@@ -1,7 +1,7 @@
 (ns seqspert.vector
   (:import [java.lang.reflect Field]
            [clojure.lang PersistentVector PersistentVector$Node APersistentVector$SubVector
-            APersistentVector$SuperVector
+            ;;APersistentVector$SuperVector
             ])
   (:require [seqspert.core :refer :all]))
 
