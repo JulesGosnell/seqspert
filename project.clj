@@ -9,7 +9,7 @@
 
   :dependencies [[org.clojure/clojure "1.6.0"]]
 
-  :plugins [;[lein-test-out "0.3.0"]
+  :plugins [[lein-test-out "0.3.1"]
             [lein-nodisassemble "0.1.3"]]
 
   :warn-on-reflection true
