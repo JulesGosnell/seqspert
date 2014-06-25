@@ -91,4 +91,18 @@
         )))
     ))
 
+(def m1 (apply hash-map (range 10000)))
+(def m2 (apply hash-map (range 5000 150000)))
 
+(println "merge map x 10000")
+(dotimes [_ 10] (time (merge m1 m2)))
+(println "splice-map x 10000")
+(dotimes [_ 10] (time (splice-map m1 m2)))
+
+(def s1 (apply hash-set (range 10000)))
+(def s2 (apply hash-set (range 5000 150000)))
+
+(println "merge set x 10000")
+(dotimes [_ 10] (time (merge s1 s2)))
+(println "splice-set x 10000")
+(dotimes [_ 10] (time (splice-set s1 s2)))

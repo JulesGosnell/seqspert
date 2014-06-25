@@ -10,6 +10,8 @@
     Seqspert
     ])
   (:require
+   [clojure.core
+    [reducers :as r]]
    [seqspert.core :refer :all]))
 
 ;; vector internals
@@ -184,3 +186,98 @@
       (System/arraycopy src-array (- length tail-length) tail 0 tail-length)
       (doseq [branch branches] (deref branch))
       v)))
+
+;;------------------------------------------------------------------------------
+
+;; recurse down a node mapping the branch and leaf kernels across the
+;; appropriate arrays, returning a new Node...
+(defn vmap-node [^PersistentVector$Node n level bk lk]
+  (PersistentVector$Node.
+   (AtomicReference.)
+   (let [a (.array n)]
+     (if (zero? level)
+       (lk a (object-array 32))
+       (bk a (object-array 32) (dec level) bk)
+       ))))
+
+(defn construct-vector [count shift root tail]
+  (Seqspert/createPersistentVector (int count) (int shift) root tail))
+
+(defn vmap-2 [f ^PersistentVector v bk lk tk]
+  (let [shift (.shift v)]
+    (construct-vector
+     (count v)
+     shift
+     (vmap-node (.root v) (/ shift 5) bk lk)
+     (let [t (.tail v)
+           n (count t)] 
+       (tk n t (object-array n))))))
+
+;;------------------------------------------------------------------------------
+;; local impl
+
+;; wavefront size provided at construction time, no runtime args
+(defn kernel-compile-leaf [f]
+  (fn [^"[Ljava.lang.Object;" in ^"[Ljava.lang.Object;" out]
+    (dotimes [i 32] (aset out i (f (aget in i))))
+    ;;(clojure.lang.RT/amap f in out)
+    out))
+
+;; wavefront size provided at construction time, supports runtime args
+(defn kernel-compile-branch [f]
+  (fn [^"[Ljava.lang.Object;" in ^"[Ljava.lang.Object;" out & args]
+    (dotimes [i 32] (aset out i (apply f (aget in i) args))) out))
+
+;; expects call-time wavefront size - for handling variable size arrays
+(defn kernel-compile-tail [f]
+  (fn [n ^"[Ljava.lang.Object;" in ^"[Ljava.lang.Object;" out]
+    (dotimes [i n] (aset out i (f (aget in i))))
+    out))
+
+(defn vmap [f ^PersistentVector v]
+  (let [lk (kernel-compile-leaf f)
+        bk (kernel-compile-branch (fn [n l bk] (if n (vmap-node n l bk lk))))
+        tk (kernel-compile-tail f)]
+    (vmap-2 f v bk lk tk)))
+
+;;------------------------------------------------------------------------------
+;; fork/join impl
+
+(defmacro with-ns
+  "Evaluates body in another namespace.  ns is either a namespace
+  object or a symbol.  This makes it possible to define functions in
+  namespaces other than the current one."
+  [ns & body]
+  `(binding [*ns* (the-ns ~ns)]
+     ~@(map (fn [form] `(eval '~form)) body)))
+
+(let [[fjpool fjtask fjinvoke fjfork fjjoin]
+      (with-ns 'clojure.core.reducers [pool fjtask fjinvoke fjfork fjjoin])]
+  (def fjpool fjpool)
+  (def fjtask fjtask)
+  (def fjinvoke fjinvoke)
+  (def fjfork fjfork)
+  (def fjjoin fjjoin))
+
+(defn fjkernel-compile-branch [f]
+  (fn [^"[Ljava.lang.Object;" in ^"[Ljava.lang.Object;" out & args]
+    (fjinvoke
+     (fn []
+       (doseq [task 
+               (let [tasks (object-array 32)]
+                 (dotimes [i 32] (aset tasks i (fjfork (fjtask #(aset out i (apply f (aget in i) args))))))
+                 tasks)]
+         (fjjoin task))))
+    out))
+  
+  ;; (defn fjprocess-tail [f t]
+  ;;   (fjjoin (fjinvoke (fn [] (fjfork (fjtask #(process-tail f t)))))))
+
+
+(defn fjvmap [f ^PersistentVector v]
+  (let [lk (kernel-compile-leaf f)
+        bk (kernel-compile-branch (fn [n l bk] (if n (vmap-node n l bk lk))))
+        pbk (fjkernel-compile-branch (fn [n l pbk] (if n (vmap-node n l bk lk))))
+        tk (kernel-compile-tail f)]
+    (vmap-2 f v pbk lk tk)))     ;TODO run tail on another thread ?
+
