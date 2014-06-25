@@ -19,10 +19,11 @@
 
   :jvm-opts ["-Xms1g" "-Xmx1g" "-server" "-XX:+UsePopCountInstruction"]
 
-  :main seqspert.vector
+  :main seqspert.all
+
+  :java-source-paths ["src/java"]
 
   :source-paths ["src" "src/clojure"]
-  :java-source-paths ["src/java"] ; Java source is stored separately.
   :test-paths ["test" "test/clojure"]
 
   )
