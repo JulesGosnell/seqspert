@@ -1,8 +1,10 @@
 (ns seqspert.splice-test
   (:import [clojure.lang Seqspert])
-  (:require [clojure.test :refer :all]))
+  (:use [clojure set test]))
 
 (set! *warn-on-reflection* true)
+
+(println "\navailable processors:" (.availableProcessors (Runtime/getRuntime)))
 
 (defn splice-set [l r] (Seqspert/spliceHashSets l r))
 (defn splice-map [l r] (Seqspert/spliceHashMaps l r))
@@ -91,18 +93,21 @@
         )))
     ))
 
-(def m1 (apply hash-map (range 10000)))
-(def m2 (apply hash-map (range 5000 150000)))
+(defn millis [n f]
+  (let [t (System/nanoTime)]
+    (dotimes [_ n] (f))
+    (double (/ (- (System/nanoTime) t) n 1000000))))
 
-(println "merge map x 10000")
-(dotimes [_ 10] (time (merge m1 m2)))
-(println "splice-map x 10000")
-(dotimes [_ 10] (time (splice-map m1 m2)))
-
-(def s1 (apply hash-set (range 10000)))
-(def s2 (apply hash-set (range 5000 150000)))
-
-(println "merge set x 10000")
-(dotimes [_ 10] (time (merge s1 s2)))
-(println "splice-set x 10000")
-(dotimes [_ 10] (time (splice-set s1 s2)))
+(deftest times
+  (def m1 (apply hash-map (range 10000)))
+  (def m2 (apply hash-map (range 5000 150000)))
+  
+  (println "merge map x 10000 :" (millis 100 #(merge m1 m2)) "ms")
+  (println "splice-map x 10000:" (millis 100 #(splice-map m1 m2)) "ms")
+  
+  (def s1 (apply hash-set (range 10000)))
+  (def s2 (apply hash-set (range 5000 150000)))
+  
+  (println "union set x 10000 :" (millis 100 #(union s1 s2)) "ms")
+  (println "splice-set x 10000:" (millis 100 #(splice-set s1 s2)) "ms")
+  )
