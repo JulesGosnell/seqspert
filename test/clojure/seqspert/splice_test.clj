@@ -1,13 +1,14 @@
 (ns seqspert.splice-test
   (:import [clojure.lang Seqspert])
+  (:require  [clojure.core [reducers :as r]])
   (:use [clojure set test]))
 
 (set! *warn-on-reflection* true)
 
 (println "\navailable processors:" (.availableProcessors (Runtime/getRuntime)))
 
-(defn splice-set [l r] (Seqspert/spliceHashSets l r))
-(defn splice-map [l r] (Seqspert/spliceHashMaps l r))
+(defn splice-sets [l r] (Seqspert/spliceHashSets l r))
+(defn splice-maps [l r] (Seqspert/spliceHashMaps l r))
 
 (def factories
   [even?
@@ -31,7 +32,7 @@
     (def a (into #{} (data (range 100000))))
     (def b (into #{} (data (range 50000 150000))))
     (def c (into a b))
-    (def d (splice-set a b))
+    (def d (splice-sets a b))
 
     (is
      (and
@@ -53,7 +54,7 @@
     )
 
   (testing "check that mutating splicees has no effect on spliced"
-    (let [d (splice-set a b)
+    (let [d (splice-sets a b)
           a2 (conj! (transient a) -1)
           b2 (conj! (transient b) -2)]
       (is
@@ -73,7 +74,7 @@
      (and
       (let [a2 (transient a)
             b2 (transient b)
-            d (splice-set a b)
+            d (splice-sets a b)
             r1 (= c d)
             a3 (persistent! (conj! a2 -1))
             b3 (persistent! (conj! b2 -2))
@@ -86,7 +87,7 @@
             r4 (= c d)]
         (and r1 r2 r3 r4))
 
-      (let [c (splice-set a b)
+      (let [c (splice-sets a b)
             a2 (into a (range -10000 0))
             b2 (into b (range -20000 -10000))]
         (= c d)
@@ -102,12 +103,42 @@
   (def m1 (apply hash-map (range 10000)))
   (def m2 (apply hash-map (range 5000 150000)))
   
-  (println "merge map x 10000 :" (millis 100 #(merge m1 m2)) "ms")
-  (println "splice-map x 10000:" (millis 100 #(splice-map m1 m2)) "ms")
-  
+  (println)
+  (println "two intersecting maps of 5000 entries to be merged")  
+
+  (println "merge vs splice :"
+           (millis 100 #(merge m1 m2)) "ms" "vs"
+           (millis 100 #(splice-maps m1 m2)) "ms")
+
+  (is (=
+       (merge m1 m2)
+       (splice-maps m1 m2)))
+
+  (println)
+  (println "two intersecting sets of 10000 items to be merged")  
+
   (def s1 (apply hash-set (range 10000)))
   (def s2 (apply hash-set (range 5000 150000)))
+
+  (println "union sets vs splice-sets :" (millis 100 #(union s1 s2)) "ms" "vs" (millis 100 #(splice-sets s1 s2)) "ms")
+
+  (is (=
+       (union s1 s2)
+       (splice-sets s1 s2)))
+
+  (println)
+
+  (println "a vector of 10000 items to be read into a hash set")
   
-  (println "union set x 10000 :" (millis 100 #(union s1 s2)) "ms")
-  (println "splice-set x 10000:" (millis 100 #(splice-set s1 s2)) "ms")
+  (def r 10000)
+  (def v (vec (range r)))
+  (def n (/ r (.availableProcessors (Runtime/getRuntime))))
+  
+  (println "parallel 'into' vs 'splice' into hash-set :" 
+           (millis 100 #(r/fold n (r/monoid into hash-set) conj v)) "ms" "vs"
+           (millis 100 #(r/fold n (r/monoid splice-sets hash-set) conj v)) "ms")
+  
+  (is (=
+       (r/fold n (r/monoid into hash-set) conj v)
+       (r/fold n (r/monoid splice-sets hash-set) conj v)))
   )

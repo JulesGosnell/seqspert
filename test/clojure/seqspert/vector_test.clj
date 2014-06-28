@@ -15,25 +15,29 @@
     (double (/ (- (System/nanoTime) t) n 1000000))))
 
 (deftest vector-to-array-test
-  (let [r (vec (range 1000000))]
-    (println "into-array x 1000000     :" (millis 100 #(into-array r)) "ms")
-    (println "vector-to-array x 1000000:" (millis 100 #(vector-to-array r)) "ms")
-    (is (= (seq (vector-to-array r)) (seq (object-array r))))))
+  (let [r (vec (range 10000))]
+    (println)
+    (println "copy a vector of 10000 items into an object array")
+    (println "into-array vs vector-to-array :"
+             (millis 100 #(into-array r)) "ms" "vs"
+             (millis 100 #(vector-to-array r)) "ms")
+    (is (= (seq (into-array r)) (seq (vector-to-array r))))))
 
 (deftest array-to-vector-test
   (let [r (object-array (range 1000000))]
-    (println "into [] x 1000000        :" (millis 100 #(into [] r)) "ms")
-    (println "array-to-vector x 1000000:" (millis 100 #(array-to-vector r)) "ms")
-    (is (= (array-to-vector r) (vec r)))))
+    (println)
+    (println "inflate an array of 10000 items into a vector")
+    (println "into vs array-to-vector:" 
+             (millis 100 #(into [] r)) "ms" "vs"
+             (millis 100 #(array-to-vector r)) "ms")
+    (is (= (into [] r) (array-to-vector r)))))
 
 (deftest vmap-test
   (let [r (vec (range 1000000))]
-    (println "mapv x 1000000:" (millis 100 #(mapv identity r)) "ms")
-    (println "vmap x 1000000:" (millis 100 #(vmap identity r)) "ms")
-    (is (= (vmap inc r) (mapv inc r)))))
-
-(deftest fjvmap-test
-  (let [r (vec (range 1000000))]
-    (println "mapv x 1000000  :" (millis 100 #(mapv identity r)) "ms")
-    (println "fjvmap x 1000000:" (millis 100 #(fjvmap identity r)) "ms")
-    (is (= (fjvmap inc r) (mapv inc r)))))
+    (println)
+    (println "map identity fn over a vector of 1000000 items")
+    (println "mapv vs vmap vs fjvmap:"
+             (millis 100 #(mapv identity r)) "ms" "vs"
+             (millis 100 #(vmap identity r)) "ms" "vs"
+             (millis 100 #(fjvmap identity r)) "ms")
+    (is (= (mapv identity r) (vmap identity r) (fjvmap identity r)))))
