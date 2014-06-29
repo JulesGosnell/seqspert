@@ -4,7 +4,9 @@
             PersistentHashMap
             PersistentHashMap$BitmapIndexedNode
             PersistentHashMap$ArrayNode
-            PersistentHashMap$INode])
+            PersistentHashMap$INode]
+           [clojure.lang Seqspert]
+           )
   (:require [seqspert.core :refer :all]))
 
 ;; (defn mask [hash shift]
@@ -178,3 +180,7 @@
   (ArrayNode. (array-node-count n) (decloak (array-node-array n))))
 
 (decloak (apply hash-map (range 100)))
+
+;;------------------------------------------------------------------------------
+
+(defn splice-hash-maps [l r] (Seqspert/spliceHashMaps l r))

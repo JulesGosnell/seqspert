@@ -2,7 +2,8 @@
   (:import [java.lang.reflect Field]
            [clojure.lang
             PersistentHashSet
-            APersistentSet])
+            APersistentSet]
+           [clojure.lang Seqspert])
   (:require [seqspert.core :refer :all]))
 
 (let [^Field f (unlock-field APersistentSet "impl")]  (defn hash-set-impl  [n] (.get f n)))
@@ -11,3 +12,5 @@
 
 (defmethod decloak PersistentHashSet [^PersistentHashSet s]
   (HashSet. (decloak (hash-set-impl s))))
+
+(defn splice-hash-sets [l r] (Seqspert/spliceHashSets l r))
