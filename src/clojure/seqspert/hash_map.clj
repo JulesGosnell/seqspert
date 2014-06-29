@@ -7,7 +7,8 @@
             PersistentHashMap$INode]
            [clojure.lang Seqspert]
            )
-  (:require [seqspert.core :refer :all]))
+  (:require [clojure.core [reducers :as r]]
+            [seqspert.core :refer :all]))
 
 ;; (defn mask [hash shift]
 ;;   (clojure.lang.Numbers/and
@@ -184,3 +185,10 @@
 ;;------------------------------------------------------------------------------
 
 (defn splice-hash-maps [l r] (Seqspert/spliceHashMaps l r))
+
+(defn into-hash-map
+  "parallel fold a sequence of pairs into a hash-map"
+  ([values]
+     (r/fold (r/monoid splice-hash-maps hash-map) conj values))
+  ([parallelism values]
+     (r/fold parallelism (r/monoid splice-hash-maps hash-map) conj values)))

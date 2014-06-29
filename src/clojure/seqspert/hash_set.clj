@@ -4,7 +4,8 @@
             PersistentHashSet
             APersistentSet]
            [clojure.lang Seqspert])
-  (:require [seqspert.core :refer :all]))
+  (:require [clojure.core [reducers :as r]])
+  (:use [seqspert core]))
 
 (let [^Field f (unlock-field APersistentSet "impl")]  (defn hash-set-impl  [n] (.get f n)))
 
@@ -14,3 +15,10 @@
   (HashSet. (inspect (hash-set-impl s))))
 
 (defn splice-hash-sets [l r] (Seqspert/spliceHashSets l r))
+
+(defn into-hash-set
+  "parallel fold a sequence into a hash-set"
+  ([values]
+     (r/fold (r/monoid splice-hash-sets hash-set) conj values))
+  ([parallelism values]
+     (r/fold parallelism (r/monoid splice-hash-sets hash-set) conj values)))

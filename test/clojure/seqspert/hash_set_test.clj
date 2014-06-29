@@ -105,18 +105,19 @@
        (splice-hash-sets s1 s2)))
 
   (println)
-
   (println "a vector of 10000 items to be read into a hash set")
   
   (def r 10000)
   (def v (vec (range r)))
-  (def n (/ r (.availableProcessors (Runtime/getRuntime))))
+  (def p (/ r (.availableProcessors (Runtime/getRuntime))))
   
-  (println "parallel 'into' vs 'splice' into hash-set :" 
-           (millis 100 #(r/fold n (r/monoid into hash-set) conj v)) "ms" "vs"
-           (millis 100 #(r/fold n (r/monoid splice-hash-sets hash-set) conj v)) "ms")
+  (println "sequential 'into' vs parallel 'into' vs parallel spliced 'into-hash-set' into hash-set :"
+           (millis 100 #(into #{} v)) "ms" "vs"
+           (millis 100 #(r/fold p (r/monoid into hash-set) conj v)) "ms" "vs"
+           (millis 100 #(into-hash-set p v)) "ms")
   
   (is (=
-       (r/fold n (r/monoid into hash-set) conj v)
-       (r/fold n (r/monoid splice-hash-sets hash-set) conj v)))
+       (into #{} v)
+       (r/fold p (r/monoid into hash-set) conj v)
+       (into-hash-set p v)))
   )
