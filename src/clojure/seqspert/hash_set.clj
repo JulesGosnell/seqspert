@@ -10,7 +10,7 @@
 
 (defrecord HashSet [impl])
 
-(defmethod decloak PersistentHashSet [^PersistentHashSet s]
-  (HashSet. (decloak (hash-set-impl s))))
+(defmethod inspect PersistentHashSet [^PersistentHashSet s]
+  (HashSet. (inspect (hash-set-impl s))))
 
 (defn splice-hash-sets [l r] (Seqspert/spliceHashSets l r))

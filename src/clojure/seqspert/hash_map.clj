@@ -86,15 +86,15 @@
 ;;   (mapv (fn [b] (bit-test i b)) (range 32)))
 
 ;; ;; e.g.
-;; ;; (decloak (bits 2r10100100010000) 0 []) ->
+;; ;; (inspect (bits 2r10100100010000) 0 []) ->
 ;; ;; [false false false false 0 false false false 1 false false 2 false 3 ...]
-;; (defn decloak [[head & tail] total output]
+;; (defn inspect [[head & tail] total output]
 ;;   (if (empty? tail)
 ;;     output
 ;;     (let [[v t] (if head [total (inc total)] [false total])]
-;;       (decloak tail t (conj output v)))))
+;;       (inspect tail t (conj output v)))))
 
-;; ;; try to use decloak bits to access arrays and pull keys/values for reforming into new set/map...
+;; ;; try to use inspect bits to access arrays and pull keys/values for reforming into new set/map...
 
 ;; (let [types (into-array Class [java.util.concurrent.atomic.AtomicReference (java.lang.Integer/TYPE) (type (into-array []))])
 ;;       ^java.lang.reflect.Constructor ctor (doto ^java.lang.reflect.Constructor (.getDeclaredConstructor clojure.lang.PersistentHashMap$BitmapIndexedNode types)
@@ -113,8 +113,8 @@
 ;;        (fn [l r]
 ;;          [(if l (aget l-array (inc (* 2 l))) l)
 ;;           (if r (aget r-array (inc (* 2 r))) r)])
-;;        (decloak (bits l-bitmap) 0 [])
-;;        (decloak (bits r-bitmap) 0 []))
+;;        (inspect (bits l-bitmap) 0 [])
+;;        (inspect (bits r-bitmap) 0 []))
 ;;       (.newInstance
 ;;        ctor
 ;;        (into-array
@@ -162,11 +162,11 @@
 (let [^Field f (unlock-field PersistentHashMap$BitmapIndexedNode "array")]
   (defn bitmap-indexed-node-array [v] (.get f v)))
 
-(defmethod decloak PersistentHashMap$BitmapIndexedNode [^PersistentHashMap$BitmapIndexedNode n]
-  (BitmapIndexedNode. (Integer/toBinaryString (bitmap-indexed-node-bitmap n)) (decloak (bitmap-indexed-node-array n))))
+(defmethod inspect PersistentHashMap$BitmapIndexedNode [^PersistentHashMap$BitmapIndexedNode n]
+  (BitmapIndexedNode. (Integer/toBinaryString (bitmap-indexed-node-bitmap n)) (inspect (bitmap-indexed-node-array n))))
 
-(defmethod decloak PersistentHashMap [^PersistentHashMap m]
-  (HashMap. (hash-map-count m) (decloak (hash-map-root m))))
+(defmethod inspect PersistentHashMap [^PersistentHashMap m]
+  (HashMap. (hash-map-count m) (inspect (hash-map-root m))))
 
 (defrecord ArrayNode [count array])
 
@@ -176,10 +176,10 @@
 (let [^Field f (unlock-field PersistentHashMap$ArrayNode "array")]
   (defn array-node-array [v] (.get f v)))
 
-(defmethod decloak PersistentHashMap$ArrayNode [^PersistentHashMap$ArrayNode n]
-  (ArrayNode. (array-node-count n) (decloak (array-node-array n))))
+(defmethod inspect PersistentHashMap$ArrayNode [^PersistentHashMap$ArrayNode n]
+  (ArrayNode. (array-node-count n) (inspect (array-node-array n))))
 
-(decloak (apply hash-map (range 100)))
+(inspect (apply hash-map (range 100)))
 
 ;;------------------------------------------------------------------------------
 

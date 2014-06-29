@@ -12,7 +12,7 @@
 (let [^Field f (unlock-field PersistentArrayMap "array")]
   (defn array-map-array [v] (.get f v)))
 
-(defmethod decloak PersistentArrayMap [^PersistentArrayMap m]
-  (ArrayMap. (decloak (array-map-array m))))
+(defmethod inspect PersistentArrayMap [^PersistentArrayMap m]
+  (ArrayMap. (inspect (array-map-array m))))
 
-(decloak {:a 1 :b 2 :c 3})
+(inspect {:a 1 :b 2 :c 3})

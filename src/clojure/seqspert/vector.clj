@@ -25,17 +25,17 @@
 (defrecord Vector [cnt shift root tail])
 (defrecord VectorNode [array])
 
-(defmethod decloak PersistentVector$Node [^PersistentVector$Node n]
-  (VectorNode. (decloak (vector-node-array n))))
+(defmethod inspect PersistentVector$Node [^PersistentVector$Node n]
+  (VectorNode. (inspect (vector-node-array n))))
 
-(defmethod decloak PersistentVector[^PersistentVector v]
+(defmethod inspect PersistentVector[^PersistentVector v]
   (Vector.
    (vector-cnt v)
    (vector-shift v)
-   (decloak (vector-root v))
-   (decloak (vector-tail v))))
+   (inspect (vector-root v))
+   (inspect (vector-tail v))))
 
-(decloak (into [] (range (+ 1 (* 32 33)))))
+(inspect (into [] (range (+ 1 (* 32 33)))))
 
 ;;------------------------------------------------------------------------------
 ;; subvector internals
@@ -46,13 +46,13 @@
 
 (defrecord SubVector [v start end])
 
-(defmethod decloak APersistentVector$SubVector [^APersistentVector$SubVector s]
+(defmethod inspect APersistentVector$SubVector [^APersistentVector$SubVector s]
   (SubVector.
-   (decloak (subvector-v s))
+   (inspect (subvector-v s))
    (subvector-start s)
    (subvector-end s)))
 
-(decloak (subvec [0 1 2 3 4 5 6 7 8 9] 2 8))
+(inspect (subvec [0 1 2 3 4 5 6 7 8 9] 2 8))
 
 ;;------------------------------------------------------------------------------
 ;; looks like a vector builds a "tail" Object[32] and then fills

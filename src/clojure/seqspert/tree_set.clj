@@ -9,5 +9,5 @@
 
 (defrecord TreeSet [impl])
 
-(defmethod decloak PersistentTreeSet [^PersistentTreeSet s]
-  (TreeSet. (decloak (tree-set-impl s))))
+(defmethod inspect PersistentTreeSet [^PersistentTreeSet s]
+  (TreeSet. (inspect (tree-set-impl s))))
