@@ -62,15 +62,48 @@ public class Seqspert {
 		return bitmap;
 	}
 
+    private static final int[] arrayCountToBits = {0, 1, 3, 7, 15, 31, 63, 127, 255, 511};
+
+    // this could be prettier and maybe faster is PersistentHashMap
+    // was refactored but it is not part of seqspert :-(
+
 	private static Hack spliceNodes(int shift, INode lNode, INode rNode) {
 		int numDuplicates = 0;
-		boolean lIsBIN = lNode instanceof BitmapIndexedNode;
-		boolean rIsBIN = rNode instanceof BitmapIndexedNode;
-		int lBitmap = lIsBIN ? ((BitmapIndexedNode)lNode).bitmap : arrayBitmap((ArrayNode)lNode);
-		int rBitmap = rIsBIN ? ((BitmapIndexedNode)rNode).bitmap : arrayBitmap((ArrayNode)rNode);
+		int lBitmap, rBitmap;
+		Object[] lArray, rArray;
+		boolean lIsBIN = false;
+		boolean rIsBIN = false;
+		if (lNode instanceof BitmapIndexedNode) {
+		    BitmapIndexedNode l = (BitmapIndexedNode)lNode;
+		    lBitmap = l.bitmap;
+		    lArray = l.array;
+		    lIsBIN = true;
+		} else if (lNode instanceof ArrayNode) {
+		    ArrayNode l = (ArrayNode) lNode;
+		    lBitmap = arrayBitmap(l);
+		    lArray = l.array;
+		} else {
+		    HashCollisionNode l = (HashCollisionNode) lNode;
+		    lBitmap = arrayCountToBits[l.count];
+		    lArray = l.array;
+		}
+
+		if (rNode instanceof BitmapIndexedNode) {
+		    BitmapIndexedNode r = (BitmapIndexedNode)rNode;
+		    rBitmap = r.bitmap;
+		    rArray = r.array;
+		    rIsBIN = true;
+		} else if (rNode instanceof ArrayNode) {
+		    ArrayNode r = (ArrayNode) rNode;
+		    rBitmap = arrayBitmap(r);
+		    rArray = r.array;
+		} else {
+		    HashCollisionNode r = (HashCollisionNode) rNode;
+		    rBitmap = arrayCountToBits[r.count];
+		    rArray = r.array;
+		}
+
 		int oBitmap = lBitmap | rBitmap;
-		Object[] lArray= lIsBIN ? ((BitmapIndexedNode)lNode).array : ((ArrayNode)lNode).array;
-		Object[] rArray= rIsBIN ? ((BitmapIndexedNode)rNode).array : ((ArrayNode)rNode).array;
 		Object[] oArray = new Object[Integer.bitCount(oBitmap) * 2]; // nasty - but we need to know before we start the loop
 		int lPosition = 0;
 		int rPosition = 0;
