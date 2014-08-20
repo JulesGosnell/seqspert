@@ -202,8 +202,8 @@ public class Seqspert {
     
     static class HashCollisionNodeHashCollisionNodeSplicer implements Splicer {
     	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift) {
-		    HashCollisionNode l = (HashCollisionNode) lNode;
-		    HashCollisionNode r = (HashCollisionNode) rNode;
+		    final HashCollisionNode l = (HashCollisionNode) lNode;
+		    final HashCollisionNode r = (HashCollisionNode) rNode;
 		    throw new RuntimeException("NYI");
     	}
     }
@@ -211,10 +211,10 @@ public class Seqspert {
     static Splicer[] splicers = new Splicer[] {
     	new ArrayNodeArrayNodeSplicer(),
     	new ArrayNodeBitmapIndexedNodeSplicer(),
-    	new ArrayNodeArrayNodeSplicer(),
+    	new ArrayNodeHashCollisionNodeSplicer(),
     	new BitmapIndexedNodeArrayNodeSplicer(),
     	new BitmapIndexedNodeBitmapIndexedNodeSplicer(),
-    	new BitmapIndexedNodeArrayNodeSplicer(),
+    	new BitmapIndexedNodeHashCollisionNodeSplicer(),
     	new HashCollisionNodeArrayNodeSplicer(),
     	new HashCollisionNodeBitmapIndexedNodeSplicer(),
     	new HashCollisionNodeHashCollisionNodeSplicer()
@@ -226,24 +226,24 @@ public class Seqspert {
 
 	public static PersistentHashMap spliceHashMaps(PersistentHashMap lMap, PersistentHashMap rMap) {
 		// check null config the same
-		INode lRoot = lMap.root;
-		INode rRoot = rMap.root;
+		final INode lRoot = lMap.root;
+		final INode rRoot = rMap.root;
 		if (lRoot == null)
 			return rMap;
 		else if (rRoot == null)
 			return lMap;
 
-		Hack hack = spliceNodes(0, lRoot, rRoot);
-		PersistentHashMap.BitmapIndexedNode root = hack.getNode();
-		int count = lMap.count + rMap.count - hack.numDuplicates; 
+		final Hack hack = spliceNodes(0, lRoot, rRoot);
+		final PersistentHashMap.BitmapIndexedNode root = hack.getNode();
+		final int count = lMap.count + rMap.count - hack.numDuplicates; 
 		return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);
 	}
 	
 	// HashSet
 	
 	public static PersistentHashSet spliceHashSets(PersistentHashSet lSet, PersistentHashSet rSet) {
-		PersistentHashMap meta = PersistentHashMap.EMPTY; // TODO - consider merging METAs
-		IPersistentMap impl = spliceHashMaps((PersistentHashMap)lSet.impl, (PersistentHashMap)rSet.impl);
+		final PersistentHashMap meta = PersistentHashMap.EMPTY; // TODO - consider merging METAs
+		final IPersistentMap impl = spliceHashMaps((PersistentHashMap)lSet.impl, (PersistentHashMap)rSet.impl);
 		return new PersistentHashSet(meta, impl);
 	}
 
