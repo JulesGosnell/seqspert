@@ -67,42 +67,13 @@ public class Seqspert {
     // this could be prettier and maybe faster is PersistentHashMap
     // was refactored but it is not part of seqspert :-(
 
-	private static Hack spliceNodes(int shift, INode lNode, INode rNode) {
-		int numDuplicates = 0;
-		int lBitmap, rBitmap;
-		Object[] lArray, rArray;
-		boolean lIsBIN = false;
-		boolean rIsBIN = false;
-		if (lNode instanceof BitmapIndexedNode) {
-		    BitmapIndexedNode l = (BitmapIndexedNode)lNode;
-		    lBitmap = l.bitmap;
-		    lArray = l.array;
-		    lIsBIN = true;
-		} else if (lNode instanceof ArrayNode) {
-		    ArrayNode l = (ArrayNode) lNode;
-		    lBitmap = arrayBitmap(l);
-		    lArray = l.array;
-		} else {
-		    HashCollisionNode l = (HashCollisionNode) lNode;
-		    lBitmap = arrayCountToBits[l.count];
-		    lArray = l.array;
-		}
+    static int nodeTypeInt(INode node) {
+    	return (node instanceof ArrayNode) ? 0 : (node instanceof BitmapIndexedNode) ? 1 : 2;
+    }
+    
 
-		if (rNode instanceof BitmapIndexedNode) {
-		    BitmapIndexedNode r = (BitmapIndexedNode)rNode;
-		    rBitmap = r.bitmap;
-		    rArray = r.array;
-		    rIsBIN = true;
-		} else if (rNode instanceof ArrayNode) {
-		    ArrayNode r = (ArrayNode) rNode;
-		    rBitmap = arrayBitmap(r);
-		    rArray = r.array;
-		} else {
-		    HashCollisionNode r = (HashCollisionNode) rNode;
-		    rBitmap = arrayCountToBits[r.count];
-		    rArray = r.array;
-		}
-
+	
+	static Hack spliceNodes(int lBitmap, Object[] lArray, boolean lIsBIN, int rBitmap, Object[] rArray, boolean rIsBIN, int numDuplicates, int shift) {
 		int oBitmap = lBitmap | rBitmap;
 		Object[] oArray = new Object[Integer.bitCount(oBitmap) * 2]; // nasty - but we need to know before we start the loop
 		int lPosition = 0;
@@ -159,6 +130,98 @@ public class Seqspert {
 		}
 
 		return new Hack(numDuplicates, new PersistentHashMap.BitmapIndexedNode(new AtomicReference<Thread>(), oBitmap, oArray));
+	}
+	
+    static interface Splicer {
+    	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift);
+    }
+    
+    static class ArrayNodeArrayNodeSplicer implements Splicer {
+    	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift) {
+		    final ArrayNode l = (ArrayNode) lNode;
+		    final ArrayNode r = (ArrayNode) rNode;
+		    return spliceNodes(arrayBitmap(l), l.array, false, arrayBitmap(r), r.array, false, numDuplicates, shift);
+    	}
+    }
+    
+    static class ArrayNodeBitmapIndexedNodeSplicer implements Splicer {
+    	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift) {
+    		final ArrayNode l = (ArrayNode) lNode;
+		    final BitmapIndexedNode r = (BitmapIndexedNode)rNode;
+		    return spliceNodes(arrayBitmap(l), l.array, false, r.bitmap, r.array, true, numDuplicates, shift);
+    	}
+    }
+    
+    static class ArrayNodeHashCollisionNodeSplicer implements Splicer {
+    	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift) {
+		    final ArrayNode l = (ArrayNode) lNode;
+		    final HashCollisionNode r = (HashCollisionNode) rNode;
+		    return spliceNodes(arrayBitmap(l), l.array, false, arrayCountToBits[r.count], r.array, false, numDuplicates, shift);
+    	}
+    }
+    
+    static class BitmapIndexedNodeArrayNodeSplicer implements Splicer {
+    	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift) {
+    		final BitmapIndexedNode l = (BitmapIndexedNode)lNode;
+		    final ArrayNode r = (ArrayNode) rNode;
+		    return spliceNodes(l.bitmap, l.array, true, arrayBitmap(r), r.array, false, numDuplicates, shift);
+    	}
+    }
+    
+    static class BitmapIndexedNodeBitmapIndexedNodeSplicer implements Splicer {
+    	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift) {
+		    final BitmapIndexedNode l = (BitmapIndexedNode)lNode;
+		    final BitmapIndexedNode r = (BitmapIndexedNode)rNode;
+		    return spliceNodes(l.bitmap, l.array, true, r.bitmap, r.array, true, numDuplicates, shift);
+    	}
+    }
+
+    static class BitmapIndexedNodeHashCollisionNodeSplicer implements Splicer {
+    	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift) {
+		    final BitmapIndexedNode l = (BitmapIndexedNode)lNode;
+		    final HashCollisionNode r = (HashCollisionNode) rNode;
+		    return spliceNodes(l.bitmap, l.array, true, arrayCountToBits[r.count], r.array, false, numDuplicates, shift);
+    	}
+    }
+    
+    static class HashCollisionNodeArrayNodeSplicer implements Splicer {
+    	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift) {
+    		final HashCollisionNode l = (HashCollisionNode) lNode;
+		    final ArrayNode r = (ArrayNode) rNode;
+		    return spliceNodes(arrayCountToBits[l.count], l.array, false, arrayBitmap(r), r.array, false, numDuplicates, shift);
+    	}
+    }
+    
+    static class HashCollisionNodeBitmapIndexedNodeSplicer implements Splicer {
+    	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift) {
+    		final HashCollisionNode l = (HashCollisionNode) lNode;
+		    final BitmapIndexedNode r = (BitmapIndexedNode)rNode;
+		    return spliceNodes(arrayCountToBits[l.count], l.array, false, r.bitmap, r.array, true, numDuplicates, shift);
+    	}
+    }
+    
+    static class HashCollisionNodeHashCollisionNodeSplicer implements Splicer {
+    	public Hack splice(INode lNode, INode rNode, int numDuplicates, int shift) {
+		    HashCollisionNode l = (HashCollisionNode) lNode;
+		    HashCollisionNode r = (HashCollisionNode) rNode;
+		    throw new RuntimeException("NYI");
+    	}
+    }
+    
+    static Splicer[] splicers = new Splicer[] {
+    	new ArrayNodeArrayNodeSplicer(),
+    	new ArrayNodeBitmapIndexedNodeSplicer(),
+    	new ArrayNodeArrayNodeSplicer(),
+    	new BitmapIndexedNodeArrayNodeSplicer(),
+    	new BitmapIndexedNodeBitmapIndexedNodeSplicer(),
+    	new BitmapIndexedNodeArrayNodeSplicer(),
+    	new HashCollisionNodeArrayNodeSplicer(),
+    	new HashCollisionNodeBitmapIndexedNodeSplicer(),
+    	new HashCollisionNodeHashCollisionNodeSplicer()
+    };
+    
+	static Hack spliceNodes(int shift, INode lNode, INode rNode) {		
+		return splicers[(3 * nodeTypeInt(lNode)) + nodeTypeInt(rNode)].splice(lNode, rNode, 0, shift);
 	}
 
 	public static PersistentHashMap spliceHashMaps(PersistentHashMap lMap, PersistentHashMap rMap) {
