@@ -91,11 +91,11 @@
     ))
 
 (deftest times
-  (def m1 (apply hash-map (range 10000)))
-  (def m2 (apply hash-map (range 5000 150000)))
+  (def m1 (apply hash-map (range 100000)))
+  (def m2 (apply hash-map (range 50000 150000)))
   
-  (def s1 (apply hash-set (range 10000)))
-  (def s2 (apply hash-set (range 5000 150000)))
+  (def s1 (apply hash-set (range 100000)))
+  (def s2 (apply hash-set (range 50000 150000)))
   (println)
   (println "two intersecting hash sets of 10000 items to be merged")  
   (println "union vs splice :" (millis 100 #(union s1 s2)) "ms" "vs" (millis 100 #(splice-hash-sets s1 s2)) "ms")

@@ -5,8 +5,8 @@
    [seqspert test-utils hash-map]))
 
 (deftest times
-  (def m1 (apply hash-map (mapcat (fn [v] [(keyword (str v)) v]) (range 10000))))
-  (def m2 (apply hash-map (mapcat (fn [v] [(keyword (str v)) v]) (range 5000 150000))))
+  (def m1 (apply hash-map (mapcat (fn [v] [(keyword (str v)) v]) (range 100000))))
+  (def m2 (apply hash-map (mapcat (fn [v] [(keyword (str v)) v]) (range 50000 150000))))
   
   (println)
   (println "two intersecting hash maps of 10000 entries to be merged")  

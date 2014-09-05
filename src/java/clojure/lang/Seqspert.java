@@ -415,7 +415,35 @@ public class Seqspert {
 
     }
     
+    
+    static int keyIndex(Object[] array, int length, Object key) {
+    	for (int i = 0; i < length; i += 2) if (Util.equiv(array[i], key)) return i;
+    	return -1;
+    }
+    
     static class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
+    	public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+    		final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
+    		final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
+    		
+    		final int leftLength = leftNode.count * 2;
+			final int rightLength = rightNode.count* 2;
+			final Object[] leftArray = leftNode.array;
+			final Object[] rightArray = rightNode.array;
+
+			int c = leftLength;
+			final Object[] array = new Object[leftLength + rightLength];
+			System.arraycopy(leftArray, 0, array, 0, c);
+			
+			for (int r = 0; r < rightLength; r += 2) {
+				if (keyIndex(leftArray, leftLength, rightArray[r]) == -1) {
+					array[c++] = rightArray[r];
+					array[c++] = rightArray[r + 1];
+				}
+			}
+    
+    		return new HashCollisionNode(null, shift, c / 2, array);
+    	}	
     }
 
     static class ArrayNodeAndKeyValuePairSplicer extends AbstractSplicer {
