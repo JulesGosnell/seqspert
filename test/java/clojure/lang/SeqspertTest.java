@@ -16,6 +16,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 
+// TODO - if no changes are made, original node, tree should be returned...
+
 public class SeqspertTest {
 
 
