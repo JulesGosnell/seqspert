@@ -26,6 +26,8 @@
 
   :java-source-paths ["src/java" "test/java"]
   :junit ["test/java"]
+  :junit-formatter "xml"
+  :junit-results-dir "target"
 
   :source-paths ["src/clojure"]
   :test-paths ["test/clojure"]
