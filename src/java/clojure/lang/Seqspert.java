@@ -439,10 +439,12 @@ public class Seqspert {
 				if (keyIndex(leftArray, leftLength, rightArray[r]) == -1) {
 					array[c++] = rightArray[r];
 					array[c++] = rightArray[r + 1];
+				} else {
+					duplications.duplications++;
 				}
 			}
     
-    		return new HashCollisionNode(null, shift, c / 2, array);
+    		return new HashCollisionNode(null, shift, c / 2, compact(array, c));
     	}	
     }
 
