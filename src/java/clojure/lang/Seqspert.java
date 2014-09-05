@@ -198,7 +198,7 @@ public class Seqspert {
                     array[j++] = rVal;
                 }
             }
-            return new HashCollisionNode(null, rightNode.hash, j / 2, compact(array, j));
+            return new HashCollisionNode(null, rightNode.hash, j / 2, trim(array, j));
         }
     }
 
@@ -392,8 +392,8 @@ public class Seqspert {
         }
     }
 
-    // compacting is used to keep unit test happy (uses AssertArrayEquals) - could be dropped to make things faster...
-    static Object[] compact(Object[] oldArray, int length) {
+    // trimming is used to keep unit test happy (uses AssertArrayEquals) - could be dropped to make things faster...
+    static Object[] trim(Object[] oldArray, int length) {
         if (oldArray.length == length) {
             return oldArray;
         } else {
@@ -444,7 +444,7 @@ public class Seqspert {
 				}
 			}
     
-    		return new HashCollisionNode(null, shift, c / 2, compact(array, c));
+    		return new HashCollisionNode(null, shift, c / 2, trim(array, c));
     	}	
     }
 
