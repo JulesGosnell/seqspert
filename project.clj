@@ -10,7 +10,8 @@
   :dependencies [[org.clojure/clojure "1.7.0-alpha2"]
                  [junit/junit "4.11"]]
 
-  :plugins [[lein-junit "1.1.7"]
+  :plugins [[lein-test-out "0.3.1"]
+            [lein-junit "1.1.7"]
             [lein-nodisassemble "0.1.3"]]
 
   :warn-on-reflection true
