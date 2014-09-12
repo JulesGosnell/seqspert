@@ -63,7 +63,6 @@ public class Seqspert {
         }
     }
 
-
     // Vector
 
 	static public PersistentVector createPersistentVector(int cnt, int shift, PersistentVector.Node root, Object[] tail) {
@@ -392,19 +391,139 @@ public class Seqspert {
         }
     }
 
-    // trimming is used to keep unit test happy (uses AssertArrayEquals) - could be dropped to make things faster...
-    static Object[] trim(Object[] oldArray, int length) {
-        if (oldArray.length == length) {
-            return oldArray;
-        } else {
-            final Object[] newArray = new Object[length];
-            System.arraycopy(oldArray, 0, newArray, 0, length);
-            return newArray;
-        }
+    /*
+     * return a copy of oldArray of 'newLength' - content may be truncated
+     */
+    public static Object[] clone(Object[] oldArray, int oldLength, int newLength) {
+	final Object[] newArray = new Object[newLength];
+	System.arraycopy(oldArray, 0, newArray, 0, oldLength);
+	return newArray;
+    }
+    
+    // trimming is used to keep unit test happy (uses
+    // AssertArrayEquals) - could be dropped to make things faster...
+    /*
+     * return an array, maybe 'oldArray', of 'newLength' and with the same contents as 'oldArray'
+     */
+    static Object[] trim(Object[] oldArray, int newLength) {
+        return (oldArray.length == newLength) ? oldArray : clone(oldArray, newLength, newLength);
     }
 
+    /*
+     * return a copy of 'oldArray' of 'newLength' with 'key' and 'value' appended at 'oldLength'
+     */
+    static Object[] append(Object[] oldArray, int oldLength, int newLength, Object key, Object value) {
+	final Object[] newArray = clone(oldArray, oldLength, newLength);
+	newArray[oldLength + 0] = key;
+	newArray[oldLength + 1] = value;
+	return newArray;
+    }
 
+    static int keyIndex(Object[] array, int length, Object key) {
+    	for (int i = 0; i < length; i += 2) if (Util.equiv(array[i], key)) return i;
+    	return -1;
+    }
+
+    /*
+     * return an array equivalent to 'array' with the value at 'index'
+     * set to 'value'.
+     */
+    static Object[] maybeSet(Object[] array, int index, Object value, Duplications duplications) {
+	duplications.duplications++;
+	if (Util.equiv(array[index + 1], value)) {
+	    return array;
+	} else {
+	    final Object[] newArray = array.clone();
+	    newArray[index + 1] = value;
+	    return newArray;
+	}
+    }
+
+    /*
+     * return an array, the set of which's key:value pairs is
+     * equivalent to the union of 'array' and {'key':'value'}
+     */
+    static Object[] maybeAdd(Object[] array, int length, Object key, Object value, Duplications duplications) {
+	final int i = keyIndex(array, length, key);
+	return (i == -1) ?
+	    append(array, length, length + 2, key, value) :
+	    maybeSet(array, i, value, duplications);
+    }
+    
+
+    /*
+     * return an array, the set of which's key:value pairs is
+     * equivalent to the union of 'leftArray' and 'rightArray'
+     */
+    static Object[] maybeAddAll(Object[] leftArray, int leftLength,
+				Object[] rightArray, int rightLength, Duplications duplications) {
+	// start with the assumption that no kvps will be added.
+	Object[] newArray = leftArray;
+	int l = leftLength;
+	// walk rightArray potentially adding each kvp
+	for (int r = 0; r < rightLength; r += 2) {
+	    // check whether key is already present in leftArray
+	    final Object rightKey = rightArray[r];
+	    final int i = keyIndex(leftArray, leftLength, rightKey);
+	    if (i == -1) {
+		// key is not present
+		// the first time this happens we need to clone leftArray to create space for additions
+		if (newArray == leftArray)
+		    newArray = clone(leftArray, leftLength, leftLength + rightLength - r);
+		// append the kvp
+		newArray[l++] = rightKey;
+		newArray[l++] = rightArray[r + 1];
+	    } else {
+		// key is present
+		final Object rightValue = rightArray[r + 1];
+		duplications.duplications++;
+		// is the value the same as well ?
+		if (Util.equiv(leftArray[i + 1], rightValue)) {
+		    // value is same
+		    // leave as is
+		} else {
+		    // value is different
+		    // the first time this happens we need to clone leftArray to create space for additions
+		    if (newArray == leftArray)
+			newArray = clone(leftArray, leftLength, leftLength + rightLength - r);
+		    // overwrite old value
+		    newArray[i + 1] = rightValue;
+		}
+	    }
+	}
+	return newArray;
+    }
+    
     static class HashCollisionNodeAndKeyValuePairSplicer extends AbstractSplicer {
+	public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+	    final HashCollisionNode leftNode = (HashCollisionNode) leftValue;
+	    final int leftHash = leftNode.hash;
+	    if (rightKey.hashCode() == leftHash) {
+		if (rightKey.equals(leftKey)) {
+		    //if (rightValue
+		    // TODO: overwrite kvp
+		    throw new UnsupportedOperationException("NYI");
+		    // TODO: provide tests for this Splicer
+		    // TODO: clean up existing splicers, sharing more code...
+		    // TODO: what if value is equal as well ? need a new set of tests - no change
+		    // TODO: random test in clojure - runs for hours trying all sorts of stuff
+		    // TODO: always pass rhs hash through, so it is only calc-ed once
+		    // TODO: provide insert as well as append
+		    // TODO: provide default splicer that just uses iteration and assoc() ?
+		} else {
+		    // add new kvp to existing collisions...
+		    final int leftCount = leftNode.count;
+		    final int newLeftCount = leftCount + 2;
+		    final Object[] leftArray = leftNode.array;
+		    final Object[] newLeftArray =
+			append(leftArray, leftCount, newLeftCount, rightKey, rightValue);
+		    return new HashCollisionNode(null, leftHash, newLeftCount, newLeftArray);
+		}
+	    } else {
+		// TODO: I think that we need a new BitmapIndexedNode here...
+		throw new UnsupportedOperationException("NYI");
+	    }
+	}
     }
 
     static class HashCollisionNodeAndArrayNodeSplicer extends AbstractSplicer {
@@ -415,36 +534,24 @@ public class Seqspert {
 
     }
     
-    
-    static int keyIndex(Object[] array, int length, Object key) {
-    	for (int i = 0; i < length; i += 2) if (Util.equiv(array[i], key)) return i;
-    	return -1;
-    }
-    
     static class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
     	public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
     		final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
     		final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
-    		
-    		final int leftLength = leftNode.count * 2;
-			final int rightLength = rightNode.count* 2;
-			final Object[] leftArray = leftNode.array;
-			final Object[] rightArray = rightNode.array;
 
-			int c = leftLength;
-			final Object[] array = new Object[leftLength + rightLength];
-			System.arraycopy(leftArray, 0, array, 0, c);
-			
-			for (int r = 0; r < rightLength; r += 2) {
-				if (keyIndex(leftArray, leftLength, rightArray[r]) == -1) {
-					array[c++] = rightArray[r];
-					array[c++] = rightArray[r + 1];
-				} else {
-					duplications.duplications++;
-				}
-			}
+		// TODO - inline a few of these
+    		final int leftLength = leftNode.count * 2;
+		final int rightLength = rightNode.count* 2;
+		final Object[] leftArray = leftNode.array;
+		final Object[] rightArray = rightNode.array;
+		final int oldDuplications = duplications.duplications;
+
+		final Object[] newArray = maybeAddAll(leftArray, leftLength, rightArray, rightLength, duplications);
+		// TODO: inline these
+		final int newDuplications = (duplications.duplications - oldDuplications);
+		final int newLength = leftLength + rightLength - (newDuplications * 2);
     
-    		return new HashCollisionNode(null, shift, c / 2, trim(array, c));
+    		return newArray == leftArray ? leftNode : new HashCollisionNode(null, shift, newLength / 2, newArray);
     	}	
     }
 
