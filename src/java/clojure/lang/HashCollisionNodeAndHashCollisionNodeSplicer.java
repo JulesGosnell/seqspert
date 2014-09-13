@@ -2,11 +2,10 @@ package clojure.lang;
 
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
-import clojure.lang.Seqspert.AbstractSplicer;
 import clojure.lang.Seqspert.Duplications;
 
 class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
-	public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+	public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
 		final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
 		final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
 

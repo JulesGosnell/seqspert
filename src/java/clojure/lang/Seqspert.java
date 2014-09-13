@@ -65,15 +65,9 @@ public class Seqspert {
     	return (key != null) ? 0 : (value instanceof BitmapIndexedNode) ? 1 : (value instanceof ArrayNode) ? 3 : 2;
     }
 	
-    static abstract class AbstractSplicer implements Splicer {
-        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
-            throw new UnsupportedOperationException("NYI:" + getClass().getSimpleName() + ".splice()");
-        }
-    }
-
     // TODO: untested
     static class KeyValuePairAndKeyValuePairSplicer extends AbstractSplicer {
-        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
             // TODO: inline bodies of both createNode() methods and refactor for efficiency - first test being equiv will be slow...
             if (Util.equiv(leftKey, rightKey)) {
                 duplications.duplications++;
@@ -82,14 +76,14 @@ public class Seqspert {
                 //return createNode(shift, leftKey, leftValue);
             } else {
                 // collision / no collision
-                return createNode(shift, leftKey, leftValue, hash(rightKey), rightKey, rightValue);
+                return createNode(shift, leftKey, leftValue, rightHash, rightKey, rightValue);
             }
         }
     }
 
     // TODO: untested
     static class KeyValuePairAndBitmapIndexedNodeSplicer extends AbstractSplicer {
-        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
             final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
             final int bit = bitpos(hash(leftKey), shift);
             if((rightNode.bitmap & bit) == 0) {
@@ -114,7 +108,7 @@ public class Seqspert {
                     if (lhash == hash(k))
                         return new HashCollisionNode(null, lhash, 2, new Object[]{leftKey, leftValue, k, v});
                     else
-                        return spliceNodes(shift + 5, duplications, leftKey, leftValue, k, v);
+                        return spliceNodes(shift + 5, duplications, leftKey, leftValue, rightHash, k, v);
                 }
             }
         }
@@ -122,7 +116,7 @@ public class Seqspert {
 
     // TODO: untested
     static class KeyValuePairAndHashCollisionNodeSplicer extends AbstractSplicer {
-        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
 
             final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
 
@@ -162,7 +156,7 @@ public class Seqspert {
 
     static class BitmapIndexedNodeAndArrayNodeSplicer extends AbstractSplicer {
 
-    	public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+    	public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
     		final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;
 		    final ArrayNode r = (ArrayNode) rightValue;
 
@@ -185,7 +179,7 @@ public class Seqspert {
 
                     if (rb) {
                         // both sides present - merge them...
-                        array[i] = spliceNodes(shift + 5, duplications, lk, lv, null, rv);
+                        array[i] = spliceNodes(shift + 5, duplications, lk, lv, rightHash, null, rv);
                     } else {
                         // only lhs present
                         array[i] = (lk == null) ? (INode) lv : createNode(shift + 5, lk, lv);
@@ -215,7 +209,7 @@ public class Seqspert {
     }
 
     static class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
-    	public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+    	public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
             // TODO: BIN or AN ?
 		    final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;
 		    final BitmapIndexedNode r = (BitmapIndexedNode) rightValue;
@@ -255,7 +249,7 @@ public class Seqspert {
                     boolean rIsNode = rv instanceof INode;
                     if (lIsNode) {
                         if (rIsNode) {
-                            ov = spliceNodes(shift + 5, duplications, null, (INode) lv, null, (INode) rv);
+                            ov = spliceNodes(shift + 5, duplications, null, (INode) lv, rightHash, null, (INode) rv);
                         } else {
                             ov = assoc(((INode) lv), shift + 5, hash(rk), rk, rv, duplications);
                         }
@@ -295,7 +289,7 @@ public class Seqspert {
     }
 
     static class BitmapIndexedNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
-        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
             final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;
             final HashCollisionNode r = (HashCollisionNode) rightValue;
             int bit = bitpos(r.hash, shift);
@@ -325,7 +319,7 @@ public class Seqspert {
                 } else if (lHash == r.hash) {
                     // collision (maybe duplication)
                     // replace lhs with an HCN, and tip rhs into it, checking for duplication...
-                    final HashCollisionNode node = (HashCollisionNode)spliceNodes(shift + 5, duplications, lk, lVal, null, r);
+                    final HashCollisionNode node = (HashCollisionNode)spliceNodes(shift + 5, duplications, lk, lVal, rightHash, null, r);
                     final Object[] array = l.array.clone();
                     array[vIdx] = node;
                     return new BitmapIndexedNode(null, l.bitmap, array);
@@ -345,7 +339,7 @@ public class Seqspert {
     }
 
     static class ArrayNodeAndArrayNodeSplicer extends AbstractSplicer {
-        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+        public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
             final ArrayNode leftNode = (ArrayNode) leftValue;
             final ArrayNode rightNode = (ArrayNode) rightValue;
 
@@ -357,7 +351,7 @@ public class Seqspert {
                 final boolean lb = l != null;
                 final boolean rb = r != null;
                 if (lb) {
-                    array[i] = rb ? spliceNodes(shift + 5, duplications, null, l, null, r) : l;
+                    array[i] = rb ? spliceNodes(shift + 5, duplications, null, l, rightHash, null, r) : l;
                 } else {
                     if (rb)
                         array[i] = r;
@@ -396,9 +390,9 @@ public class Seqspert {
             null
     };
     
-	static INode spliceNodes(int shift, Duplications duplications, Object leftKey, Object leftValue, Object rightKey, Object rightValue) {
+	static INode spliceNodes(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
 		return splicers[(4 * nodeTypeInt(leftKey, leftValue)) + nodeTypeInt(rightKey, rightValue)].
-                splice(shift, duplications, leftKey, leftValue, rightKey, rightValue);
+                splice(shift, duplications, leftKey, leftValue, rightHash, rightKey, rightValue);
 	}
 
 	public static PersistentHashMap spliceHashMaps(PersistentHashMap lMap, PersistentHashMap rMap) {
@@ -411,7 +405,7 @@ public class Seqspert {
 			return lMap;
 
         final Duplications duplications = new Duplications(0);
-        final PersistentHashMap.INode root = spliceNodes(0, duplications, null, lRoot, null, rRoot);
+        final PersistentHashMap.INode root = spliceNodes(0, duplications, null, lRoot, 0, null, rRoot);
 		final int count = lMap.count + rMap.count - duplications.duplications;
 		return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);
 	}
