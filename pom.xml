@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>seqspert</groupId>
+  <artifactId>seqspert</artifactId>
+  <packaging>jar</packaging>
+  <version>1.6.0.0-SNAPSHOT</version>
+  <name>seqspert</name>
+  <description>Seqspert: Understand the internals of Clojure sequence implementations</description>
+  <url>http://example.com/FIXME</url>
+  <build>
+    <sourceDirectory>src/clojure</sourceDirectory>
+    <testSourceDirectory>test/clojure</testSourceDirectory>
+    <directory>target</directory>
+    <outputDirectory>target/classes</outputDirectory>
+  </build>
+  <dependencies>
+<!--
+    <dependency>
+      <groupId>nodisassemble</groupId>
+      <artifactId>nodisassemble</artifactId>
+      <version>0.1.3</version>
+    </dependency>
+-->
+    <dependency>
+      <groupId>org.clojure</groupId>
+      <artifactId>clojure</artifactId>
+      <version>1.7.0-alpha2</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
