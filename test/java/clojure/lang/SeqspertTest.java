@@ -1,19 +1,17 @@
 package clojure.lang;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 import java.util.concurrent.atomic.AtomicReference;
 
-import clojure.lang.PersistentHashMap.INode;
+import org.junit.Test;
+
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
-
+import clojure.lang.PersistentHashMap.INode;
 import clojure.lang.Seqspert.Duplications;
-import clojure.lang.Seqspert.Splicer;
-
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
 
 
 // TODO - if no changes are made, original node, tree should be returned...
