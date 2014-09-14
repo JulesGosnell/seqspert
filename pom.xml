@@ -1,4 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    >
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>seqspert</groupId>
   <artifactId>seqspert</artifactId>
@@ -8,10 +15,8 @@
   <description>Seqspert: Understand the internals of Clojure sequence implementations</description>
   <url>http://example.com/FIXME</url>
   <build>
-    <sourceDirectory>src/clojure</sourceDirectory>
-    <testSourceDirectory>test/clojure</testSourceDirectory>
-    <directory>target</directory>
-    <outputDirectory>target/classes</outputDirectory>
+    <sourceDirectory>src/java</sourceDirectory>
+    <testSourceDirectory>test/java</testSourceDirectory>
   </build>
   <dependencies>
 <!--
@@ -33,4 +38,15 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.6</version>
+      </plugin>
+    </plugins>
+  </reporting>
+
 </project>
