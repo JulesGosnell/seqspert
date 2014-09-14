@@ -11,7 +11,6 @@ import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
-import clojure.lang.Seqspert.Duplications;
 
 
 // TODO - if no changes are made, original node, tree should be returned...
@@ -51,14 +50,14 @@ public class SeqspertTest {
         {
             final Object key = new HashCodeKey("key", 123456);
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.assoc(shift,  PersistentHashMap.hash(key), key, value, new Box(null));
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift, key, value);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key, value);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
         }
         {
             final Object key = new HashCodeKey("key", -123456);
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.assoc(shift,  PersistentHashMap.hash(key), key, value, new Box(null));
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift, key, value);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key, value);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
         }
@@ -77,7 +76,7 @@ public class SeqspertTest {
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
                     assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
                     assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
         }
@@ -89,7 +88,7 @@ public class SeqspertTest {
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
                     assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
                     assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
         }
@@ -101,7 +100,7 @@ public class SeqspertTest {
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
                     assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
                     assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
         }
@@ -113,7 +112,7 @@ public class SeqspertTest {
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
                     assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
                     assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
         }
@@ -125,7 +124,7 @@ public class SeqspertTest {
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
                     assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
                     assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
         }
@@ -137,7 +136,7 @@ public class SeqspertTest {
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
                     assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
                     assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
         }
@@ -149,7 +148,7 @@ public class SeqspertTest {
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
                     assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
                     assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             final BitmapIndexedNode expectedNested = (BitmapIndexedNode) expected.array[1];
             final BitmapIndexedNode actualNested = (BitmapIndexedNode) actual.array[1];
@@ -164,7 +163,7 @@ public class SeqspertTest {
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
                     assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
                     assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             final HashCollisionNode expectedNested = (HashCollisionNode) expected.array[1];
             final HashCollisionNode actualNested = (HashCollisionNode) actual.array[1];
@@ -182,7 +181,7 @@ public class SeqspertTest {
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
                     assoc(edit, shift2, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
                     assoc(edit, shift2, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
-            final BitmapIndexedNode actual = (BitmapIndexedNode) Seqspert.createNode(shift2, key0, value0, PersistentHashMap.hash(key1), key1, value1);
+            final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift2, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
         }
@@ -210,10 +209,10 @@ public class SeqspertTest {
         final Object leftValue = 123;
         final Object rightKey = "right";
         final Object rightValue = 456;
-        final INode leftNode1  = Seqspert.createNode(shift, leftKey, leftValue);
-        final INode rightNode1 = Seqspert.createNode(shift, rightKey, rightValue);
+        final INode leftNode1  = NodeUtils.create(shift, leftKey, leftValue);
+        final INode rightNode1 = NodeUtils.create(shift, rightKey, rightValue);
 
-        final Splicer splicer = new Seqspert.BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
+        final Splicer splicer = new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
         final BitmapIndexedNode actual = (BitmapIndexedNode) splicer.splice(shift, duplications, null, leftNode1, PersistentHashMap.hash(rightKey), null, rightNode1);
         assertEquals(0, duplications.duplications);
 
@@ -237,10 +236,10 @@ public class SeqspertTest {
         final Object rightKey = new HashCodeKey("right", hashCode);
         final Object rightValue = 345;
 
-        final INode leftNode1  = Seqspert.createNode(shift, leftKey, leftValue);
-        final INode rightNode1 = Seqspert.createNode(shift, rightKey, rightValue);
+        final INode leftNode1  = NodeUtils.create(shift, leftKey, leftValue);
+        final INode rightNode1 = NodeUtils.create(shift, rightKey, rightValue);
 
-        final Splicer splicer = new Seqspert.BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
+        final Splicer splicer = new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
         final BitmapIndexedNode actual = (BitmapIndexedNode) splicer.splice(shift, duplications, null, leftNode1, hashCode, null, rightNode1);
         assertEquals(0, duplications.duplications);
 
@@ -269,10 +268,10 @@ public class SeqspertTest {
         final int hashCode = PersistentHashMap.hash(key);
         final Object leftValue = 123;
         final Object rightValue = 345;
-        final INode leftNode1  = Seqspert.createNode(shift, key, leftValue);
-        final INode rightNode1 = Seqspert.createNode(shift, key, rightValue);
+        final INode leftNode1  = NodeUtils.create(shift, key, leftValue);
+        final INode rightNode1 = NodeUtils.create(shift, key, rightValue);
 
-        final Splicer splicer = new Seqspert.BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
+        final Splicer splicer = new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
         final BitmapIndexedNode actual = (BitmapIndexedNode) splicer.splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
         assertEquals(1, duplications.duplications);
 
@@ -312,10 +311,10 @@ public class SeqspertTest {
         final Object right0Value = 456;
         final Object right1Key = new HashCodeKey("right1", hashCode);
         final Object right1Value = 789;
-        final INode leftNode1 = Seqspert.createNode(shift, leftKey, leftValue);
+        final INode leftNode1 = NodeUtils.create(shift, leftKey, leftValue);
         final INode rightNode1 = createBinaryHashCollisionNode(hashCode, right0Key, right0Value, right1Key, right1Value);
 
-        final Splicer splicer = new Seqspert.BitmapIndexedNodeAndHashCollisionNodeSplicer();
+        final Splicer splicer = new BitmapIndexedNodeAndHashCollisionNodeSplicer();
         final BitmapIndexedNode actual0 = (BitmapIndexedNode) splicer.splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
         assertEquals(0, duplications.duplications);
 
@@ -350,10 +349,10 @@ public class SeqspertTest {
         final Object right1Key = new HashCodeKey("right1", hashCode);
         final Object right1Value = 789;
 
-        final INode leftNode1 = Seqspert.createNode(shift, leftKey, leftValue);
+        final INode leftNode1 = NodeUtils.create(shift, leftKey, leftValue);
         final INode rightNode1 = createBinaryHashCollisionNode(hashCode, right0Key, right0Value, right1Key, right1Value);
 
-        final Splicer splicer = new Seqspert.BitmapIndexedNodeAndHashCollisionNodeSplicer();
+        final Splicer splicer = new BitmapIndexedNodeAndHashCollisionNodeSplicer();
         final BitmapIndexedNode actualNode0 = (BitmapIndexedNode) splicer.splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
         assertEquals(0, duplications.duplications);
 
@@ -383,10 +382,10 @@ public class SeqspertTest {
         final Object right0Value = 456;
         final Object right1Key = new HashCodeKey("right", hashCode);
         final Object right1Value = 789;
-        final INode leftNode1 = Seqspert.createNode(shift, leftKey, leftValue);
+        final INode leftNode1 = NodeUtils.create(shift, leftKey, leftValue);
         final INode rightNode1 = createBinaryHashCollisionNode(hashCode, right0Key, right0Value, right1Key, right1Value);
 
-        final Splicer splicer = new Seqspert.BitmapIndexedNodeAndHashCollisionNodeSplicer();
+        final Splicer splicer = new BitmapIndexedNodeAndHashCollisionNodeSplicer();
         final BitmapIndexedNode actualNode0 = (BitmapIndexedNode) splicer.splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
         assertEquals(1, duplications.duplications);
 
@@ -421,7 +420,7 @@ public class SeqspertTest {
 
         final int shift = 5;
 
-        final INode leftNode1  = Seqspert.createNode(shift, new HashCodeKey("left" + 0, 0 * 32), 0);
+        final INode leftNode1  = NodeUtils.create(shift, new HashCodeKey("left" + 0, 0 * 32), 0);
 
         INode leftNode2 = leftNode1;
         for (int i = 1; i < 18; i++) {
@@ -435,7 +434,7 @@ public class SeqspertTest {
         }
 
         final Duplications duplications = new Duplications(0);
-        final ArrayNode actual = (ArrayNode)  new Seqspert.BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
+        final ArrayNode actual = (ArrayNode)  new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
         // TODO: numDuplicates
 
         assertEquals(actual.count, expected.count);
@@ -449,7 +448,7 @@ public class SeqspertTest {
 
         final int shift = 5;
 
-        final INode leftNode1  = Seqspert.createNode(shift, new HashCodeKey("initial-left" + 0, 0 * 32), 0);
+        final INode leftNode1  = NodeUtils.create(shift, new HashCodeKey("initial-left" + 0, 0 * 32), 0);
 
         INode leftNode2 = leftNode1;
         for (int i = 0; i < 17; i++) {
@@ -463,7 +462,7 @@ public class SeqspertTest {
         }
 
         final Duplications duplications = new Duplications(0);
-        final ArrayNode actual = (ArrayNode) new Seqspert.BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
+        final ArrayNode actual = (ArrayNode) new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
         // TODO: numDuplicates
 
         assertEquals(actual.count, expected.count);
@@ -478,7 +477,7 @@ public class SeqspertTest {
 
         final int shift = 5;
 
-        final INode leftNode1  = Seqspert.createNode(shift, new HashCodeKey("left" + 0, 0 * 32), 0);
+        final INode leftNode1  = NodeUtils.create(shift, new HashCodeKey("left" + 0, 0 * 32), 0);
 
         INode leftNode2 = leftNode1;
         for (int i = 0; i < 17; i++) {
@@ -492,7 +491,7 @@ public class SeqspertTest {
         }
 
         final Duplications duplications = new Duplications(0);
-        final ArrayNode actual = (ArrayNode) new Seqspert.BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
+        final ArrayNode actual = (ArrayNode) new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
         // TODO: numDuplicates
 
         assertEquals(actual.count, expected.count);
@@ -525,7 +524,7 @@ public class SeqspertTest {
         }
 
         final Duplications duplications = new Duplications(0);
-        final ArrayNode actual = (ArrayNode) new Seqspert.ArrayNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
+        final ArrayNode actual = (ArrayNode) new ArrayNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
         // TODO: numDuplicates
 
         assertEquals(actual.count, expected.count);
@@ -559,7 +558,7 @@ public class SeqspertTest {
                 assoc(edit, shift, hashCode, key3, value3, addedLeaf);
 
         final Duplications duplications = new Duplications(0);
-        final HashCollisionNode actual =  (HashCollisionNode) Seqspert.spliceNodes(shift, duplications, null, leftNode, 0, null, rightNode);
+        final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, duplications, null, leftNode, 0, null, rightNode);
         assertEquals(0, duplications.duplications);
         
         assertEquals(expected.count, actual.count);
@@ -587,7 +586,7 @@ public class SeqspertTest {
                 assoc(edit, shift, hashCode, key2, value2, addedLeaf);
 
         final Duplications duplications = new Duplications(0);
-        final HashCollisionNode actual =  (HashCollisionNode) Seqspert.spliceNodes(shift, duplications, null, leftNode, 0, null, rightNode);
+        final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, duplications, null, leftNode, 0, null, rightNode);
         assertEquals(1, duplications.duplications);
         
         assertEquals(expected.count, actual.count);

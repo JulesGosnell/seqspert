@@ -1,7 +1,6 @@
 package clojure.lang;
 
 import clojure.lang.PersistentHashMap.INode;
-import clojure.lang.Seqspert.Duplications;
 
 abstract class AbstractSplicer implements Splicer {
 	
