@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class HashCollisionUtilsTest {
+public class HashCollisionNodeUtilsTest {
 
 	@Test
 	public void test() {
