@@ -1,2 +1,2 @@
 #!/bin/sh -x
-exec lein do clean, test, test-out junit target/test-results.xml
+exec lein do clean, javac, junit, test-out junit target/clojure-testreports.xml
