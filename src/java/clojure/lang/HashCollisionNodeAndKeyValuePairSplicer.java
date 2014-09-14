@@ -14,9 +14,7 @@ public INode splice(int shift, Duplications duplications, Object leftKey, Object
 	    throw new UnsupportedOperationException("NYI");
 	    // TODO: provide tests for this Splicer
 	    // TODO: clean up existing splicers, sharing more code...
-	    // TODO: what if value is equal as well ? need a new set of tests - no change
 	    // TODO: random test in clojure - runs for hours trying all sorts of stuff
-	    // TODO: always pass rhs hash through, so it is only calc-ed once
 	    // TODO: provide insert as well as append
 	    // TODO: provide default splicer that just uses iteration and assoc() ?
 	} else {
