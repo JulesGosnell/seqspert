@@ -1,8 +1,25 @@
 package clojure.lang;
 
+import java.util.concurrent.atomic.AtomicReference;
+
+import clojure.lang.PersistentHashMap.HashCollisionNode;
+
 
 public class HashCollisionNodeUtils {
 
+	// only used for tests
+	public static HashCollisionNode createBinaryHashCollisionNode(int hashCode, Object key0, Object value0, Object key1, Object value1) {
+		final AtomicReference<Thread> edit = null;
+		final int count = 2;
+		final int hash = hashCode;
+		final Object[] array = new Object[]{key0, value0, key1, value1};
+		final HashCollisionNode node  = new HashCollisionNode(edit, hash, count, array);
+//		assertEquals(hash, node.hash);
+//		assertEquals(count, node.count);
+//		assertArrayEquals(array, node.array);
+		return node;
+	}
+	
 	/*
 	 * return a copy of oldArray of 'newLength' - content may be truncated
 	 */
