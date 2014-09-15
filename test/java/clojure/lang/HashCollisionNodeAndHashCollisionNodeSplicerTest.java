@@ -32,17 +32,30 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 		     Object key2, Object value2, Object key3, Object value3,
 		     int expectedDuplications, boolean same) {
 	final HashCollisionNode leftNode   = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
-	final HashCollisionNode rightNode =  new HashCollisionNode(null, hashCode, 2, new Object[]{key1, value1, key2, value2});
+	final HashCollisionNode rightNode =  new HashCollisionNode(null, hashCode, 2, new Object[]{key2, value2, key3, value3});
 	
 	final AtomicReference<Thread> edit = new AtomicReference<Thread>();
-	final Box addedLeaf = new Box(null);
-	final HashCollisionNode expected = (HashCollisionNode) leftNode.
-	    assoc(edit, shift, hashCode, key1, value1, addedLeaf).
-	    assoc(edit, shift, hashCode, key2, value2, addedLeaf);
+	HashCollisionNode expected = (HashCollisionNode) leftNode;
+	Box addedLeaf = null;
+	int expectedDups = 0;
+	addedLeaf = new Box(null);
+	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key0, value0, addedLeaf);
+	expectedDups += (addedLeaf.val == addedLeaf) ? 1 : 0;
+	addedLeaf = new Box(null);	
+	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key1, value1, addedLeaf);
+	expectedDups += (addedLeaf.val == addedLeaf) ? 1 : 0;
+	addedLeaf = new Box(null);
+	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key2, value2, addedLeaf);
+	expectedDups += (addedLeaf.val == addedLeaf) ? 1 : 0;
+	addedLeaf = new Box(null);	
+	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key3, value3, addedLeaf);
+	expectedDups += (addedLeaf.val == addedLeaf) ? 1 : 0;
 	
 	final Duplications duplications = new Duplications(0);
 	final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, duplications, null, leftNode, 0, null, rightNode);
-	//assertEquals(expectedDuplications, duplications.duplications);
+	//assertEquals(expectedDuplications, expectedDups);
+	//assertEquals(expectedDups, duplications.duplications);
+	assertEquals(expectedDuplications, duplications.duplications);
 	assertHashCollisionNodesEqual(expected, actual);
 	if (same) assertSame(expected, actual);
     }

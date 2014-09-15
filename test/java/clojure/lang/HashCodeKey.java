@@ -22,5 +22,10 @@ class HashCodeKey {
                 ((HashCodeKey)that).hashCode == hashCode &&
                 ((HashCodeKey)that).key.equals(key);
     }
+    
+    @Override
+    public String toString() {
+    	return "[" + hashCode + "]:" + key;
+    }
 
 }
