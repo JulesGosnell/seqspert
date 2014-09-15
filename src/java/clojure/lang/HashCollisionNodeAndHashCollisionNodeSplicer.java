@@ -8,6 +8,10 @@ class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 		final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
 		final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
 
+		// TODO: is it possible that the nodes hash codes are different ?
+		// I think they must fall in the same partition, but can be different - consider...
+		// try to replicate from clojure...
+		
 		final int leftLength = leftNode.count * 2;
 		final int rightLength = rightNode.count* 2;
 		final Object[] leftArray = leftNode.array;

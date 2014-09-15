@@ -1,20 +1,56 @@
 package clojure.lang;
 
-import static org.junit.Assert.*;
-import static clojure.lang.TestUtils.*;
+import static clojure.lang.TestUtils.assertHashCollisionNodesEqual;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.HashCollisionNode;
+import clojure.lang.PersistentHashMap.INode;
 
 public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
     @Test
     @Override
     public void testNoCollision() {
-	// TODO - I guess we create a BIN and put the two HCNs inside it...
+        final int shift = 0;
+        final int leftHashCode = 1;
+        final int rightHashCode = 2;
+        final Object key0 = new HashCodeKey("key0", leftHashCode);
+        final Object key1 = new HashCodeKey("key1", leftHashCode);
+        final Object key2 = new HashCodeKey("key2", rightHashCode);
+        final Object key3 = new HashCodeKey("key3", rightHashCode);
+        final Object value0 = "value0";
+        final Object value1 = "value1";
+        final Object value2 = "value2";
+        final Object value3 = "value3";
+    	final HashCollisionNode leftNode   = new HashCollisionNode(null, leftHashCode,  2, new Object[]{key0, value0, key1, value1});
+    	final HashCollisionNode rightNode =  new HashCollisionNode(null, rightHashCode, 2, new Object[]{key2, value2, key3, value3});
+    	
+    	final AtomicReference<Thread> edit = new AtomicReference<Thread>();
+    	INode expected = leftNode;
+//    	INode expected = BitmapIndexedNode.EMPTY;
+    	Box addedLeaf = null;
+    	int expectedDuplications = 0;
+//    	addedLeaf = new Box(null);
+//    	expected = expected.assoc(edit, shift, hashCode, key0, value0, addedLeaf);
+//    	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+//    	addedLeaf = new Box(null);	
+//    	expected = expected.assoc(edit, shift, hashCode, key1, value1, addedLeaf);
+//    	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+    	addedLeaf = new Box(null);
+    	expected = expected.assoc(edit, shift, hashCode, key2, value2, addedLeaf);
+    	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+    	addedLeaf = new Box(null);	
+    	expected = expected.assoc(edit, shift, hashCode, key3, value3, addedLeaf);
+    	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+    	
+    	final Duplications duplications = new Duplications(0);
+    	final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, duplications, null, leftNode, 0, null, rightNode);
+    	assertEquals(expectedDuplications, duplications.duplications);
     }
     
     final int shift = 0;
@@ -78,7 +114,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
     @Test
     //@Override
     public void testAllIdentical() {
-	// all keys and values is also identical...
+	// all keys and values are also identical...
 	test(key0, value0, key1, value1, key0, value0, key1, value1, true);
     }
 
