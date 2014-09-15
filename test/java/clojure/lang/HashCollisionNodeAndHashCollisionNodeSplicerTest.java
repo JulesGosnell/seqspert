@@ -30,31 +30,23 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 
     public void test(Object key0, Object value0, Object key1, Object value1,
 		     Object key2, Object value2, Object key3, Object value3,
-		     int expectedDuplications, boolean same) {
+		     boolean same) {
 	final HashCollisionNode leftNode   = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 	final HashCollisionNode rightNode =  new HashCollisionNode(null, hashCode, 2, new Object[]{key2, value2, key3, value3});
 	
 	final AtomicReference<Thread> edit = new AtomicReference<Thread>();
 	HashCollisionNode expected = (HashCollisionNode) leftNode;
 	Box addedLeaf = null;
-	int expectedDups = 0;
-	addedLeaf = new Box(null);
-	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key0, value0, addedLeaf);
-	expectedDups += (addedLeaf.val == addedLeaf) ? 1 : 0;
-	addedLeaf = new Box(null);	
-	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key1, value1, addedLeaf);
-	expectedDups += (addedLeaf.val == addedLeaf) ? 1 : 0;
+	int expectedDuplications = 0;
 	addedLeaf = new Box(null);
 	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key2, value2, addedLeaf);
-	expectedDups += (addedLeaf.val == addedLeaf) ? 1 : 0;
+	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
 	addedLeaf = new Box(null);	
 	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key3, value3, addedLeaf);
-	expectedDups += (addedLeaf.val == addedLeaf) ? 1 : 0;
+	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
 	
 	final Duplications duplications = new Duplications(0);
 	final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, duplications, null, leftNode, 0, null, rightNode);
-	//assertEquals(expectedDuplications, expectedDups);
-	//assertEquals(expectedDups, duplications.duplications);
 	assertEquals(expectedDuplications, duplications.duplications);
 	assertHashCollisionNodesEqual(expected, actual);
 	if (same) assertSame(expected, actual);
@@ -64,7 +56,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
     @Override
     public void testCollision() {
 	// differing keys all have same hashcode but values are different...
-	test(key0, value0, key1, value1, key2, value2, key3, value3, 0, false);
+	test(key0, value0, key1, value1, key2, value2, key3, value3, false);
     }
 
     @Test
@@ -73,21 +65,21 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 	// as above, but one pair of keys is identical...
 	final Object leftValue1 = "left-" + (String) value1;
 	final Object rightValue1 = "right-" + (String) value1;
-	test(key0, value0, key1, leftValue1, key1, rightValue1, key2, value2, 1, false);
+	test(key0, value0, key1, leftValue1, key1, rightValue1, key2, value2, false);
     }
 
     @Test
     //@Override
     public void testSomeIdentical() {
 	// as above but one pair of values is also identical...
-	test(key0, value0, key1, value1, key1, value1, key2, value2, 1, false);
+	test(key0, value0, key1, value1, key1, value1, key2, value2, false);
     }
 
     @Test
     //@Override
     public void testAllIdentical() {
 	// all keys and values is also identical...
-	test(key0, value0, key1, value1, key0, value0, key1, value1, 2, true);
+	test(key0, value0, key1, value1, key0, value0, key1, value1, true);
     }
 
 }
