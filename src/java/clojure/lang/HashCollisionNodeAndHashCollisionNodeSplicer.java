@@ -21,7 +21,7 @@ class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 		return newArray == leftArray ?
 				leftNode :
 					new HashCollisionNode(null,
-							shift,
+							leftNode.hash,
 							(leftLength + rightLength - ((duplications.duplications - oldDuplications) * 2)) / 2,
 							newArray);
 	}	
