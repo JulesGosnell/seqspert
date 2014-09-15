@@ -38,3 +38,24 @@
        (into-hash-map p v)
        ))
   )
+
+(deftype MyType [value hashcode] Object (hashCode [_] hashcode))
+
+(deftest collision-test
+  (let [k0 (MyType. :k0 0) v0 "v0"
+        k1 (MyType. :k1 0) v1 "v1"
+        k2 (MyType. :k2 0) v2 "v2"
+        k3 (MyType. :k3 0) v3 "v3"]
+    (testing "one : one"
+      (is (= (splice-hash-maps (hash-map k0 v0) (hash-map k1 v1))
+             (hash-map k0 v0 k1 v1))))
+    (testing "one : two"
+      (is (= (splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2))
+             (hash-map k0 v0 k1 v1 k2 v2))))
+    (testing "two : one"
+      (is (= (splice-hash-maps (hash-map k0 v0) (hash-map k1 v1 k2 v2))
+             (hash-map k0 v0 k1 v1 k2 v2))))
+    (testing "two : two"
+      (is (= (splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2 k3 v3))
+             (hash-map k0 v0 k1 v1 k2 v2 k3 v3))))
+    ))
