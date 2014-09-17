@@ -43,7 +43,7 @@
 (deftype MyKey [value hashcode]
   Object
   (hashCode [_] hashcode)
-  (toString [_] (str "<" hashcode ":" value ">")))
+  (toString [_] (str "(" hashcode ":" value ")")))
 
 (deftest collision-test
   (let [k0 (MyKey. :k0 0) v0 "v0"
