@@ -3,6 +3,7 @@
            [clojure.lang
             PersistentHashMap
             PersistentHashMap$BitmapIndexedNode
+            PersistentHashMap$HashCollisionNode
             PersistentHashMap$ArrayNode
             PersistentHashMap$INode]
            [clojure.lang Seqspert]
@@ -181,6 +182,22 @@
   (ArrayNode. (array-node-count n) (inspect (array-node-array n))))
 
 (inspect (apply hash-map (range 100)))
+
+(defrecord HashCollisionNode [hash count array])
+
+(let [^Field f (unlock-field PersistentHashMap$HashCollisionNode "hash")]
+  (defn hash-collision-node-hash [v] (.get f v)))
+
+(let [^Field f (unlock-field PersistentHashMap$HashCollisionNode "count")]
+  (defn hash-collision-node-count [v] (.get f v)))
+
+(let [^Field f (unlock-field PersistentHashMap$HashCollisionNode "array")]
+  (defn hash-collision-node-array [v] (.get f v)))
+
+(defmethod inspect PersistentHashMap$HashCollisionNode [^PersistentHashMap$HashCollisionNode n]
+  (HashCollisionNode. (hash-collision-node-hash n)
+                      (hash-collision-node-count n)
+                      (inspect (hash-collision-node-array n))))
 
 ;;------------------------------------------------------------------------------
 
