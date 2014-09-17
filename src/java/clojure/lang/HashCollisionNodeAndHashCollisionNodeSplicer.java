@@ -17,23 +17,16 @@ class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 	
 	final int leftBits = PersistentHashMap.mask(leftHash, shift);
 	final int rightBits = PersistentHashMap.mask(rightHash, shift);
-	if (leftBits == rightBits) {
+	return
+	    (leftBits == rightBits) ?
 	    // keep recursing down...
-	    return new BitmapIndexedNode(edit,
-					 1 << leftBits,
-					 new Object[]{null,
-						      foo(shift + 5,
-							  leftHash, leftNode,
-							  rightHash, rightNode)});
-	} else {
+	    BitmapIndexedNodeUtils.create(leftBits,
+					  foo(shift + 5,
+					      leftHash, leftNode,
+					      rightHash, rightNode)) :
 	    // end recursion
-	    // c.f. NodeUtils.create() - we should share code somehow
-	    return new BitmapIndexedNode(edit,
-					 1 << leftBits | 1 << rightBits,
-					 (leftBits <= rightBits) ?
-					 new Object[]{null, leftNode, null, rightNode} :
-					 new Object[]{null, rightNode, null, leftNode});
-	}
+	    BitmapIndexedNodeUtils.create(leftBits, leftNode,
+					  rightBits, rightNode);
     }
     
     public INode splice(int shift, Duplications duplications,
@@ -52,6 +45,7 @@ class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 	    final Object[] newArray = HashCollisionNodeUtils.maybeAddAll(leftArray, leftLength,
 									 rightNode.array, rightLength,
 									 duplications);
+
 	    final int newDuplications = duplications.duplications - oldDuplications;
 
 	    return newArray == leftArray ?
