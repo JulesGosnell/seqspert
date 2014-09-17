@@ -36,14 +36,11 @@ class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 	}
     }
     
-    
-    public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+    public INode splice(int shift, Duplications duplications,
+			Object leftKey, Object leftValue,
+			int rightHash, Object rightKey, Object rightValue) {
 	final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
 	final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
-
-	// TODO: is it possible that the nodes hash codes are different ?
-	// I think they must fall in the same partition, but can be different - consider...
-	// try to replicate from clojure...
 
 	if (leftNode.hash == rightNode.hash) {
 		
@@ -53,15 +50,15 @@ class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 	    final int oldDuplications = duplications.duplications;
 
 	    final Object[] newArray = HashCollisionNodeUtils.maybeAddAll(leftArray, leftLength,
-									 rightNode.array,
-									 rightLength,
+									 rightNode.array, rightLength,
 									 duplications);
+	    final int newDuplications = duplications.duplications - oldDuplications;
 
 	    return newArray == leftArray ?
 		leftNode :
 		new HashCollisionNode(null,
 				      leftNode.hash,
-				      (leftLength + rightLength - ((duplications.duplications - oldDuplications) * 2)) / 2,
+				      ((leftLength + rightLength) / 2) - newDuplications,
 				      newArray);
 	} else {
 	    
