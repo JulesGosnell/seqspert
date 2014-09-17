@@ -1,5 +1,6 @@
 (ns seqspert.hash-map-test
   (:require  [clojure.core [reducers :as r]])
+  (:require [clojure [pprint :as p]])
   (:use
    [clojure set test]
    [seqspert test-utils hash-map]))
@@ -39,13 +40,16 @@
        ))
   )
 
-(deftype MyType [value hashcode] Object (hashCode [_] hashcode))
+(deftype MyKey [value hashcode]
+  Object
+  (hashCode [_] hashcode)
+  (toString [_] (str "<" hashcode ":" value ">")))
 
 (deftest collision-test
-  (let [k0 (MyType. :k0 0) v0 "v0"
-        k1 (MyType. :k1 0) v1 "v1"
-        k2 (MyType. :k2 0) v2 "v2"
-        k3 (MyType. :k3 0) v3 "v3"]
+  (let [k0 (MyKey. :k0 0) v0 "v0"
+        k1 (MyKey. :k1 0) v1 "v1"
+        k2 (MyKey. :k2 0) v2 "v2"
+        k3 (MyKey. :k3 0) v3 "v3"]
     (testing "one : one"
       (is (= (splice-hash-maps (hash-map k0 v0) (hash-map k1 v1))
              (hash-map k0 v0 k1 v1))))
@@ -58,4 +62,19 @@
     (testing "two : two"
       (is (= (splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2 k3 v3))
              (hash-map k0 v0 k1 v1 k2 v2 k3 v3))))
+    ))
+
+
+(deftest collision-test
+  (testing "merging of two HCN's with different hashCodes"
+    (let [k0 (MyKey. :k0 1) v0 "v0"
+          k1 (MyKey. :k1 1) v1 "v1"
+          k2 (MyKey. :k2 33) v2 "v2"
+          k3 (MyKey. :k3 33) v3 "v3"
+          expected (hash-map k0 v0 k1 v1 k2 v2 k3 v3)
+          actual (splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2 k3 v3))]
+      (p/pprint (seqspert.core/inspect expected))
+      (p/pprint (seqspert.core/inspect actual))
+      (is (= actual expected))
+      )
     ))
