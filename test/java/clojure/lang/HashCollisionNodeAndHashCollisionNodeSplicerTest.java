@@ -1,6 +1,7 @@
 package clojure.lang;
 
-import static clojure.lang.TestUtils.assertHashCollisionNodesEqual;
+import static clojure.lang.TestUtils.assertHashCollisionNodeEquals;
+import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -50,9 +51,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 
 	final Duplications duplications = new Duplications(0);
 	final INode actual = NodeUtils.splice(shift, duplications, null, leftNode, rightHashCode, null, rightNode);
-	// TODO: fix this line
-	//assertEquals(expected, actual);
-
+	assertNodeEquals(expected, actual);
 	assertEquals(expectedDuplications, duplications.duplications);
     }
 
@@ -87,7 +86,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 	final Duplications duplications = new Duplications(0);
 	final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, duplications, null, leftNode, 0, null, rightNode);
 	assertEquals(expectedDuplications, duplications.duplications);
-	assertHashCollisionNodesEqual(expected, actual);
+	assertHashCollisionNodeEquals(expected, actual);
 	if (same) assertSame(expected, actual);
     }
 

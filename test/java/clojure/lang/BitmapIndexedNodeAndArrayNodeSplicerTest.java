@@ -64,10 +64,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest
 	    final ArrayNode actual = (ArrayNode)  new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
 	    // TODO: numDuplicates
 	
-	    assertEquals(actual.count, expected.count);
-	    for (int i = 0; i < 18; i++) {
-	        assertBitmapIndexedNodesEqual((BitmapIndexedNode) actual.array[i], (BitmapIndexedNode) expected.array[i]);
-	    }
+	    assertArrayNodeEquals(actual, expected);
 	}
 
 	//-----------------------------------------------------
@@ -119,9 +116,9 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest
 	    // TODO: numDuplicates
 	
 	    assertEquals(actual.count, expected.count);
-	    assertHashCollisionNodesEqual((HashCollisionNode) actual.array[0], (HashCollisionNode) expected.array[0]);
+	    assertHashCollisionNodeEquals((HashCollisionNode) actual.array[0], (HashCollisionNode) expected.array[0]);
 	    for (int i = 1; i < 17; i++) {
-	        assertBitmapIndexedNodesEqual((BitmapIndexedNode) actual.array[i], (BitmapIndexedNode) expected.array[i]);
+	        assertBitmapIndexedNodeEquals((BitmapIndexedNode) actual.array[i], (BitmapIndexedNode) expected.array[i]);
 	    }
 	}
 
@@ -175,7 +172,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest
 	
 	    assertEquals(actual.count, expected.count);
 	    for (int i = 0; i < 17; i++) {
-	        assertBitmapIndexedNodesEqual((BitmapIndexedNode) actual.array[i], (BitmapIndexedNode) expected.array[i]);
+	        assertBitmapIndexedNodeEquals((BitmapIndexedNode) actual.array[i], (BitmapIndexedNode) expected.array[i]);
 	    }
 	}
 

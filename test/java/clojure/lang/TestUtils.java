@@ -1,30 +1,64 @@
 package clojure.lang;
 
 import static org.junit.Assert.*;
-import static clojure.lang.TestUtils.*;
 
 import org.junit.Test;
 
+import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 
 public class TestUtils {
 
-    public static void assertBitmapIndexedNodesEqual(BitmapIndexedNode actual, BitmapIndexedNode expected) {
-	assertEquals(actual.bitmap, expected.bitmap);
-	assertEquals(actual.array[0], expected.array[0]);
-	assertEquals(actual.array[1], expected.array[1]);
+    public static void assertNodeEquals(INode l, INode r) {
+	if (l instanceof BitmapIndexedNode) {
+	    assertBitmapIndexedNodeEquals((BitmapIndexedNode) l, (BitmapIndexedNode) r);
+	} else if (l instanceof HashCollisionNode) {
+	    assertHashCollisionNodeEquals((HashCollisionNode) l, (HashCollisionNode) r);
+	} else {
+	    assertArrayNodeEquals((ArrayNode) l, (ArrayNode) r);
+	}
     }
 
-    public static void assertSubarrayEquals(Object[] actual, Object[] expected, int length) {
-	for (int i = 0; i < length; i++)
-	    assertEquals(actual[i], expected[i]);
+    public static void assertValueEquals(Object l, Object r) {
+        if (l != r) {
+	    if (l instanceof INode) {
+		assertEquals(l.getClass(), r.getClass());
+		assertNodeEquals((INode) l, (INode) r);
+	    }
+	    else
+		assertEquals(l, r);
+	}
     }
 
-    public static void assertHashCollisionNodesEqual(HashCollisionNode actual, HashCollisionNode expected) {
-	assertEquals(actual.hash, expected.hash);
-	assertEquals(actual.count, expected.count);
-	assertSubarrayEquals(actual.array, expected.array, expected.count * 2);
+    public static void assertKeyValuePairArrayEquals(Object[] actual, Object[] expected, int length) {
+	for (int i = 0; i < length;) {
+	    assertEquals(actual[i], expected[i++]);
+	    assertValueEquals(actual[i], expected[i++]);
+	}
     }
-	
+
+    public static void assertArrayNodeEquals(ArrayNode actual, ArrayNode expected) {
+	if (actual != expected) {
+	    assertEquals(actual.count, expected.count);
+	    assertKeyValuePairArrayEquals(actual.array, expected.array, expected.count * 2);
+	}
+    }
+
+    public static void assertBitmapIndexedNodeEquals(BitmapIndexedNode actual, BitmapIndexedNode expected) {
+	if (actual != expected) {
+	    assertEquals(actual.bitmap, expected.bitmap);
+	    assertKeyValuePairArrayEquals(actual.array, expected.array, Integer.bitCount(expected.bitmap) * 2);
+	}
+    }
+
+    public static void assertHashCollisionNodeEquals(HashCollisionNode actual, HashCollisionNode expected) {
+	if (actual != expected) {
+	    assertEquals(actual.hash, expected.hash);
+	    assertEquals(actual.count, expected.count);
+	    assertKeyValuePairArrayEquals(actual.array, expected.array, expected.count * 2);
+	}
+    }
+
 }
