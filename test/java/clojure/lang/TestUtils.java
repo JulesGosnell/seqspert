@@ -40,10 +40,12 @@ public class TestUtils {
     }
 
     public static void assertArrayNodeEquals(ArrayNode actual, ArrayNode expected) {
-	if (actual != expected) {
-	    assertEquals(actual.count, expected.count);
-	    assertKeyValuePairArrayEquals(actual.array, expected.array, expected.count * 2);
-	}
+    	if (actual != expected) {
+    		assertEquals(actual.count, expected.count);
+    		for (int i = 0; i < expected.count;) {
+    			assertNodeEquals(actual.array[i], expected.array[i++]);
+    		}
+    	}
     }
 
     public static void assertBitmapIndexedNodeEquals(BitmapIndexedNode actual, BitmapIndexedNode expected) {
