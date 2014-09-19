@@ -18,26 +18,25 @@ public class ArrayNodeAndArrayNodeSplicerTest
 	
 	final int shift = 5;
 	
-	INode leftNode1 = BitmapIndexedNode.EMPTY;
+	INode leftNode = BitmapIndexedNode.EMPTY;
 	for (int i = 0; i < 17; i++) {
-	    leftNode1 = leftNode1.assoc(shift, i * 32 , new HashCodeKey("left" + i, i * 32), i, new Box(null));
+	    leftNode = leftNode.assoc(shift, i * 32 , new HashCodeKey("left" + i, i * 32), i, new Box(null));
 	}
-	
-	INode leftNode2 = leftNode1;
+
+	INode expected = leftNode;
+	INode rightNode = BitmapIndexedNode.EMPTY;
 	for (int i = 16; i < 33; i++) {
-	    leftNode2 = leftNode2.assoc(shift, i * 32 , new HashCodeKey("left" + i, i * 32), i, new Box(null));
-	}
-	final ArrayNode expected = (ArrayNode) leftNode2;
-	
-	INode rightNode1 = BitmapIndexedNode.EMPTY;
-	for (int i = 16; i < 33; i++) {
-	    rightNode1 = rightNode1.assoc(shift, i * 32 , new HashCodeKey("left" + i, i * 32), i, new Box(null));
+	    final Object key = new HashCodeKey("left" + i, i * 32);
+	    final int hash = key.hashCode();
+	    final Object value = i;
+	    expected = expected.assoc(shift, hash , key, value, new Box(null));
+	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
 	}
 	
 	final Duplications duplications = new Duplications(0);
-	final ArrayNode actual = (ArrayNode) new ArrayNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
-	// TODO: numDuplicates
-	
-	assertArrayNodeEquals(actual, expected);
+	final INode actual = new ArrayNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode, 0, null, rightNode);
+
+	assertEquals(1, duplications.duplications);
+	assertNodeEquals(actual, expected);
     }
 }
