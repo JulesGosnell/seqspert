@@ -22,7 +22,7 @@ class ArrayNodeAndArrayNodeSplicer extends AbstractSplicer {
                 if (rb)
                     array[i] = r;
                 else
-                    empty--;
+                    empty++;
             }
         }
 
