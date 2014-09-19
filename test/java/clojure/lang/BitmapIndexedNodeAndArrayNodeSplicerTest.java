@@ -10,170 +10,78 @@ import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-public class BitmapIndexedNodeAndArrayNodeSplicerTest
-//implements SplicerTestInterface 
-{
+public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
+    @Test
+    public void testNoCollision() {
 	
-
-	//-----------------------------------------------------
+	final int shift = 5;
 	
-	// BIN(a) | BIN(b) -> BIN(a, b)
+	final INode leftNode  = NodeUtils.create(shift, new HashCodeKey("left" + 0, 0 * 32), 0);
 	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456}
-	
-	
-	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456} when key hash codes collide
-	
-	
-	
-	// {"duplicate" 123 "duplicate" 456} should= {"duplicate" 123} + {"duplicate" 456}
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when right key hash codes collide
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when all key hash codes collide
-	
-	
-	
-	// {"left" 123 "left" 456 "right" 789} should= {"left" 123} + {"left" 456 "right" 789} when all key hash codes collide and duplicate keys are present
-	
-	@Test
-	public void testBitmapIndexedNodeAndArrayNodeSplicerNoCollision() {
-	
-	    final int shift = 5;
-	
-	    final INode leftNode1  = NodeUtils.create(shift, new HashCodeKey("left" + 0, 0 * 32), 0);
-	
-	    INode leftNode2 = leftNode1;
-	    for (int i = 1; i < 18; i++) {
-	        leftNode2 = leftNode2.assoc(shift, i * 32 , new HashCodeKey("left" + i, i * 32), i, new Box(null));
-	    }
-	    final ArrayNode expected = (ArrayNode) leftNode2;
-	
-	    INode rightNode1 = BitmapIndexedNode.EMPTY;
-	    for (int i = 1; i < 18; i++) {
-	        rightNode1 = rightNode1.assoc(shift, i * 32 , new HashCodeKey("left" + i, i * 32), i, new Box(null));
-	    }
-	
-	    final Duplications duplications = new Duplications(0);
-	    final ArrayNode actual = (ArrayNode)  new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
-	    // TODO: numDuplicates
-	
-	    assertArrayNodeEquals(actual, expected);
+	INode expected = leftNode;
+	INode rightNode = BitmapIndexedNode.EMPTY;
+	for (int i = 1; i < 18; i++) {
+	    final int hash = i * 32;
+	    final Object key = new HashCodeKey("left" + i, hash);
+	    final Object value = i;
+	    expected = expected.assoc(shift, hash , key, value, new Box(null));
+	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
 	}
+	
+	final Duplications duplications = new Duplications(0);
+	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode, 0, null, rightNode);
 
-	//-----------------------------------------------------
-	
-	// BIN(a) | BIN(b) -> BIN(a, b)
-	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456}
-	
-	
-	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456} when key hash codes collide
-	
-	
-	
-	// {"duplicate" 123 "duplicate" 456} should= {"duplicate" 123} + {"duplicate" 456}
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when right key hash codes collide
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when all key hash codes collide
-	
-	
-	
-	// {"left" 123 "left" 456 "right" 789} should= {"left" 123} + {"left" 456 "right" 789} when all key hash codes collide and duplicate keys are present
-	
-	@Test
-	public void testBitmapIndexedNodeAndArrayNodeSplicerCollision() {
-	
-	    final int shift = 5;
-	
-	    final INode leftNode1  = NodeUtils.create(shift, new HashCodeKey("initial-left" + 0, 0 * 32), 0);
-	
-	    INode leftNode2 = leftNode1;
-	    for (int i = 0; i < 17; i++) {
-	        leftNode2 = leftNode2.assoc(shift, i * 32 , new HashCodeKey("left" + i, i * 32), i, new Box(null));
-	    }
-	    final ArrayNode expected = (ArrayNode) leftNode2;
-	
-	    INode rightNode1 = BitmapIndexedNode.EMPTY;
-	    for (int i = 0; i < 17; i++) {
-	        rightNode1 = rightNode1.assoc(shift, i * 32 , new HashCodeKey("left" + i, i * 32), i, new Box(null));
-	    }
-	
-	    final Duplications duplications = new Duplications(0);
-	    final ArrayNode actual = (ArrayNode) new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
-	    // TODO: numDuplicates
-	
-	    assertEquals(actual.count, expected.count);
-	    assertHashCollisionNodeEquals((HashCollisionNode) actual.array[0], (HashCollisionNode) expected.array[0]);
-	    for (int i = 1; i < 17; i++) {
-	        assertBitmapIndexedNodeEquals((BitmapIndexedNode) actual.array[i], (BitmapIndexedNode) expected.array[i]);
-	    }
-	}
+	assertEquals(0, duplications.duplications);
+	assertNodeEquals(actual, expected);
+    }
 
-	//-----------------------------------------------------
+    @Test
+    public void testCollision() {
 	
-	// BIN(a) | BIN(b) -> BIN(a, b)
+	final int shift = 5;
 	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456}
+	final INode leftNode  = NodeUtils.create(shift, new HashCodeKey("initial-left" + 0, 0 * 32), 0);
 	
-	
-	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456} when key hash codes collide
-	
-	
-	
-	// {"duplicate" 123 "duplicate" 456} should= {"duplicate" 123} + {"duplicate" 456}
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when right key hash codes collide
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when all key hash codes collide
-	
-	
-	
-	// {"left" 123 "left" 456 "right" 789} should= {"left" 123} + {"left" 456 "right" 789} when all key hash codes collide and duplicate keys are present
-	
-	@Test
-	public void testBitmapIndexedNodeAndArrayNodeSplicerDuplication() {
-	
-	    final int shift = 5;
-	
-	    final INode leftNode1  = NodeUtils.create(shift, new HashCodeKey("left" + 0, 0 * 32), 0);
-	
-	    INode leftNode2 = leftNode1;
-	    for (int i = 0; i < 17; i++) {
-	        leftNode2 = leftNode2.assoc(shift, i * 32 , new HashCodeKey("left" + i, i * 32), i, new Box(null));
-	    }
-	    final ArrayNode expected = (ArrayNode) leftNode2;
-	
-	    INode rightNode1 = BitmapIndexedNode.EMPTY;
-	    for (int i = 0; i < 17; i++) {
-	        rightNode1 = rightNode1.assoc(shift, i * 32 , new HashCodeKey("left" + i, i * 32), i, new Box(null));
-	    }
-	
-	    final Duplications duplications = new Duplications(0);
-	    final ArrayNode actual = (ArrayNode) new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
-	    // TODO: numDuplicates
-	
-	    assertEquals(actual.count, expected.count);
-	    for (int i = 0; i < 17; i++) {
-	        assertBitmapIndexedNodeEquals((BitmapIndexedNode) actual.array[i], (BitmapIndexedNode) expected.array[i]);
-	    }
+	INode expected = leftNode;
+	INode rightNode = BitmapIndexedNode.EMPTY;
+	for (int i = 0; i < 17; i++) {
+	    final int hash = i * 32;
+	    final Object key = new HashCodeKey("left" + i, hash);
+	    final Object value = i;
+	    expected = expected.assoc(shift, hash , key, value, new Box(null));
+	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
 	}
+	
+	final Duplications duplications = new Duplications(0);
+	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode, 0, null, rightNode);
+
+	assertEquals(0, duplications.duplications);
+	assertNodeEquals(actual, expected);
+    }
+
+    @Test
+    public void testDuplication() {
+	
+	final int shift = 5;
+	
+	final INode leftNode  = NodeUtils.create(shift, new HashCodeKey("left" + 0, 0 * 32), 0);
+	
+	INode expected = leftNode;
+	INode rightNode = BitmapIndexedNode.EMPTY;
+	for (int i = 0; i < 17; i++) {
+	    final int hash = i * 32;
+	    final Object key = new HashCodeKey("left" + i, hash);
+	    final Object value = i;
+	    expected = expected.assoc(shift, hash , key, value, new Box(null));
+	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
+	}
+	
+	final Duplications duplications = new Duplications(0);
+	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode, 0, null, rightNode);
+
+	assertEquals(1, duplications.duplications);
+	assertNodeEquals(actual, expected);
+    }
 
 }
