@@ -75,13 +75,7 @@ public class NodeUtils {
 	}
 
 	// HashMap
-	
-	
-	
-	
-	
-	
-	
+
 	// this could be prettier and maybe faster if PersistentHashMap
 	// was refactored but it is not part of seqspert :-(
 	

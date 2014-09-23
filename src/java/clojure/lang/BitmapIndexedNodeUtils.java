@@ -9,16 +9,24 @@ public class BitmapIndexedNodeUtils {
 	return 1 << PersistentHashMap.mask(hash, shift);
     }
 
-    public static BitmapIndexedNode create(int bits, INode node) {
+    public static BitmapIndexedNode create(int index, INode node) {
 	return new BitmapIndexedNode(null,
-				     1 << bits,
+				     1 << index,
 				     new Object[]{null, node});
     }
 
-    public static  BitmapIndexedNode create(int leftBits, INode leftNode, int rightBits, INode rightNode) {
+    public static  BitmapIndexedNode create(int leftIndex, INode leftNode, int rightIndex, Object rightKey, Object rightValue) {
 	return new BitmapIndexedNode(null,
-				     1 << leftBits | 1 << rightBits,
-				     (leftBits <= rightBits) ?
+				     1 << leftIndex | 1 << rightIndex,
+				     (leftIndex <= rightIndex) ?
+				     new Object[]{null, leftNode, rightKey, rightValue} :
+				     new Object[]{rightKey, rightValue, null, leftNode});
+    }
+
+    public static  BitmapIndexedNode create(int leftIndex, INode leftNode, int rightIndex, INode rightNode) {
+	return new BitmapIndexedNode(null,
+				     1 << leftIndex | 1 << rightIndex,
+				     (leftIndex <= rightIndex) ?
 				     new Object[]{null, leftNode, null, rightNode} :
 				     new Object[]{null, rightNode, null, leftNode});
     }

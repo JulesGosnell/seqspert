@@ -73,10 +73,10 @@ public class HashCollisionNodeUtils {
 	 * equivalent to the union of 'array' and {'key':'value'}
 	 */
 	public static Object[] maybeAdd(Object[] array, int length, Object key, Object value, Duplications duplications) {
-		final int i = keyIndex(array, length, key);
-		return (i == -1) ?
-				append(array, length, length + 2, key, value) :
-					maybeSet(array, i, value, duplications);
+	    final int i = keyIndex(array, length, key);
+	    return (i == -1) ?
+		append(array, length, length + 2, key, value) :
+		maybeSet(array, i, value, duplications);
 	}
 
 
