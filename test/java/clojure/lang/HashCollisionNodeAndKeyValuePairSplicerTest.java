@@ -1,16 +1,12 @@
 package clojure.lang;
 
-import static clojure.lang.TestUtils.assertHashCollisionNodeEquals;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.HashCollisionNode;
-import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestInterface {
@@ -45,7 +41,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 	final int rightHashCode = 3;
 	final Object rightKey = new HashCodeKey("key2", rightHashCode);
 	final Object rightValue = "value2";
-	test(rightHashCode, rightKey, rightKey, false);
+	test(rightHashCode, rightKey, rightValue, false);
     }
 
     @Test
@@ -54,7 +50,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 	final int rightHashCode = hashCode;
 	final Object rightKey = new HashCodeKey("key2", rightHashCode);
 	final Object rightValue = "value2";
-	test(rightHashCode, rightKey, rightKey, false);
+	test(rightHashCode, rightKey, rightValue, false);
     }
 
     @Test
@@ -63,7 +59,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 	final int rightHashCode = hashCode;
 	final Object rightKey = new HashCodeKey("key2", rightHashCode);
 	final Object rightValue = "value2";
-	test(rightHashCode, rightKey, rightKey, false);
+	test(rightHashCode, rightKey, rightValue, false);
     }
 
     @Test
@@ -72,7 +68,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 	final int rightHashCode = hashCode;
 	final Object rightKey = new HashCodeKey("key1", rightHashCode);
 	final Object rightValue = "value2";
-	test(rightHashCode, rightKey, rightKey, false);
+	test(rightHashCode, rightKey, rightValue, false);
     }
 
     @Test
@@ -81,7 +77,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 	final int rightHashCode = hashCode;
 	final Object rightKey = new HashCodeKey("key1", rightHashCode);
 	final Object rightValue = "value1";
-	test(rightHashCode, rightKey, rightKey, false);
+	test(rightHashCode, rightKey, rightValue, true);
     }
 
 }
