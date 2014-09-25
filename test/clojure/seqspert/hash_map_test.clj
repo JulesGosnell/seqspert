@@ -45,6 +45,11 @@
   (hashCode [_] hashcode)
   (toString [_] (str "(" hashcode ":" value ")")))
 
+;; override default print-method which produces e.g. #<...> which
+;; breaks xml test output parser in Jenkins...
+(defmethod clojure.core/print-method MyKey [key ^java.io.Writer writer]
+  (.write writer (str key)))
+
 (deftest collision-test
   (let [k0 (MyKey. :k0 0) v0 "v0"
         k1 (MyKey. :k1 0) v1 "v1"
