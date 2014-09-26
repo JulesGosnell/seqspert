@@ -11,6 +11,34 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class NodeUtils {
 
+
+    //------------------------------------------------------------------------------
+    // Array utils:
+
+    // TODO: rationalise the way cloneAndSet and cloneAndInsert work...
+
+    public static INode[] cloneAndSet(INode[] oldArray, int index, INode node) {
+	final INode[] newArray = oldArray.clone();
+	newArray[index] = node;
+	return newArray;
+    }
+
+    public static Object[] cloneAndSet(Object[] oldArray, int index, Object node) {
+	final Object[] newArray = oldArray.clone();
+	newArray[index] = node;
+	return newArray;
+    }
+
+    public static Object[] cloneAndInsert(Object[] oldArray, int oldLength, int index, INode node) {
+	final Object[] newArray = new Object[oldLength + 2];
+	System.arraycopy(oldArray, 0, newArray, 0, index);
+	newArray[index + 1] = node;
+	System.arraycopy(oldArray, index, newArray, index + 2, oldLength - index);
+	return newArray;
+    }
+
+    //------------------------------------------------------------------------------
+
 	public static INode create(int shift, Object key, Object value) {
 	    return new BitmapIndexedNode(null, BitmapIndexedNodeUtils.bitpos(hash(key), shift), new Object[]{key, value});
 	}

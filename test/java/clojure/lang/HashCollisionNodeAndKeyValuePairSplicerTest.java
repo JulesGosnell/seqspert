@@ -57,15 +57,6 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
     @Override
     public void testDuplication() {
 	final int rightHashCode = hashCode;
-	final Object rightKey = new HashCodeKey("key2", rightHashCode);
-	final Object rightValue = "value2";
-	test(rightHashCode, rightKey, rightValue, false);
-    }
-
-    @Test
-    //@Override
-    public void testSomeIdentical() {
-	final int rightHashCode = hashCode;
 	final Object rightKey = new HashCodeKey("key1", rightHashCode);
 	final Object rightValue = "value2";
 	test(rightHashCode, rightKey, rightValue, false);
@@ -73,7 +64,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
     @Test
     //@Override
-    public void testAllIdentical() {
+    public void testSame() {
 	final int rightHashCode = hashCode;
 	final Object rightKey = new HashCodeKey("key1", rightHashCode);
 	final Object rightValue = "value1";
