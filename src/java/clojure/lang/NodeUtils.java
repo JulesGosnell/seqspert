@@ -43,16 +43,6 @@ public class NodeUtils {
 	    return new BitmapIndexedNode(null, BitmapIndexedNodeUtils.bitpos(hash(key), shift), new Object[]{key, value});
 	}
 
-	// TODO: consider that BINs may morph into ANs as they increase in size...
-	
-	static INode assoc(INode left, int shift, int hash, Object rightKey, Object rightValue, Duplications duplications) {
-	    // TODO: should be able to inline this and avoid Box allocation...
-	    final Box addedLeaf = new Box(null);
-	    final INode node = left.assoc(shift, hash, rightKey, rightValue, addedLeaf);
-	    duplications.duplications += (addedLeaf.val == null ? 1 : 0);
-	    return node;
-	}
-
 	// HashMap
 	
 	// N.B. - this does NOT handle with duplicate keys !!

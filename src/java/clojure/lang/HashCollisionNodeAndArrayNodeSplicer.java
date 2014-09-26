@@ -21,7 +21,7 @@ class HashCollisionNodeAndArrayNodeSplicer extends AbstractSplicer {
 	final int index = PersistentHashMap.mask(rightHash, shift);
 	final INode subNode = rightArray[index];
 	return (subNode == null) ?
-	    new ArrayNode(null, rightNode.count + 1, cloneAndSet(rightArray, index, leftNode)) :
+	    new ArrayNode(null, rightNode.count + 1, cloneAndSet(rightArray, index + 1, leftNode)) :
 	    NodeUtils.splice(shift, duplications, null, leftNode, 0, null, subNode);
 	// TODO: we are passing 0 as rightHash - need to make sure that it is never used...
     }
