@@ -63,13 +63,4 @@ public class TestUtils {
 	}
     }
 
-    
-    // integrate Box with Duplications for simpler assoc calls...
-    static INode assoc(INode left, int shift, int hash, Object rightKey, Object rightValue, Duplications duplications) {
-	final Box addedLeaf = new Box(null);
-	final INode node = left.assoc(shift, hash, rightKey, rightValue, addedLeaf);
-	duplications.duplications += (addedLeaf.val == null ? 1 : 0);
-	return node;
-    }
-    
 }

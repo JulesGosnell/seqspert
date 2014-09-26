@@ -101,4 +101,13 @@ public class NodeUtils {
 		return (key != null) ? 0 : (value instanceof BitmapIndexedNode) ? 1 : (value instanceof ArrayNode) ? 3 : 2;
 	}
 
+    // TODO: move to TestUtils
+    // integrate Box with Duplications for simpler assoc calls...
+    static INode assoc(INode left, int shift, int hash, Object rightKey, Object rightValue, Duplications duplications) {
+	final Box addedLeaf = new Box(null);
+	final INode node = left.assoc(shift, hash, rightKey, rightValue, addedLeaf);
+	duplications.duplications += (addedLeaf.val == null ? 1 : 0);
+	return node;
+    }
+    
 }

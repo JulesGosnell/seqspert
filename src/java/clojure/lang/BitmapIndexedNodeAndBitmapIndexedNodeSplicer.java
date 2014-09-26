@@ -51,14 +51,12 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
                     if (rIsNode) {
                         ov = NodeUtils.splice(shift + 5, duplications, null, (INode) lv, rightHash, null, (INode) rv);
                     } else {
-			throw new RuntimeException("NYI");
-                        //ov = NodeUtils.assoc(((INode) lv), shift + 5, hash(rk), rk, rv, duplications);
+                        ov = NodeUtils.assoc(((INode) lv), shift + 5, hash(rk), rk, rv, duplications);
                     }
                 } else {
                     if (rIsNode) {
                         // TODO: may cause unnecessary copying ? think...
-			throw new RuntimeException("NYI");
-                        //ov = NodeUtils.assoc(((INode) rv), shift + 5, hash(lk), lk, lv, duplications);
+                        ov = NodeUtils.assoc(((INode) rv), shift + 5, hash(lk), lk, lv, duplications);
                     } else {
                         if (Util.equiv(lk, rk)) {
                             ok = lk;
