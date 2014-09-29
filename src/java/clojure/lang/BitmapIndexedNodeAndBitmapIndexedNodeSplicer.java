@@ -9,75 +9,83 @@ import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
-	public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
-        // TODO: BIN or AN ?
-	    final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;
-	    final BitmapIndexedNode r = (BitmapIndexedNode) rightValue;
 
-        int lBitmap = l.bitmap;
-        int rBitmap = r.bitmap;
-        Object[] lArray = l.array;
-        Object[] rArray = r.array;
+    public INode splice(int shift, Duplications duplications,
+			Object leftKey, Object leftValue,
+			int rightHash, Object rightKey, Object rightValue) {
+    
+	// TODO: BIN or AN ?
+	final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
+	final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
 
-        int oBitmap = lBitmap | rBitmap;
-        Object[] oArray = new Object[Integer.bitCount(oBitmap) * 2]; // nasty - but we need to know before we start the loop
-        int lPosition = 0;
-        int rPosition = 0;
-        int oPosition = 0;
-        for (int i = 0; i < 32; i++)
-        {
-            int mask = 1 << i;
-            boolean lb = ((lBitmap & mask) != 0);
-            boolean rb = ((rBitmap & mask) != 0);
+        final int leftBitmap = leftNode.bitmap;
+        final Object[] leftArray = leftNode.array;
+        final int rightBitmap = rightNode.bitmap;
+        final Object[] rightArray = rightNode.array;
 
-            if (lb && !rb) {
-                oArray[oPosition++] = lArray[lPosition++];
-                oArray[oPosition++] = lArray[lPosition++];
-            } else if (rb && !lb) {
-                oArray[oPosition++] = rArray[rPosition++];
-                oArray[oPosition++] = rArray[rPosition++];
-            } else if  (lb && rb) {
-                Object lk = lArray[lPosition++];
-                Object lv = lArray[lPosition++];
-                Object rk = rArray[rPosition++];
-                Object rv = rArray[rPosition++];
-                Object ok= null;
-                Object ov = null;
+	// if neither of our inputs are empty, then we must always return a fresh node...
+	// not sure whether this is always the case...
+	// what happens is we splice together two empty maps ? TODO
+	assert(leftBitmap != 0);
+	assert(rightBitmap != 0);
 
-                // splice two nodes...
-                boolean lIsNode = lv instanceof INode;
-                boolean rIsNode = rv instanceof INode;
-                if (lIsNode) {
-                    if (rIsNode) {
-                        ov = NodeUtils.splice(shift + 5, duplications, null, (INode) lv, rightHash, null, (INode) rv);
-                    } else {
-                        ov = NodeUtils.assoc(((INode) lv), shift + 5, hash(rk), rk, rv, duplications);
-                    }
-                } else {
-                    if (rIsNode) {
-                        // TODO: may cause unnecessary copying ? think...
-                        ov = NodeUtils.assoc(((INode) rv), shift + 5, hash(lk), lk, lv, duplications);
-                    } else {
-                        if (Util.equiv(lk, rk)) {
-                            ok = lk;
-                            ov = rv; // overwrite from right ?
-                            duplications.duplications++;
-                        } else {
-                            // TODO - does not work anymore...
-                            final int lkHash = hash(lk);
-                            final int rkHash = hash(rk);
-                            ov = (lkHash == rkHash) ?
-                                    new HashCollisionNode(null, lkHash, 2, new Object[]{lk, lv, rk, rv}) :
-                                    NodeUtils.create(shift + 5, lk, lv, rkHash, rk, rv);
-                        }
-                    }
-                }
+        final int newBitmap = leftBitmap | rightBitmap;
+	final int newBitCount = Integer.bitCount(newBitmap);
+        final Object[] newArray = new Object[newBitCount * 2]; // nasty - but we need to know...
 
-                oArray[oPosition++] = ok;
-                oArray[oPosition++] = ov;
-            }
-        }
+	if (newBitCount > 16) {
+	    // output will be an ArrayNode...
+	    throw new RuntimeException("NIY");
+	} else {
+	    // output will be a BitmapIndexedNode or a HashCollisionNode
+	    int lPosition = 0;
+	    int rPosition = 0;
+	    int oPosition = 0;
+	    for (int i = 0; i < 32; i++)
+		{
+		    int mask = 1 << i;
+		    boolean lb = ((leftBitmap & mask) != 0);
+		    boolean rb = ((rightBitmap & mask) != 0);
 
-        return new PersistentHashMap.BitmapIndexedNode(new AtomicReference<Thread>(), oBitmap, oArray);
+		    // TODO - only check one side in each test...
+		    // maybe we should make this check in splice() ?
+		    if (lb && !rb) {
+			newArray[oPosition++] = leftArray[lPosition++];
+			newArray[oPosition++] = leftArray[lPosition++];
+		    } else if (rb && !lb) {
+			newArray[oPosition++] = rightArray[rPosition++];
+			newArray[oPosition++] = rightArray[rPosition++];
+		    } else if  (lb && rb) {
+			Object lk = leftArray[lPosition++];
+			Object lv = leftArray[lPosition++];
+			Object rk = rightArray[rPosition++];
+			Object rv = rightArray[rPosition++];
+
+			// TODO: ouch
+			final int rh = rv instanceof INode ?
+			    rv instanceof HashCollisionNode ? ((HashCollisionNode)rv).hash :
+			    0 :
+			    hash(rv);
+			
+			final INode newNode = NodeUtils.splice(shift + 5, duplications, lk, lv, rh, rk, rv);
+			if (newNode == null) {
+			    // we must have spliced two leaves giving a result of a single leaf...
+			    // the key must be unchanged
+			    newArray[oPosition++] = lk;
+			    // what is the value ? TODO: ouch - expensive and duplicate computation
+			    newArray[oPosition++] = Util.equiv(lv, rv) ? lv : rv;
+			} else {
+			    // result was a Node...
+			    if (newBitCount == 1 && newNode instanceof HashCollisionNode)
+				return newNode; // TODO - yeugh...
+			    
+			    newArray[oPosition++] = null;
+			    newArray[oPosition++] = newNode;
+			}
+		    }
+		}
+
+	    return new PersistentHashMap.BitmapIndexedNode(new AtomicReference<Thread>(), newBitmap, newArray);
 	}
+    }
 }

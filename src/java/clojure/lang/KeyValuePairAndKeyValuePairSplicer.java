@@ -9,8 +9,9 @@ class KeyValuePairAndKeyValuePairSplicer extends AbstractSplicer {
         if (Util.equiv(leftKey, rightKey)) {
             duplications.duplications++;
             // TODO: I think that this is a problem - we should be returning a kvpair NOT a new Node
-            throw new UnsupportedOperationException("AARGH! need big code change...");
+            //throw new UnsupportedOperationException("AARGH! need big code change...");
             //return createNode(shift, leftKey, leftValue);
+	    return null;
         } else {
             // collision / no collision
             return NodeUtils.create(shift, leftKey, leftValue, rightHash, rightKey, rightValue);
