@@ -3,10 +3,12 @@ package clojure.lang;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-// TODO: untested
 class KeyValuePairAndHashCollisionNodeSplicer extends AbstractSplicer {
+	
     public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
 
+    	// TODO - what if hashCodes do not collide ?
+    	
         final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
 
         final int length = (rightNode.count + 1) * 2;
@@ -32,4 +34,5 @@ class KeyValuePairAndHashCollisionNodeSplicer extends AbstractSplicer {
         }
         return new HashCollisionNode(null, rightNode.hash, j / 2, HashCollisionNodeUtils.trim(array, j));
     }
+    
 }

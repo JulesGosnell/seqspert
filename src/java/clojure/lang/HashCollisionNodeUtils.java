@@ -8,7 +8,7 @@ import clojure.lang.PersistentHashMap.HashCollisionNode;
 public class HashCollisionNodeUtils {
 
 	// only used for tests
-	public static HashCollisionNode createBinaryHashCollisionNode(int hashCode, Object key0, Object value0, Object key1, Object value1) {
+	public static HashCollisionNode create(int hashCode, Object key0, Object value0, Object key1, Object value1) {
 		final AtomicReference<Thread> edit = null;
 		final int count = 2;
 		final int hash = hashCode;

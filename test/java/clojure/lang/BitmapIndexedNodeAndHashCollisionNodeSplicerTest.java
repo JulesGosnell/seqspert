@@ -44,7 +44,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 	    final Object right1Key = new HashCodeKey("right1", hashCode);
 	    final Object right1Value = 789;
 	    final INode leftNode1 = NodeUtils.create(shift, leftKey, leftValue);
-	    final INode rightNode1 = HashCollisionNodeUtils.createBinaryHashCollisionNode(hashCode, right0Key, right0Value, right1Key, right1Value);
+	    final INode rightNode1 = HashCollisionNodeUtils.create(hashCode, right0Key, right0Value, right1Key, right1Value);
 	
 	    final Splicer splicer = new BitmapIndexedNodeAndHashCollisionNodeSplicer();
 	    final BitmapIndexedNode actual0 = (BitmapIndexedNode) splicer.splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
@@ -101,7 +101,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 	    final Object right1Value = 789;
 	
 	    final INode leftNode1 = NodeUtils.create(shift, leftKey, leftValue);
-	    final INode rightNode1 = HashCollisionNodeUtils.createBinaryHashCollisionNode(hashCode, right0Key, right0Value, right1Key, right1Value);
+	    final INode rightNode1 = HashCollisionNodeUtils.create(hashCode, right0Key, right0Value, right1Key, right1Value);
 	
 	    final Splicer splicer = new BitmapIndexedNodeAndHashCollisionNodeSplicer();
 	    final BitmapIndexedNode actualNode0 = (BitmapIndexedNode) splicer.splice(shift, duplications, null, leftNode1, 0, null, rightNode1);
@@ -117,32 +117,6 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 	    assertEquals(actualNode1.count, expectedNode1.count);
 	    assertArrayEquals(actualNode1.array, expectedNode1.array);
 	}
-
-	//-----------------------------------------------------
-	
-	// BIN(a) | BIN(b) -> BIN(a, b)
-	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456}
-	
-	
-	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456} when key hash codes collide
-	
-	
-	
-	// {"duplicate" 123 "duplicate" 456} should= {"duplicate" 123} + {"duplicate" 456}
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when right key hash codes collide
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when all key hash codes collide
-	
-	
-	
-	// {"left" 123 "left" 456 "right" 789} should= {"left" 123} + {"left" 456 "right" 789} when all key hash codes collide and duplicate keys are present
 	
 	@Test
 	public void testDuplication() {
@@ -158,7 +132,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 	    final Object right1Key = new HashCodeKey("right", hashCode);
 	    final Object right1Value = 789;
 	    final INode leftNode1 = NodeUtils.create(shift, leftKey, leftValue);
-	    final INode rightNode1 = HashCollisionNodeUtils.createBinaryHashCollisionNode(hashCode, right0Key, right0Value, right1Key, right1Value);
+	    final INode rightNode1 = HashCollisionNodeUtils.create(hashCode, right0Key, right0Value, right1Key, right1Value);
 	
 	    final Splicer splicer = new BitmapIndexedNodeAndHashCollisionNodeSplicer();
 	    final BitmapIndexedNode actualNode0 = (BitmapIndexedNode) splicer.splice(shift, duplications, null, leftNode1, 0, null, rightNode1);

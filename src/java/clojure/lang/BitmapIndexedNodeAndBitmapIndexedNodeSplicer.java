@@ -62,10 +62,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
 			Object rv = rightArray[rPosition++];
 
 			// TODO: ouch
-			final int rh = rv instanceof INode ?
-			    rv instanceof HashCollisionNode ? ((HashCollisionNode)rv).hash :
-			    0 :
-			    hash(rv);
+			final int rh = (rk == null ? (rv instanceof HashCollisionNode ? ((HashCollisionNode)rv).hash : 0) : hash(rk));
 			
 			final INode newNode = NodeUtils.splice(shift + 5, duplications, lk, lv, rh, rk, rv);
 			if (newNode == null) {
@@ -76,8 +73,8 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
 			    newArray[oPosition++] = Util.equiv(lv, rv) ? lv : rv;
 			} else {
 			    // result was a Node...
-			    if (newBitCount == 1 && newNode instanceof HashCollisionNode)
-				return newNode; // TODO - yeugh...
+			    //if (newBitCount == 1 && newNode instanceof HashCollisionNode)
+				//return newNode; // TODO - yeugh...
 			    
 			    newArray[oPosition++] = null;
 			    newArray[oPosition++] = newNode;

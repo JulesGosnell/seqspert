@@ -10,6 +10,8 @@ class BitmapIndexedNodeAndArrayNodeSplicer extends AbstractSplicer {
 		final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;
 	    final ArrayNode r = (ArrayNode) rightValue;
 
+	    // TODO: we may not have to make a new Node here !!
+	    
         // make a new array
         final INode[] array = new INode[32];
 

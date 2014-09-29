@@ -1,13 +1,10 @@
 package clojure.lang;
 
-import static org.junit.Assert.*;
-import static clojure.lang.TestUtils.*;
+import static clojure.lang.TestUtils.assertNodeEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.junit.Ignore;
 
-import clojure.lang.PersistentHashMap.BitmapIndexedNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
@@ -35,7 +32,6 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 	assertNodeEquals(expected, actual);
     }
 
-    @Ignore
     @Override
     @Test
     public void testCollision() {
