@@ -54,7 +54,8 @@ public class NodeUtils {
 
 	// HashMap
 	
-	// N.B. - this does NOT handle with duplicate keys !!
+    // TODO: this should probably be somewhere else...
+	// N.B. - this does NOT handle duplicate keys !!
 	public static INode create(int shift, Object key1, Object val1, int key2hash, Object key2, Object val2) {
 	    final AtomicReference<Thread> edit = new AtomicReference<Thread>();
 	    int key1hash = hash(key1);

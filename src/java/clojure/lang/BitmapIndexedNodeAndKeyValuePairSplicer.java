@@ -42,7 +42,7 @@ class BitmapIndexedNodeAndKeyValuePairSplicer extends AbstractSplicer {
 					 leftNode.bitmap,
 					 cloneAndSet(leftNode.array,
 						     valueIndex,
-						     NodeUtils.splice(shift, duplications,
+						     NodeUtils.splice(shift + 5, duplications,
 								      subKey, subVal,
 								      rightHash, rightKey, rightValue)));
 
