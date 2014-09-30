@@ -14,7 +14,6 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
     
-	// TODO: BIN or AN ?
 	final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
 	final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
 
@@ -47,42 +46,43 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
 		    boolean lb = ((leftBitmap & mask) != 0);
 		    boolean rb = ((rightBitmap & mask) != 0);
 
-		    // TODO - only check one side in each test...
 		    // maybe we should make this check in splice() ?
-		    if (lb && !rb) {
-			newArray[oPosition++] = leftArray[lPosition++];
-			newArray[oPosition++] = leftArray[lPosition++];
-		    } else if (rb && !lb) {
-			newArray[oPosition++] = rightArray[rPosition++];
-			newArray[oPosition++] = rightArray[rPosition++];
-		    } else if  (lb && rb) {
-			Object lk = leftArray[lPosition++];
-			Object lv = leftArray[lPosition++];
-			Object rk = rightArray[rPosition++];
-			Object rv = rightArray[rPosition++];
+		    if (lb) {
+			if (rb) {
+			    Object lk = leftArray[lPosition++];
+			    Object lv = leftArray[lPosition++];
+			    Object rk = rightArray[rPosition++];
+			    Object rv = rightArray[rPosition++];
 
-			// TODO: ouch
-			final int rh = (rk == null ? (rv instanceof HashCollisionNode ? ((HashCollisionNode)rv).hash : 0) : hash(rk));
+			    // TODO: ouch
+			    final int rh = (rk == null ? (rv instanceof HashCollisionNode ? ((HashCollisionNode)rv).hash : 0) : hash(rk));
 			
-			final INode newNode = NodeUtils.splice(shift + 5, duplications, lk, lv, rh, rk, rv);
-			if (newNode == null) {
-			    // we must have spliced two leaves giving a result of a single leaf...
-			    // the key must be unchanged
-			    newArray[oPosition++] = lk;
-			    // what is the value ? TODO: ouch - expensive and duplicate computation
-			    newArray[oPosition++] = Util.equiv(lv, rv) ? lv : rv;
+			    final INode newNode = NodeUtils.splice(shift + 5, duplications, lk, lv, rh, rk, rv);
+			    if (newNode == null) {
+				// we must have spliced two leaves giving a result of a single leaf...
+				// the key must be unchanged
+				newArray[oPosition++] = lk;
+				// what is the value ? TODO: ouch - expensive and duplicate computation
+				newArray[oPosition++] = Util.equiv(lv, rv) ? lv : rv;
+			    } else {
+				// result was a Node...
+				newArray[oPosition++] = null;
+				newArray[oPosition++] = newNode;
+			    }
 			} else {
-			    // result was a Node...
-			    //if (newBitCount == 1 && newNode instanceof HashCollisionNode)
-				//return newNode; // TODO - yeugh...
-			    
-			    newArray[oPosition++] = null;
-			    newArray[oPosition++] = newNode;
+			    newArray[oPosition++] = leftArray[lPosition++];
+			    newArray[oPosition++] = leftArray[lPosition++];
 			}
+		    } else {
+			if (rb) {
+			    newArray[oPosition++] = rightArray[rPosition++];
+			    newArray[oPosition++] = rightArray[rPosition++];
+			} 
 		    }
 		}
-
+	    
 	    return new PersistentHashMap.BitmapIndexedNode(new AtomicReference<Thread>(), newBitmap, newArray);
 	}
     }
+    
 }
