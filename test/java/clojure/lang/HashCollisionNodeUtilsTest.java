@@ -8,6 +8,7 @@ public class HashCollisionNodeUtilsTest {
 
 	@Test
 	public void test() {
+	    new HashCollisionNodeUtils();
 	}
 
 }

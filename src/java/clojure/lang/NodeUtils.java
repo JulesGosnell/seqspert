@@ -37,6 +37,15 @@ public class NodeUtils {
 	return newArray;
     }
 
+    public static Object[] cloneAndInsert(Object[] oldArray, int oldLength, int index, Object key, Object value) {
+	final Object[] newArray = new Object[oldLength + 2];
+	System.arraycopy(oldArray, 0, newArray, 0, index);
+	newArray[index + 0] = key;
+	newArray[index + 1] = value;
+	System.arraycopy(oldArray, index, newArray, index + 2, oldLength - index);
+	return newArray;
+    }
+
     //------------------------------------------------------------------------------
 
 	public static INode create(int shift, Object key, Object value) {
