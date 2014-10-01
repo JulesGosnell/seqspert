@@ -5,27 +5,42 @@ import clojure.lang.PersistentHashMap.INode;
 
 
 class ArrayNodeAndArrayNodeSplicer extends AbstractSplicer {
-    public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+    public INode splice(int shift, Duplications duplications,
+			Object leftKey, Object leftValue,
+			int rightHash, Object rightKey, Object rightValue) {
         final ArrayNode leftNode = (ArrayNode) leftValue;
         final ArrayNode rightNode = (ArrayNode) rightValue;
 
-        final INode[] array = new INode[32];
+        final INode[] array = new INode[32]; // allocate new array optimistically...
         int empty = 0;
+	int differences = 0;
+	final INode[] leftArray = leftNode.array;
+	final INode[] rightArray = rightNode.array;
         for (int i = 0; i < 32; i++) {
-            final INode l = leftNode.array[i];
-            final INode r = rightNode.array[i];
+            final INode l = leftArray[i];
+            final INode r = rightArray[i];
             final boolean lb = l != null;
             final boolean rb = r != null;
             if (lb) {
-                array[i] = rb ? NodeUtils.splice(shift + 5, duplications, null, l, rightHash, null, r) : l;
+		if (rb) {
+		    final INode n = NodeUtils.splice(shift + 5, duplications, null, l, rightHash, null, r);
+		    if (l != n) differences++;
+		    array[i] = n;
+		} else {
+		    array[i] = l;
+		}
             } else {
-                if (rb)
+                if (rb) {
+		    differences++;
                     array[i] = r;
-                else
+		} else {
                     empty++;
+		}
             }
         }
 
-        return new ArrayNode(null, 32 - empty, array);
+	// now decide whether we need any of the work that we have
+	// done - I expect that we do...
+        return differences > 0 ? new ArrayNode(null, 32 - empty, array) : leftNode;
     }
 }
