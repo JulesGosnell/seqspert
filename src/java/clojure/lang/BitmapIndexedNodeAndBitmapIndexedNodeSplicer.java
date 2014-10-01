@@ -35,7 +35,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
 	// if (newBitCount > 16) {
 	//     // output will be an ArrayNode...
 	//     // TODO: this is breaking Clojure tests...
-	//     throw new RuntimeException("NIY");
+	//     throw new RuntimeException("NYI");
 	// } else 
 	    {
 	    // output will be a BitmapIndexedNode or a HashCollisionNode
