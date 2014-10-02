@@ -1,6 +1,6 @@
 package clojure.lang;
 
-import static clojure.lang.PersistentHashMap.hash;
+import static clojure.lang.NodeUtils.hash;
 import static clojure.lang.NodeUtils.cloneAndInsert;
 import static clojure.lang.NodeUtils.cloneAndSet;
 import static clojure.lang.NodeUtils.splice;

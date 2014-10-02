@@ -1,6 +1,6 @@
 package clojure.lang;
 
-import static clojure.lang.PersistentHashMap.hash;
+import static clojure.lang.NodeUtils.hash;
 
 import clojure.lang.PersistentHashMap.INode;
 

@@ -1,7 +1,5 @@
 package clojure.lang;
 
-import static clojure.lang.PersistentHashMap.hash;
-
 import java.util.concurrent.atomic.AtomicReference;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
@@ -48,68 +46,84 @@ public class NodeUtils {
 
     //------------------------------------------------------------------------------
 
-	public static INode create(int shift, Object key, Object value) {
-	    return new BitmapIndexedNode(null, BitmapIndexedNodeUtils.bitpos(hash(key), shift), new Object[]{key, value});
-	}
+    public static int hash(Object key) {
+	return PersistentHashMap.hash(key);
+    }
 
-	// HashMap
+    public static INode create(int shift, Object key, Object value) {
+	return new BitmapIndexedNode(null, BitmapIndexedNodeUtils.bitpos(hash(key), shift), new Object[]{key, value});
+    }
+
+    public static INode create(int shift, int hash, Object key, Object value) {
+	return new BitmapIndexedNode(null, BitmapIndexedNodeUtils.bitpos(hash, shift), new Object[]{key, value});
+    }
+
+    public static int nodeHash(Object rv) {
+	return (rv instanceof HashCollisionNode ? ((HashCollisionNode)rv).hash : 0);
+    }
+
+    public static int nodeHash(Object rk, Object rv) {
+	return (rk == null ? nodeHash(rv) : hash(rk));
+    }
+
+    // HashMap
 	
     // TODO: this should probably be somewhere else...
-	// N.B. - this does NOT handle duplicate keys !!
-	public static INode create(int shift, Object key1, Object val1, int key2hash, Object key2, Object val2) {
-	    final AtomicReference<Thread> edit = new AtomicReference<Thread>();
-	    int key1hash = hash(key1);
-	    int p1 = PersistentHashMap.mask(key1hash, shift);
-	    int p2 = PersistentHashMap.mask(key2hash, shift);
-	    int bit1 = 1 << p1;
-	    int bit2 = 1 << p2;
-	    int bitmap = bit1 | bit2;
-	    return new BitmapIndexedNode(edit,
-	            bitmap,
-	            (bit1 == bit2) ?
-	                    new Object[]{null,
-	                            (key1hash == key2hash) ?
-	                                    new HashCollisionNode(null, key1hash, 2, new Object[] {key1, val1, key2, val2}) :
-	                                    create(shift + 5, key1, val1, key2hash, key2, val2), null, null, null, null, null, null} :
-	                    (p1 <= p2) ?
-	                            new Object[]{key1, val1, key2, val2, null, null, null, null} :
-	                            new Object[]{key2, val2, key1, val1, null, null, null, null});
-	}
+    // N.B. - this does NOT handle duplicate keys !!
+    public static INode create(int shift, Object key1, Object val1, int key2hash, Object key2, Object val2) {
+	final AtomicReference<Thread> edit = new AtomicReference<Thread>();
+	int key1hash = hash(key1);
+	int p1 = PersistentHashMap.mask(key1hash, shift);
+	int p2 = PersistentHashMap.mask(key2hash, shift);
+	int bit1 = 1 << p1;
+	int bit2 = 1 << p2;
+	int bitmap = bit1 | bit2;
+	return new BitmapIndexedNode(edit,
+				     bitmap,
+				     (bit1 == bit2) ?
+				     new Object[]{null,
+						  (key1hash == key2hash) ?
+						  new HashCollisionNode(null, key1hash, 2, new Object[] {key1, val1, key2, val2}) :
+						  create(shift + 5, key1, val1, key2hash, key2, val2), null, null, null, null, null, null} :
+				     (p1 <= p2) ?
+				     new Object[]{key1, val1, key2, val2, null, null, null, null} :
+				     new Object[]{key2, val2, key1, val1, null, null, null, null});
+    }
 	
 
     static Splicer[] splicers = new Splicer[] {
-            new KeyValuePairAndKeyValuePairSplicer(),
-            new KeyValuePairAndBitmapIndexedNodeSplicer(),
-            new KeyValuePairAndHashCollisionNodeSplicer(),
-            new KeyValuePairAndArrayNodeSplicer(),
-            new BitmapIndexedNodeAndKeyValuePairSplicer(),
-            new BitmapIndexedNodeAndBitmapIndexedNodeSplicer(),
-            new BitmapIndexedNodeAndHashCollisionNodeSplicer(),
-            new BitmapIndexedNodeAndArrayNodeSplicer(),
-            new HashCollisionNodeAndKeyValuePairSplicer(),
-            new HashCollisionNodeAndBitmapIndexedNodeSplicer(),
-            new HashCollisionNodeAndHashCollisionNodeSplicer(),
-            new HashCollisionNodeAndArrayNodeSplicer(),
-            new ArrayNodeAndKeyValuePairSplicer(),
-            new ArrayNodeAndBitmapIndexedNodeSplicer(),
-            new ArrayNodeAndHashCollisionNodeSplicer(),
-            new ArrayNodeAndArrayNodeSplicer(),
-            null
+	new KeyValuePairAndKeyValuePairSplicer(),
+	new KeyValuePairAndBitmapIndexedNodeSplicer(),
+	new KeyValuePairAndHashCollisionNodeSplicer(),
+	new KeyValuePairAndArrayNodeSplicer(),
+	new BitmapIndexedNodeAndKeyValuePairSplicer(),
+	new BitmapIndexedNodeAndBitmapIndexedNodeSplicer(),
+	new BitmapIndexedNodeAndHashCollisionNodeSplicer(),
+	new BitmapIndexedNodeAndArrayNodeSplicer(),
+	new HashCollisionNodeAndKeyValuePairSplicer(),
+	new HashCollisionNodeAndBitmapIndexedNodeSplicer(),
+	new HashCollisionNodeAndHashCollisionNodeSplicer(),
+	new HashCollisionNodeAndArrayNodeSplicer(),
+	new ArrayNodeAndKeyValuePairSplicer(),
+	new ArrayNodeAndBitmapIndexedNodeSplicer(),
+	new ArrayNodeAndHashCollisionNodeSplicer(),
+	new ArrayNodeAndArrayNodeSplicer(),
+	null
     };
 
-	static INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
-		return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
-	            splice(shift, duplications, leftKey, leftValue, rightHash, rightKey, rightValue);
-	}
+    static INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+	return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
+	    splice(shift, duplications, leftKey, leftValue, rightHash, rightKey, rightValue);
+    }
 
-	// HashMap
+    // HashMap
 
-	// this could be prettier and maybe faster if PersistentHashMap
-	// was refactored but it is not part of seqspert :-(
+    // this could be prettier and maybe faster if PersistentHashMap
+    // was refactored but it is not part of seqspert :-(
 	
-	static int typeInt(Object key, Object value) {
-		return (key != null) ? 0 : (value instanceof BitmapIndexedNode) ? 1 : (value instanceof ArrayNode) ? 3 : 2;
-	}
+    static int typeInt(Object key, Object value) {
+	return (key != null) ? 0 : (value instanceof BitmapIndexedNode) ? 1 : (value instanceof ArrayNode) ? 3 : 2;
+    }
 
     // TODO: move to TestUtils
     // integrate Box with Duplications for simpler assoc calls...

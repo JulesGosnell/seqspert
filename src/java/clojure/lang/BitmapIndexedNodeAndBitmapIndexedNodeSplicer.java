@@ -1,6 +1,7 @@
 package clojure.lang;
 
-import static clojure.lang.PersistentHashMap.hash;
+import static clojure.lang.NodeUtils.hash;
+import static clojure.lang.NodeUtils.nodeHash;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -57,7 +58,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
 			    Object rv = rightArray[rPosition++];
 
 			    // TODO: ouch
-			    final int rh = (rk == null ? (rv instanceof HashCollisionNode ? ((HashCollisionNode)rv).hash : 0) : hash(rk));
+			    final int rh = nodeHash(rk, rv);
 			
 			    final INode newNode = NodeUtils.splice(shift + 5, duplications, lk, lv, rh, rk, rv);
 			    if (newNode == null) {
