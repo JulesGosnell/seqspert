@@ -17,7 +17,7 @@ class KeyValuePairAndArrayNodeSplicer extends AbstractSplicer {
         final ArrayNode rightNode = (ArrayNode) rightValue;
 
 	// TODO: can we pass down the hash to avoid work here ?
-	final int index = BitmapIndexedNodeUtils.bitpos(hash(leftKey), shift);
+	final int index = PersistentHashMap.mask(hash(leftKey), shift);
 	
 	final INode subNode = rightNode.array[index];
 
@@ -27,7 +27,7 @@ class KeyValuePairAndArrayNodeSplicer extends AbstractSplicer {
 				 cloneAndSet(rightNode.array, index,
 					     create(shift, hash(leftKey), leftKey, leftValue)));
 	} else {
-	    final INode newNode = splice(shift + 5, duplications, leftKey, leftValue, nodeHash(subNode), null, subNode);
+	    final INode newNode = NodeUtils.splice(shift + 5, duplications, leftKey, leftValue, nodeHash(subNode), null, subNode);
 	    return newNode == subNode ? 
 		rightNode :
 		new ArrayNode(null,

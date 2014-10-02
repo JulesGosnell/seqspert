@@ -1,17 +1,18 @@
 package clojure.lang;
 
-import static org.junit.Assert.*;
-import static clojure.lang.TestUtils.*;
-import static clojure.lang.NodeUtils.*;
+import static clojure.lang.NodeUtils.create;
+import static clojure.lang.NodeUtils.nodeHash;
+import static clojure.lang.TestUtils.assertNodeEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
-import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface {
+	
     final int shift = 0;
     final Splicer splicer = new KeyValuePairAndArrayNodeSplicer();
     
@@ -48,19 +49,16 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 	test(new HashCodeKey("key1", 1), 1, 2, 30, false);
     }
 
-    @Ignore
     @Test
     public void testCollision() {
 	test(new HashCodeKey("collision", 1), 1, 1, 30, false);
     }
 	
-    @Ignore
     @Test
     public void testDuplication() {
 	test(new HashCodeKey("key1", 2), 1, 1, 30, false);
     }
 
-    @Ignore
     @Test
     public void testSame() {
 	test(new HashCodeKey("key1", 1), 1, 1, 30, true);
