@@ -11,26 +11,6 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
-	
-
-	//-----------------------------------------------------
-	
-	// BIN(a) | BIN(b) -> BIN(a, b)
-	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456}
-	
-	
-	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456} when key hash codes collide
-	
-	
-	
-	// {"duplicate" 123 "duplicate" 456} should= {"duplicate" 123} + {"duplicate" 456}
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when right key hash codes collide
-	
 	@Test
 	public void testNoCollision() {
 	
@@ -65,28 +45,6 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 	    assertEquals(actual1.array[3], expected1.array[3]);
 	}
 
-	//-----------------------------------------------------
-	
-	// BIN(a) | BIN(b) -> BIN(a, b)
-	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456}
-	
-	
-	
-	// {"left" 123 "right" 456} should= {"left" 123} + {"right" 456} when key hash codes collide
-	
-	
-	
-	// {"duplicate" 123 "duplicate" 456} should= {"duplicate" 123} + {"duplicate" 456}
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when right key hash codes collide
-	
-	
-	
-	// {"left" 123 "right0" 456 "right1" 789} should= {"left" 123} + {"right0" 456 "right1" 789} when all key hash codes collide
-	
 	@Test
 	public void testCollision() {
 	

@@ -34,8 +34,6 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 	
 	// do the splice
 	final Counts actualDuplications = new Counts(0, 0);
-	System.out.println("RIGHT: " + rightNode.getClass().getSimpleName());
-	System.out.println("EXPEC: " + expected.getClass().getSimpleName());
 	final INode actual = splicer.splice(shift, actualDuplications, leftKey, leftValue, nodeHash(rightNode), null, rightNode);
 
 	// check everything is as expected...
