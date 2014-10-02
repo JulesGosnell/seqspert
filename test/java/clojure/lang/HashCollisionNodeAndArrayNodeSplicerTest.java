@@ -1,14 +1,11 @@
 package clojure.lang;
 
-import static org.junit.Assert.*;
-import static clojure.lang.TestUtils.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.junit.Ignore;
 
-import clojure.lang.PersistentHashMap.ArrayNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class HashCollisionNodeAndArrayNodeSplicerTest
@@ -41,11 +38,11 @@ public class HashCollisionNodeAndArrayNodeSplicerTest
 
 
 	// The actual ArrayNode
-	final Duplications duplications = new Duplications(0);
+	final Counts counts = new Counts(0, 0);
 	final Splicer splicer = new HashCollisionNodeAndArrayNodeSplicer();
-	final INode actual = splicer.splice(shift, duplications, null, leftNode, 0, null, rightNode);
+	final INode actual = splicer.splice(shift, counts, null, leftNode, 0, null, rightNode);
 
-	assertEquals(0, duplications.duplications);
+	assertEquals(0, counts.sameKey);
 	// TODO: Need an HCN inside a BIN - fix impl...
 	// assertNodeEquals(actual, expected);
     }

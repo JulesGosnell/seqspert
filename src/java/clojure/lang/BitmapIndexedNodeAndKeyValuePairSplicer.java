@@ -1,20 +1,15 @@
 package clojure.lang;
 
-import static clojure.lang.PersistentHashMap.hash;
 import static clojure.lang.NodeUtils.cloneAndInsert;
 import static clojure.lang.NodeUtils.cloneAndSet;
-
-import java.util.concurrent.atomic.AtomicReference;
-
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 // TODO: this is pretty much identical to BINAndHCNSplicer - can we reuse the same code ?
 
 class BitmapIndexedNodeAndKeyValuePairSplicer extends AbstractSplicer {
 
-    public INode splice(int shift, Duplications duplications, 
+    public INode splice(int shift, Counts duplications, 
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
 	final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;

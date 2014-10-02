@@ -1,18 +1,14 @@
 package clojure.lang;
 
-import static clojure.lang.PersistentHashMap.hash;
 import static clojure.lang.NodeUtils.cloneAndInsert;
 import static clojure.lang.NodeUtils.cloneAndSet;
-
-import java.util.concurrent.atomic.AtomicReference;
-
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 class BitmapIndexedNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 
-    public INode splice(int shift, Duplications duplications, 
+    public INode splice(int shift, Counts counts, 
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
 	final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
@@ -38,7 +34,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 					 leftNode.bitmap,
 					 cloneAndSet(leftNode.array,
 						     valueIndex,
-						     NodeUtils.splice(shift, duplications,
+						     NodeUtils.splice(shift, counts,
 								      subKey, subVal,
 								      rightHash, rightKey, rightValue)));
 

@@ -2,8 +2,6 @@ package clojure.lang;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import clojure.lang.PersistentHashMap;
-import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
@@ -29,7 +27,7 @@ class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 					  rightBits, rightNode);
     }
     
-    public INode splice(int shift, Duplications duplications,
+    public INode splice(int shift, Counts duplications,
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
 	final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
@@ -40,13 +38,13 @@ class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 	    final int leftLength = leftNode.count * 2;
 	    final int rightLength = rightNode.count* 2;
 	    final Object[] leftArray = leftNode.array;
-	    final int oldDuplications = duplications.duplications;
+	    final int oldDuplications = duplications.sameKey;
 
 	    final Object[] newArray = HashCollisionNodeUtils.maybeAddAll(leftArray, leftLength,
 									 rightNode.array, rightLength,
 									 duplications);
 
-	    final int newDuplications = duplications.duplications - oldDuplications;
+	    final int newDuplications = duplications.sameKey - oldDuplications;
 
 	    return newArray == leftArray ?
 		leftNode :

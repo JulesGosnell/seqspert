@@ -1,13 +1,11 @@
 package clojure.lang;
 
-import static org.junit.Assert.*;
-import static clojure.lang.TestUtils.*;
+import static clojure.lang.TestUtils.assertNodeEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
@@ -29,10 +27,10 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
 	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
 	}
 	
-	final Duplications duplications = new Duplications(0);
-	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode, 0, null, rightNode);
+	final Counts counts = new Counts(0, 0);
+	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, counts, null, leftNode, 0, null, rightNode);
 
-	assertEquals(0, duplications.duplications);
+	assertEquals(0, counts.sameKey);
 	assertNodeEquals(actual, expected);
     }
 
@@ -53,10 +51,10 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
 	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
 	}
 	
-	final Duplications duplications = new Duplications(0);
-	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode, 0, null, rightNode);
+	final Counts counts = new Counts(0, 0);
+	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, counts, null, leftNode, 0, null, rightNode);
 
-	assertEquals(0, duplications.duplications);
+	assertEquals(0, counts.sameKey);
 	assertNodeEquals(actual, expected);
     }
 
@@ -77,10 +75,10 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
 	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
 	}
 	
-	final Duplications duplications = new Duplications(0);
-	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, duplications, null, leftNode, 0, null, rightNode);
+	final Counts counts = new Counts(0, 0);
+	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, counts, null, leftNode, 0, null, rightNode);
 
-	assertEquals(1, duplications.duplications);
+	assertEquals(1, counts.sameKey);
 	assertNodeEquals(actual, expected);
     }
 

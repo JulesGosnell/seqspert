@@ -5,7 +5,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 class KeyValuePairAndHashCollisionNodeSplicer extends AbstractSplicer {
 	
-    public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+    public INode splice(int shift, Counts duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
 
     	// TODO - what if hashCodes do not collide ?
     	
@@ -25,7 +25,7 @@ class KeyValuePairAndHashCollisionNodeSplicer extends AbstractSplicer {
                 // duplication - overwrite lhs k:v pair
                 array[0] = rKey;
                 array[1] = rVal;
-                duplications.duplications++;
+                duplications.sameKey++;
             } else {
                 // simple collision
                 array[j++] = rKey;

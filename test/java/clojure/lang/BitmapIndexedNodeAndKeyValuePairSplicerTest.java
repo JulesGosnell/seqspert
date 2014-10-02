@@ -1,13 +1,11 @@
 package clojure.lang;
 
-import static org.junit.Assert.*;
 import static clojure.lang.TestUtils.assertNodeEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
-import clojure.lang.PersistentHashMap.BitmapIndexedNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestInterface {
@@ -29,10 +27,10 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
 	final INode expected = leftNode.assoc(shift, rightHashCode, rightKey, rightValue, new Box(null));
 
-	final Duplications duplications = new Duplications(0);
+	final Counts duplications = new Counts(0, 0);
 	final INode actual = splicer.splice(shift, duplications, null, leftNode, rightHashCode, rightKey, rightValue);
 	
-	assertEquals(0, duplications.duplications);
+	assertEquals(0, duplications.sameKey);
 	assertNodeEquals(expected, actual);
     }
 
@@ -44,10 +42,10 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
 	final INode expected = leftNode.assoc(shift, leftHashCode, rightKey, rightValue, new Box(null));
 
-	final Duplications duplications = new Duplications(0);
+	final Counts duplications = new Counts(0, 0);
 	final INode actual = splicer.splice(shift, duplications, null, leftNode, leftHashCode, rightKey, rightValue);
 	
-	assertEquals(0, duplications.duplications);
+	assertEquals(0, duplications.sameKey);
 	assertNodeEquals(expected, actual);
     }
 
@@ -59,10 +57,10 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
 	final INode expected = leftNode.assoc(shift, leftHashCode, leftKey, rightValue, new Box(null));
 
-	final Duplications duplications = new Duplications(0);
+	final Counts duplications = new Counts(0, 0);
 	final INode actual = splicer.splice(shift, duplications, null, leftNode, leftHashCode, leftKey, rightValue);
 	
-	assertEquals(1, duplications.duplications);
+	assertEquals(1, duplications.sameKey);
 	assertNodeEquals(expected, actual);
     }
 

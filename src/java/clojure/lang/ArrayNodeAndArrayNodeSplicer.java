@@ -5,7 +5,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 
 class ArrayNodeAndArrayNodeSplicer extends AbstractSplicer {
-    public INode splice(int shift, Duplications duplications,
+    public INode splice(int shift, Counts duplications,
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
         final ArrayNode leftNode = (ArrayNode) leftValue;

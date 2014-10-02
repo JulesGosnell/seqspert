@@ -1,7 +1,8 @@
 package clojure.lang;
 
-import static org.junit.Assert.*;
-import static clojure.lang.TestUtils.*;
+import static clojure.lang.TestUtils.assertArrayNodeEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,11 +41,11 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 	}
 	
 	// do the splice
-	final Duplications actualDuplications = new Duplications(0);
+	final Counts actualDuplications = new Counts(0, 0);
 	final ArrayNode actual = (ArrayNode)splicer.splice(shift, actualDuplications, null, leftNode, 0, null, rightNode);
 
 	// check everything is as expected...
-	assertEquals(expectedDuplications, actualDuplications.duplications);
+	assertEquals(expectedDuplications, actualDuplications.sameKey);
 	if (same)
 	    assertSame(actual, expected);
 	else

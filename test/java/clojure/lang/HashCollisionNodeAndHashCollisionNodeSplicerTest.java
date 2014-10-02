@@ -9,8 +9,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.Test;
 
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
@@ -49,10 +49,10 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 	expected = expected.assoc(edit, shift, key3.hashCode(), key3, value3, addedLeaf);
 	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
 
-	final Duplications duplications = new Duplications(0);
+	final Counts duplications = new Counts(0, 0);
 	final INode actual = NodeUtils.splice(shift, duplications, null, leftNode, rightHashCode, null, rightNode);
 	assertNodeEquals(expected, actual);
-	assertEquals(expectedDuplications, duplications.duplications);
+	assertEquals(expectedDuplications, duplications.sameKey);
     }
 
     final int shift = 0;
@@ -83,9 +83,9 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key3, value3, addedLeaf);
 	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
 
-	final Duplications duplications = new Duplications(0);
+	final Counts duplications = new Counts(0, 0);
 	final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, duplications, null, leftNode, 0, null, rightNode);
-	assertEquals(expectedDuplications, duplications.duplications);
+	assertEquals(expectedDuplications, duplications.sameKey);
 	assertHashCollisionNodeEquals(expected, actual);
 	if (same) assertSame(expected, actual);
     }

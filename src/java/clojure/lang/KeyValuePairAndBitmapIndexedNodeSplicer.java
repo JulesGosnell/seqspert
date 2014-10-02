@@ -1,14 +1,13 @@
 package clojure.lang;
 
 import static clojure.lang.NodeUtils.hash;
-
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 // TODO: untested
 class KeyValuePairAndBitmapIndexedNodeSplicer extends AbstractSplicer {
-    public INode splice(int shift, Duplications duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+    public INode splice(int shift, Counts duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
         final int bit = BitmapIndexedNodeUtils.bitpos(hash(leftKey), shift);
         if((rightNode.bitmap & bit) == 0) {
@@ -24,7 +23,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer extends AbstractSplicer {
             final Object k = rightNode.array[idx];
             if (Util.equiv(leftKey, k)) { // TODO - expensive
                 // duplication - no change
-                duplications.duplications++;
+                duplications.sameKey++;
                 return rightNode;
             } else {
                 // collision...

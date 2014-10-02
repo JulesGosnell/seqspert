@@ -1,19 +1,15 @@
 package clojure.lang;
 
-import static clojure.lang.NodeUtils.hash;
 import static clojure.lang.NodeUtils.cloneAndInsert;
 import static clojure.lang.NodeUtils.cloneAndSet;
-import static clojure.lang.NodeUtils.splice;
-
-import java.util.concurrent.atomic.AtomicReference;
-
+import static clojure.lang.NodeUtils.hash;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 class HashCollisionNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
     
-    public INode splice(int shift, Duplications duplications, 
+    public INode splice(int shift, Counts duplications, 
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
 	final HashCollisionNode leftNode = (HashCollisionNode) leftValue;

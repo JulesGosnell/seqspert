@@ -25,10 +25,10 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 		final INode expected = leftNode.assoc(shift, rightHashCode , rightKey, rightValue, addedLeaf);
 		final int expectedDuplications = (addedLeaf.val == addedLeaf) ? 0 : 1;
 		final Splicer splicer = new HashCollisionNodeAndKeyValuePairSplicer();
-		final Duplications duplications = new Duplications(0);
+		final Counts duplications = new Counts(0, 0);
 		final INode actual =  splicer.splice(shift, duplications, null, leftNode, rightHashCode, rightKey, rightValue);
 
-		assertEquals(expectedDuplications, duplications.duplications);
+		assertEquals(expectedDuplications, duplications.sameKey);
 		if (same) 
 			assertSame(expected, actual);
 		else

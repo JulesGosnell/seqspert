@@ -38,10 +38,10 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
 		final INode rightNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 
 		final Splicer splicer = new KeyValuePairAndHashCollisionNodeSplicer();
-		final Duplications duplications = new Duplications(0);
+		final Counts duplications = new Counts(0, 0);
 		final INode actual =  splicer.splice(shift, duplications, leftKey, leftValue, hashCode, null, rightNode);
 
-		assertEquals(expectedDuplications, duplications.duplications);
+		assertEquals(expectedDuplications, duplications.sameKey);
 		if (same)
 			assertSame(expected, actual);
 		else

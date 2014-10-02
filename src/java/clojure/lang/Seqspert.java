@@ -32,9 +32,9 @@ public class Seqspert {
 	else if (rRoot == null)
 	    return lMap;
 
-        final Duplications duplications = new Duplications(0);
+        final Counts duplications = new Counts(0, 0);
         final PersistentHashMap.INode root = NodeUtils.splice(0, duplications, null, lRoot, 0, null, rRoot);
-	final int count = lMap.count + rMap.count - duplications.duplications;
+	final int count = lMap.count + rMap.count - duplications.sameKey;
 	return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);
     }
 	

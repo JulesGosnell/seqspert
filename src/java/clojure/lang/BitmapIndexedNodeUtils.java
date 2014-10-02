@@ -1,7 +1,7 @@
 package clojure.lang;
 
-import clojure.lang.PersistentHashMap.INode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeUtils {
 	

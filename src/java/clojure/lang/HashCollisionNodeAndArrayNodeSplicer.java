@@ -1,17 +1,13 @@
 package clojure.lang;
 
 import static clojure.lang.NodeUtils.cloneAndSet;
-
-import java.util.concurrent.atomic.AtomicReference;
-
-import clojure.lang.PersistentHashMap;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 class HashCollisionNodeAndArrayNodeSplicer extends AbstractSplicer {
 
-    public INode splice(int shift, Duplications duplications,
+    public INode splice(int shift, Counts counts,
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
 	final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
@@ -22,7 +18,7 @@ class HashCollisionNodeAndArrayNodeSplicer extends AbstractSplicer {
 	final INode subNode = rightArray[index];
 	return (subNode == null) ?
 	    new ArrayNode(null, rightNode.count + 1, cloneAndSet(rightArray, index + 1, leftNode)) :
-	    NodeUtils.splice(shift, duplications, null, leftNode, 0, null, subNode);
+	    NodeUtils.splice(shift, counts, null, leftNode, 0, null, subNode);
 	// TODO: we are passing 0 as rightHash - need to make sure that it is never used...
     }
 
