@@ -5,13 +5,13 @@ import clojure.lang.PersistentHashMap.INode;
 
 // TODO: untested
 class KeyValuePairAndKeyValuePairSplicer extends AbstractSplicer {
-    public INode splice(int shift, Counts duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+    public INode splice(int shift, Counts counts, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
     	final int leftHash = hash(leftKey);
     	// TODO: might be more efficient to check for reference equality first...
     	if (leftHash == rightHash) {
     		if (Util.equiv(leftKey, rightKey)) {
     			// duplication
-                duplications.sameKey++;
+                counts.sameKey++;
                 return null;
     		} else {
     			// collision

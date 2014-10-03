@@ -9,7 +9,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 class BitmapIndexedNodeAndKeyValuePairSplicer extends AbstractSplicer {
 
-    public INode splice(int shift, Counts duplications, 
+    public INode splice(int shift, Counts counts, 
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
 	final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
@@ -37,7 +37,7 @@ class BitmapIndexedNodeAndKeyValuePairSplicer extends AbstractSplicer {
 					 leftNode.bitmap,
 					 cloneAndSet(leftNode.array,
 						     valueIndex,
-						     NodeUtils.splice(shift + 5, duplications,
+						     NodeUtils.splice(shift + 5, counts,
 								      subKey, subVal,
 								      rightHash, rightKey, rightValue)));
 

@@ -24,24 +24,24 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
 		final INode leftNode = NodeUtils.create(shift, leftKey, leftValue);
 
 		Box addedLeaf = null;
-		int expectedDuplications = 0;
+		int expectedCounts = 0;
 		INode expected = leftNode;
 		
 		addedLeaf = new Box(null);
 		expected = expected.assoc(shift, key0.hashCode() , key0, value0, addedLeaf);
-		expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+		expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 
 		addedLeaf = new Box(null);
 		expected = expected.assoc(shift, key1.hashCode() , key1, value1, addedLeaf);
-		expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+		expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 
 		final INode rightNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 
 		final Splicer splicer = new KeyValuePairAndHashCollisionNodeSplicer();
-		final Counts duplications = new Counts(0, 0);
-		final INode actual =  splicer.splice(shift, duplications, leftKey, leftValue, hashCode, null, rightNode);
+		final Counts counts = new Counts(0, 0);
+		final INode actual =  splicer.splice(shift, counts, leftKey, leftValue, hashCode, null, rightNode);
 
-		assertEquals(expectedDuplications, duplications.sameKey);
+		assertEquals(expectedCounts, counts.sameKey);
 		if (same)
 			assertSame(expected, actual);
 		else

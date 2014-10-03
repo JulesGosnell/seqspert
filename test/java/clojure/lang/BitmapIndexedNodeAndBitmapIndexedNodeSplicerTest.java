@@ -13,7 +13,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     @Test
     public void testNoCollision() {
 	
-	final Counts duplications = new Counts(0, 0);
+	final Counts counts = new Counts(0, 0);
 	final int shift = 0;
 	
 	final Object leftKey = "left";
@@ -26,9 +26,9 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 	final INode expected = leftNode.assoc(shift, PersistentHashMap.hash(rightKey), rightKey, rightValue, new Box(null));
 
 	final Splicer splicer = new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
-	final INode actual = splicer.splice(shift, duplications, null, leftNode, PersistentHashMap.hash(rightKey), null, rightNode);
+	final INode actual = splicer.splice(shift, counts, null, leftNode, PersistentHashMap.hash(rightKey), null, rightNode);
 	
-	assertEquals(0, duplications.sameKey);
+	assertEquals(0, counts.sameKey);
 	assertNodeEquals(expected, actual);
     }
 
@@ -36,7 +36,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     @Test
     public void testCollision() {
 	
-	final Counts duplications = new Counts(0, 0);
+	final Counts counts = new Counts(0, 0);
 	final int shift = 0;
 	
 	final int hashCode = 3;//PersistentHashMap.hash("hashCode");
@@ -51,9 +51,9 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 	final INode expected = leftNode.assoc(shift, hashCode, rightKey, rightValue, new Box(null));
 
 	final Splicer splicer = new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
-	final INode actual = splicer.splice(shift, duplications, null, leftNode, hashCode, null, rightNode);
+	final INode actual = splicer.splice(shift, counts, null, leftNode, hashCode, null, rightNode);
 
-	assertEquals(0, duplications.sameKey);
+	assertEquals(0, counts.sameKey);
 	assertNodeEquals(expected, actual);
     }
 
@@ -61,7 +61,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     @Test
     public void testDuplication() {
 	
-	final Counts duplications = new Counts(0, 0);
+	final Counts counts = new Counts(0, 0);
 	final int shift = 5;
 	
 	final Object key = "duplicate";
@@ -74,9 +74,9 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 	final INode expected =leftNode.assoc(shift, hashCode, key, rightValue, new Box(null));
 
 	final Splicer splicer = new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
-	final INode actual = splicer.splice(shift, duplications, null, leftNode, 0, null, rightNode);
+	final INode actual = splicer.splice(shift, counts, null, leftNode, 0, null, rightNode);
 
-	assertEquals(1, duplications.sameKey);
+	assertEquals(1, counts.sameKey);
 	assertNodeEquals(expected, actual);
     }
 

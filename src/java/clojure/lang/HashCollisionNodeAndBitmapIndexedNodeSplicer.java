@@ -9,7 +9,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 class HashCollisionNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
     
-    public INode splice(int shift, Counts duplications, 
+    public INode splice(int shift, Counts counts, 
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
 	final HashCollisionNode leftNode = (HashCollisionNode) leftValue;
@@ -36,7 +36,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
 					 cloneAndSet(rightNode.array,
 						     index,
 						     (Object) splice(shift, 
-								     duplications,
+								     counts,
 								     null,
 								     leftNode,
 								     subKey == null ? 0 : hash(subKey),

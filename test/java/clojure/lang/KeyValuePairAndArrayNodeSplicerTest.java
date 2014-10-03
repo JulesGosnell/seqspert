@@ -20,7 +20,7 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 
 	// set up rhs and expected
 	INode expected = create(shift, leftKey, leftValue);
-	int expectedDuplications = 0;
+	int expectedCounts = 0;
 	INode rightNode = BitmapIndexedNode.EMPTY;
 	for (int i = rightStart; i < rightEnd + 1; i++) {
 	    final int hashCode = i;
@@ -29,15 +29,15 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 	    rightNode = rightNode.assoc(shift, hashCode, key, value, new Box(null));
 	    final Box addedLeaf = new Box(null);
 	    expected = expected.assoc(shift, hashCode , key, value, addedLeaf);
-	    expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+	    expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 	}
 	
 	// do the splice
-	final Counts actualDuplications = new Counts(0, 0);
-	final INode actual = splicer.splice(shift, actualDuplications, leftKey, leftValue, nodeHash(rightNode), null, rightNode);
+	final Counts actualCounts = new Counts(0, 0);
+	final INode actual = splicer.splice(shift, actualCounts, leftKey, leftValue, nodeHash(rightNode), null, rightNode);
 
 	// check everything is as expected...
-	assertEquals(expectedDuplications, actualDuplications.sameKey);
+	assertEquals(expectedCounts, actualCounts.sameKey);
 	assertNodeEquals(expected, actual);
     }
 

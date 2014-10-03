@@ -9,7 +9,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
 
-    public INode splice(int shift, Counts duplications,
+    public INode splice(int shift, Counts counts,
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
     
@@ -58,7 +58,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
 			    // TODO: ouch
 			    final int rh = nodeHash(rk, rv);
 			
-			    final INode newNode = NodeUtils.splice(shift + 5, duplications, lk, lv, rh, rk, rv);
+			    final INode newNode = NodeUtils.splice(shift + 5, counts, lk, lv, rh, rk, rv);
 			    if (newNode == null) {
 				// we must have spliced two leaves giving a result of a single leaf...
 				// the key must be unchanged

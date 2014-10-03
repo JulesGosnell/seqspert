@@ -111,9 +111,9 @@ public class NodeUtils {
 	null
     };
 
-    static INode splice(int shift, Counts duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+    static INode splice(int shift, Counts counts, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
 	return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
-	    splice(shift, duplications, leftKey, leftValue, rightHash, rightKey, rightValue);
+	    splice(shift, counts, leftKey, leftValue, rightHash, rightKey, rightValue);
     }
 
     // HashMap
@@ -127,10 +127,10 @@ public class NodeUtils {
 
     // TODO: move to TestUtils
     // integrate Box with Counts for simpler assoc calls...
-    static INode assoc(INode left, int shift, int hash, Object rightKey, Object rightValue, Counts duplications) {
+    static INode assoc(INode left, int shift, int hash, Object rightKey, Object rightValue, Counts counts) {
 	final Box addedLeaf = new Box(null);
 	final INode node = left.assoc(shift, hash, rightKey, rightValue, addedLeaf);
-	duplications.sameKey += (addedLeaf.val == null ? 1 : 0);
+	counts.sameKey += (addedLeaf.val == null ? 1 : 0);
 	return node;
     }
     

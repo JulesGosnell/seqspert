@@ -35,24 +35,24 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 	final AtomicReference<Thread> edit = new AtomicReference<Thread>();
 	INode expected = BitmapIndexedNode.EMPTY;
 	Box addedLeaf = null;
-	int expectedDuplications = 0;
+	int expectedCounts = 0;
 	addedLeaf = new Box(null);
 	expected = expected.assoc(edit, shift, key0.hashCode(), key0, value0, addedLeaf);
-	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+	expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 	addedLeaf = new Box(null);	
 	expected = expected.assoc(edit, shift, key1.hashCode(), key1, value1, addedLeaf);
-	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+	expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 	addedLeaf = new Box(null);
 	expected = expected.assoc(edit, shift, key2.hashCode(), key2, value2, addedLeaf);
-	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+	expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 	addedLeaf = new Box(null);	
 	expected = expected.assoc(edit, shift, key3.hashCode(), key3, value3, addedLeaf);
-	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+	expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 
-	final Counts duplications = new Counts(0, 0);
-	final INode actual = NodeUtils.splice(shift, duplications, null, leftNode, rightHashCode, null, rightNode);
+	final Counts counts = new Counts(0, 0);
+	final INode actual = NodeUtils.splice(shift, counts, null, leftNode, rightHashCode, null, rightNode);
 	assertNodeEquals(expected, actual);
-	assertEquals(expectedDuplications, duplications.sameKey);
+	assertEquals(expectedCounts, counts.sameKey);
     }
 
     final int shift = 0;
@@ -75,17 +75,17 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 	final AtomicReference<Thread> edit = new AtomicReference<Thread>();
 	HashCollisionNode expected = (HashCollisionNode) leftNode;
 	Box addedLeaf = null;
-	int expectedDuplications = 0;
+	int expectedCounts = 0;
 	addedLeaf = new Box(null);
 	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key2, value2, addedLeaf);
-	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+	expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 	addedLeaf = new Box(null);	
 	expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key3, value3, addedLeaf);
-	expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+	expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 
-	final Counts duplications = new Counts(0, 0);
-	final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, duplications, null, leftNode, 0, null, rightNode);
-	assertEquals(expectedDuplications, duplications.sameKey);
+	final Counts counts = new Counts(0, 0);
+	final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, counts, null, leftNode, 0, null, rightNode);
+	assertEquals(expectedCounts, counts.sameKey);
 	assertHashCollisionNodeEquals(expected, actual);
 	if (same) assertSame(expected, actual);
     }

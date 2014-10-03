@@ -27,7 +27,7 @@ class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 					  rightBits, rightNode);
     }
     
-    public INode splice(int shift, Counts duplications,
+    public INode splice(int shift, Counts counts,
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
 	final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
@@ -38,19 +38,19 @@ class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
 	    final int leftLength = leftNode.count * 2;
 	    final int rightLength = rightNode.count* 2;
 	    final Object[] leftArray = leftNode.array;
-	    final int oldDuplications = duplications.sameKey;
+	    final int oldCounts = counts.sameKey;
 
 	    final Object[] newArray = HashCollisionNodeUtils.maybeAddAll(leftArray, leftLength,
 									 rightNode.array, rightLength,
-									 duplications);
+									 counts);
 
-	    final int newDuplications = duplications.sameKey - oldDuplications;
+	    final int newCounts = counts.sameKey - oldCounts;
 
 	    return newArray == leftArray ?
 		leftNode :
 		new HashCollisionNode(null,
 				      leftNode.hash,
-				      ((leftLength + rightLength) / 2) - newDuplications,
+				      ((leftLength + rightLength) / 2) - newCounts,
 				      newArray);
 	} else {
 	    

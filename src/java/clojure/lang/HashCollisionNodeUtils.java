@@ -57,8 +57,8 @@ public class HashCollisionNodeUtils {
 	 * return an array equivalent to 'array' with the value at 'index'
 	 * set to 'value'.
 	 */
-	public static Object[] maybeSet(Object[] array, int index, Object value, Counts duplications) {
-		duplications.sameKey++;
+	public static Object[] maybeSet(Object[] array, int index, Object value, Counts counts) {
+		counts.sameKey++;
 		if (Util.equiv(array[index + 1], value)) {
 			return array;
 		} else {
@@ -72,11 +72,11 @@ public class HashCollisionNodeUtils {
 	 * return an array, the set of which's key:value pairs is
 	 * equivalent to the union of 'array' and {'key':'value'}
 	 */
-	public static Object[] maybeAdd(Object[] array, int length, Object key, Object value, Counts duplications) {
+	public static Object[] maybeAdd(Object[] array, int length, Object key, Object value, Counts counts) {
 	    final int i = keyIndex(array, length, key);
 	    return (i == -1) ?
 		append(array, length, length + 2, key, value) :
-		maybeSet(array, i, value, duplications);
+		maybeSet(array, i, value, counts);
 	}
 
 
@@ -85,7 +85,7 @@ public class HashCollisionNodeUtils {
 	 * equivalent to the union of 'leftArray' and 'rightArray'
 	 */
 	public static Object[] maybeAddAll(Object[] leftArray, int leftLength,
-			Object[] rightArray, int rightLength, Counts duplications) {
+			Object[] rightArray, int rightLength, Counts counts) {
 		// start with the assumption that no kvps will be added.
 		Object[] newArray = leftArray;
 		int l = leftLength;
@@ -105,7 +105,7 @@ public class HashCollisionNodeUtils {
 			} else {
 				// key is present
 				final Object rightValue = rightArray[r + 1];
-				duplications.sameKey++;
+				counts.sameKey++;
 				// is the value the same as well ?
 				if (Util.equiv(leftArray[i + 1], rightValue)) {
 					// value is same

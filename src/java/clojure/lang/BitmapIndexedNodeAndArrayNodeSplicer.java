@@ -6,7 +6,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 class BitmapIndexedNodeAndArrayNodeSplicer extends AbstractSplicer {
 
-	public INode splice(int shift, Counts duplications, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+	public INode splice(int shift, Counts counts, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
 		final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;
 	    final ArrayNode r = (ArrayNode) rightValue;
 
@@ -31,7 +31,7 @@ class BitmapIndexedNodeAndArrayNodeSplicer extends AbstractSplicer {
 
                 if (rb) {
                     // both sides present - merge them...
-                    array[i] = NodeUtils.splice(shift + 5, duplications, lk, lv, rightHash, null, rv);
+                    array[i] = NodeUtils.splice(shift + 5, counts, lk, lv, rightHash, null, rv);
                 } else {
                     // only lhs present
                     array[i] = (lk == null) ? (INode) lv : NodeUtils.create(shift + 5, lk, lv);

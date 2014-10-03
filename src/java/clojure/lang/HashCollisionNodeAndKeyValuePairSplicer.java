@@ -8,7 +8,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 class HashCollisionNodeAndKeyValuePairSplicer extends AbstractSplicer {
 
-    public INode splice(int shift, Counts duplications,
+    public INode splice(int shift, Counts counts,
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
 	final HashCollisionNode leftNode = (HashCollisionNode) leftValue;
@@ -16,11 +16,11 @@ class HashCollisionNodeAndKeyValuePairSplicer extends AbstractSplicer {
 	if (rightKey.hashCode() == leftHash) {
 	    final int leftCount = leftNode.count;
 	    final Object[] leftArray = leftNode.array;
-	    final int oldDuplications = duplications.sameKey;
-	    final Object[] newArray = maybeAdd(leftArray, leftCount * 2, rightKey, rightValue, duplications);
-	    final int newDuplications = duplications.sameKey - oldDuplications;
+	    final int oldCounts = counts.sameKey;
+	    final Object[] newArray = maybeAdd(leftArray, leftCount * 2, rightKey, rightValue, counts);
+	    final int newCounts = counts.sameKey - oldCounts;
 	    return (leftArray == newArray) ?
-		leftNode : new HashCollisionNode(null, leftHash, leftCount + 1 - newDuplications, newArray);
+		leftNode : new HashCollisionNode(null, leftHash, leftCount + 1 - newCounts, newArray);
 	} else {
 	    return create(mask(leftHash, shift), leftNode, mask(rightHash, shift), rightKey, rightValue);
 	}

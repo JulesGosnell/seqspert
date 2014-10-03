@@ -28,7 +28,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 	
 	// set up rhs and expected
 	ArrayNode expected = (ArrayNode) leftNode;
-	int expectedDuplications = 0;
+	int expectedCounts = 0;
 	INode rightNode = BitmapIndexedNode.EMPTY;
 	for (int i = rightStart; i < rightEnd + 1; i++) {
 	    final int hash = i;
@@ -37,15 +37,15 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
 	    final Box addedLeaf = new Box(null);
 	    expected = (ArrayNode) expected.assoc(shift, hash , key, value, addedLeaf);
-	    expectedDuplications += (addedLeaf.val == addedLeaf) ? 0 : 1;
+	    expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 	}
 	
 	// do the splice
-	final Counts actualDuplications = new Counts(0, 0);
-	final ArrayNode actual = (ArrayNode)splicer.splice(shift, actualDuplications, null, leftNode, 0, null, rightNode);
+	final Counts actualCounts = new Counts(0, 0);
+	final ArrayNode actual = (ArrayNode)splicer.splice(shift, actualCounts, null, leftNode, 0, null, rightNode);
 
 	// check everything is as expected...
-	assertEquals(expectedDuplications, actualDuplications.sameKey);
+	assertEquals(expectedCounts, actualCounts.sameKey);
 	if (same)
 	    assertSame(actual, expected);
 	else
