@@ -13,46 +13,53 @@ class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
 	final ArrayNode leftNode = (ArrayNode) leftValue;
 	final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
 
-	throw new RuntimeException("NYI");
-
-	// // TODO: we may not have to make a new Node here !!
+	// TODO: we may not have to make a new Node here !!
 	    
-        // // make a new array
-        // final INode[] array = new INode[32];
+        // optimistically, make a new array and keep track of whether
+        // it differs from original lhs...
+        final INode[] array = new INode[32];
+	int differences = 0;
 
-        // // walk through existing l and r nodes, splicing them into array...
-        // int count = 0;
-        // int lPosition = 0;
-        // for (int i = 0; i < 32; i++) {
-        //     final int mask = 1 << i;
-        //     final boolean lb = ((l.bitmap & mask) != 0);
-        //     final INode rv = r.array[i];
-        //     final boolean rb = rv != null;
+        // walk through existing l and r nodes, splicing them into array...
+	final INode[] leftArray = leftNode.array;
+	final int rightBitmap = rightNode.bitmap;
+	final Object[] rightArray = rightNode.array;
+        int count = 0;
+        int rPosition = 0;
+        for (int i = 0; i < 32; i++) {
+            final INode lv = leftArray[i];
+            final boolean lb = lv != null;
+            final int mask = 1 << i;
+            final boolean rb = ((rightBitmap & mask) != 0);
 
-        //     if (lb) {
-        //         count++;
-        //         final Object lk = l.array[lPosition++];
-        //         final Object lv = l.array[lPosition++];
+            if (lb) {
+                count++;
+                if (rb) {
+                    // both sides present - merge them...
+		    final Object rk = rightArray[rPosition++];;
+		    final Object rv = rightArray[rPosition++];;
+		    final INode newNode = NodeUtils.splice(shift + 5, counts, null, lv, rightHash, rk, rv);
+                    array[i] = newNode;
+		    if (lv != newNode) differences++;
+                } else {
+                    // only lhs present
+                    array[i] = lv;
+                }
+            } else { // not lb
+                if (rb) {
+                    count++;
+		    // TODO: may force clone...
+                    // only rhs present - copy over
+		    final Object rk = rightArray[rPosition++];;
+		    final Object rv = rightArray[rPosition++];;
+                    array[i] = rk == null ? (INode) rv : NodeUtils.create(shift + 5, rk, rv);
+		    differences++;
+                } else {
+                    // do nothing...
+                }
+            }
+        }
 
-        //         if (rb) {
-        //             // both sides present - merge them...
-        //             array[i] = NodeUtils.splice(shift + 5, counts, lk, lv, rightHash, null, rv);
-        //         } else {
-        //             // only lhs present
-        //             array[i] = (lk == null) ? (INode) lv : NodeUtils.create(shift + 5, lk, lv);
-        //         }
-        //     } else { // not lb
-        //         if (rb) {
-        //             count++;
-        //             // only rhs present - copy over
-        //             array[i] = rv;
-
-        //         } else {
-        //             // do nothing...
-        //         }
-        //     }
-        // }
-
-        // return new ArrayNode(null, count, array);
+        return differences > 0 ?  new ArrayNode(null, count, array) : leftNode;
     }
 }
