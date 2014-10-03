@@ -3,7 +3,7 @@ package clojure.lang;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class KeyValuePairAndHashCollisionNodeSplicer extends AbstractSplicer {
+class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
 	
     public INode splice(int shift, Counts counts, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
 

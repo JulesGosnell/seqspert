@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class HashCollisionNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
+class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
 
     // TODO - think of a good name...
     public INode foo(int shift,

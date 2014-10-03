@@ -7,7 +7,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 // TODO: this is pretty much identical to BINAndHCNSplicer - can we reuse the same code ?
 
-class BitmapIndexedNodeAndKeyValuePairSplicer extends AbstractSplicer {
+class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts, 
 			Object leftKey, Object leftValue,

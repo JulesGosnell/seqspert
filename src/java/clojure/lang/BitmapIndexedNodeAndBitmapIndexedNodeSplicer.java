@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class BitmapIndexedNodeAndBitmapIndexedNodeSplicer extends AbstractSplicer {
+class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
 			Object leftKey, Object leftValue,

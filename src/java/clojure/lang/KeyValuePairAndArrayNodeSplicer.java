@@ -7,7 +7,7 @@ import static clojure.lang.NodeUtils.nodeHash;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class KeyValuePairAndArrayNodeSplicer extends AbstractSplicer {
+class KeyValuePairAndArrayNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
 			Object leftKey, Object leftValue,

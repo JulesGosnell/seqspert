@@ -5,7 +5,7 @@ import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class ArrayNodeAndHashCollisionNodeSplicer extends AbstractSplicer {
+class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
     			Object leftKey, Object leftValue,

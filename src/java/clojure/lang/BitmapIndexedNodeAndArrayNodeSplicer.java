@@ -4,7 +4,7 @@ import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class BitmapIndexedNodeAndArrayNodeSplicer extends AbstractSplicer {
+class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
 
 	public INode splice(int shift, Counts counts, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
 		final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;

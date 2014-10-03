@@ -6,7 +6,7 @@ import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 // TODO: untested
-class KeyValuePairAndBitmapIndexedNodeSplicer extends AbstractSplicer {
+class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
     public INode splice(int shift, Counts counts, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
         final int bit = BitmapIndexedNodeUtils.bitpos(hash(leftKey), shift);
