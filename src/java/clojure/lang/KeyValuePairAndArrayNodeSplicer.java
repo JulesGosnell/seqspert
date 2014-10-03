@@ -9,14 +9,15 @@ import clojure.lang.PersistentHashMap.INode;
 
 class KeyValuePairAndArrayNodeSplicer extends AbstractSplicer {
 
-    public INode splice(int shift, Counts duplications,
+    public INode splice(int shift, Counts counts,
 			Object leftKey, Object leftValue,
 			int rightHash, Object rightKey, Object rightValue) {
 
         final ArrayNode rightNode = (ArrayNode) rightValue;
 
 	// TODO: can we pass down the hash to avoid work here ?
-	final int index = PersistentHashMap.mask(hash(leftKey), shift);
+	final int leftHash = hash(leftKey);
+	final int index = PersistentHashMap.mask(leftHash, shift);
 	
 	final INode subNode = rightNode.array[index];
 
@@ -24,9 +25,9 @@ class KeyValuePairAndArrayNodeSplicer extends AbstractSplicer {
 	    return new ArrayNode(null,
 				 rightNode.count + 1,
 				 cloneAndSet(rightNode.array, index,
-					     create(shift, hash(leftKey), leftKey, leftValue)));
+					     create(shift, leftHash, leftKey, leftValue)));
 	} else {
-	    final INode newNode = NodeUtils.splice(shift + 5, duplications, leftKey, leftValue, nodeHash(subNode), null, subNode);
+	    final INode newNode = NodeUtils.splice(shift + 5, counts, leftKey, leftValue, nodeHash(subNode), null, subNode);
 	    return newNode == subNode ? 
 		rightNode :
 		new ArrayNode(null,
