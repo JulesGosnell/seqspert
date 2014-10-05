@@ -1,12 +1,10 @@
 package clojure.lang;
 
-import static org.junit.Assert.*;
-import static clojure.lang.TestUtils.*;
-import static clojure.lang.NodeUtils.*;
+import static clojure.lang.TestUtils.assertNodeEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
@@ -61,7 +59,6 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
 
     @Test
     public void testSameKeyHashCode() {
-	final int rightHash = 1;
     	test(2, 30,
 	     new HashCodeKey("key1", 1), "value1",
 	     new HashCodeKey("collisionKey2", 2), "collisionValue2",
@@ -70,7 +67,6 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
 	
     @Test
     public void testSameKey() {
-	final int rightHash = 1;
     	test(2, 30,
 	     new HashCodeKey("key1", 1), "value1",
 	     new HashCodeKey("key2", 2), "duplicationValue2",
@@ -79,7 +75,6 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
 
     @Test
     public void testSameKeyAndValue() {
-	final int rightHash = 1;
     	test(1, 30,
 	     new HashCodeKey("key1", 1), "value1",
 	     new HashCodeKey("key2", 2), "value2",

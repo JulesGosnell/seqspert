@@ -11,7 +11,6 @@ class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
     public INode foo(int shift,
 		     int leftHash, HashCollisionNode leftNode,
 		     int rightHash, HashCollisionNode rightNode) {
-	final AtomicReference<Thread> edit = null;
 	
 	final int leftBits = PersistentHashMap.mask(leftHash, shift);
 	final int rightBits = PersistentHashMap.mask(rightHash, shift);

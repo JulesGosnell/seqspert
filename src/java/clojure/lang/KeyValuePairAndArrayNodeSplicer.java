@@ -3,7 +3,6 @@ package clojure.lang;
 import static clojure.lang.NodeUtils.cloneAndSet;
 import static clojure.lang.NodeUtils.create;
 import static clojure.lang.NodeUtils.hash;
-import static clojure.lang.NodeUtils.nodeHash;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.INode;
 

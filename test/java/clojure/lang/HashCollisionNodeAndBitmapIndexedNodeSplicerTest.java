@@ -1,16 +1,12 @@
 package clojure.lang;
 
-import static clojure.lang.TestUtils.assertHashCollisionNodeEquals;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {

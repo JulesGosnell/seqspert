@@ -1,12 +1,10 @@
 package clojure.lang;
 
-import static org.junit.Assert.*;
-import static clojure.lang.TestUtils.*;
-import static clojure.lang.NodeUtils.*;
+import static clojure.lang.TestUtils.assertNodeEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 

@@ -5,7 +5,6 @@ import static clojure.lang.NodeUtils.nodeHash;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 
-
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
