@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import static clojure.lang.TestUtils.*;
 import static clojure.lang.NodeUtils.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.ArrayNode;

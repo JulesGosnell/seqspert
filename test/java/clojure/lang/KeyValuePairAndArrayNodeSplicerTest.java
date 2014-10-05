@@ -5,7 +5,7 @@ import static clojure.lang.NodeUtils.nodeHash;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Ignore;
+
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
@@ -41,7 +41,6 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 	assertNodeEquals(expected, actual);
     }
 
-    @Ignore
     @Test
     public void testNoCollision() {
 	test(new HashCodeKey("key1", 1), 1, 2, 30, false);

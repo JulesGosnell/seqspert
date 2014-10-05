@@ -19,7 +19,6 @@ public class HashCollisionNodeAndArrayNodeSplicerTest
     final Object value0 = "value0";
     final Object value1 = "value1";
     
-    //@Ignore
     @Test
     public void testNoCollision() {
 	

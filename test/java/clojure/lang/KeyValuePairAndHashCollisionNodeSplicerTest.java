@@ -4,7 +4,6 @@ import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.HashCollisionNode;
@@ -48,28 +47,24 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
 			assertNodeEquals(expected, actual);
 	}
 
-	@Ignore
 	@Test
 	@Override
 	public void testNoCollision() {
 		test(new HashCodeKey("key2", 3), "value2", false);
 	}
 
-	@Ignore
 	@Test
 	@Override
 	public void testCollision() {
 		test(new HashCodeKey("key2", hashCode), "value2", false);
 	}
 
-	@Ignore
 	@Test
 	@Override
 	public void testDuplication() {
 		test(new HashCodeKey("key1", hashCode), "value2", false);
 	}
 
-	@Ignore
 	@Test
 	//@Override
 	public void testSame() {

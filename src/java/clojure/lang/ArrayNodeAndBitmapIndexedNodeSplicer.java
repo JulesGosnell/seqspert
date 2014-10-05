@@ -8,7 +8,7 @@ class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
 			Object leftKey, Object leftValue,
-			int rightHash, Object rightKey, Object rightValue) {
+			int _, Object rightKey, Object rightValue) {
 
 	final ArrayNode leftNode = (ArrayNode) leftValue;
 	final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
@@ -38,7 +38,7 @@ class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
                     // both sides present - merge them...
 		    final Object rk = rightArray[rPosition++];;
 		    final Object rv = rightArray[rPosition++];;
-		    final INode newNode = NodeUtils.splice(shift + 5, counts, null, lv, rightHash, rk, rv);
+		    final INode newNode = NodeUtils.splice(shift + 5, counts, null, lv, NodeUtils.nodeHash(rk), rk, rv);
                     array[i] = newNode;
 		    if (lv != newNode) differences++;
                 } else {

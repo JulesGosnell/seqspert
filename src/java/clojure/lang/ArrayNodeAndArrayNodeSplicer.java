@@ -5,9 +5,11 @@ import clojure.lang.PersistentHashMap.INode;
 
 
 class ArrayNodeAndArrayNodeSplicer implements Splicer {
+
     public INode splice(int shift, Counts counts,
 			Object leftKey, Object leftValue,
-			int rightHash, Object rightKey, Object rightValue) {
+			int _, Object rightKey, Object rightValue) {
+
         final ArrayNode leftNode = (ArrayNode) leftValue;
         final ArrayNode rightNode = (ArrayNode) rightValue;
 
@@ -23,7 +25,7 @@ class ArrayNodeAndArrayNodeSplicer implements Splicer {
             final boolean rb = r != null;
             if (lb) {
 		if (rb) {
-		    final INode n = NodeUtils.splice(shift + 5, counts, null, l, rightHash, null, r);
+		    final INode n = NodeUtils.splice(shift + 5, counts, null, l, 0, null, r);
 		    if (l != n) differences++;
 		    array[i] = n;
 		} else {
@@ -43,4 +45,5 @@ class ArrayNodeAndArrayNodeSplicer implements Splicer {
 	// done - I expect that we do...
         return differences > 0 ? new ArrayNode(null, 32 - empty, array) : leftNode;
     }
+
 }

@@ -9,22 +9,23 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
     			Object leftKey, Object leftValue,
-			int rightHash, Object rightKey, Object rightValue) {
+			int _, Object rightKey, Object rightValue) {
+
     	final ArrayNode leftNode = (ArrayNode) leftValue;
     	final HashCollisionNode rightNode  = (HashCollisionNode) rightValue;
 	
     	final INode[] leftArray = leftNode.array;
-    	final int index = PersistentHashMap.mask(rightHash, shift);
+    	final int index = PersistentHashMap.mask(rightNode.hash, shift);
     	final INode subNode = leftArray[index];
     	if (subNode == null) {
     	    return new ArrayNode(null, leftNode.count + 1, cloneAndSet(leftArray, index, rightNode));
 	} else {
-    	    final INode newNode = NodeUtils.splice(shift, counts, null, subNode, rightHash, null, rightNode);
-	    if (subNode == newNode)
-		return leftNode;
-	    else
-		return new ArrayNode(null, leftNode.count + 1, cloneAndSet(leftArray, index, newNode));
+    	    final INode newNode = NodeUtils.splice(shift, counts, null, subNode, rightNode.hash, null, rightNode);
+	    return (subNode == newNode) ?
+		leftNode:
+		new ArrayNode(null, leftNode.count, cloneAndSet(leftArray, index, newNode));
 	}
     }
 
 }
+

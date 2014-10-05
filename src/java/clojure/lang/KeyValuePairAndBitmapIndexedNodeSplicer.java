@@ -7,7 +7,11 @@ import clojure.lang.PersistentHashMap.INode;
 
 // TODO: untested
 class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
-    public INode splice(int shift, Counts counts, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+
+    public INode splice(int shift, Counts counts,
+			Object leftKey, Object leftValue,
+			int _, Object rightKey, Object rightValue) {
+
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
         final int bit = BitmapIndexedNodeUtils.bitpos(hash(leftKey), shift);
         if((rightNode.bitmap & bit) == 0) {
@@ -32,7 +36,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                 if (lhash == hash(k))
                     return new HashCollisionNode(null, lhash, 2, new Object[]{leftKey, leftValue, k, v});
                 else
-                    return NodeUtils.splice(shift + 5, counts, leftKey, leftValue, rightHash, k, v);
+                    return NodeUtils.splice(shift + 5, counts, leftKey, leftValue, NodeUtils.nodeHash(k), k, v);
             }
         }
     }

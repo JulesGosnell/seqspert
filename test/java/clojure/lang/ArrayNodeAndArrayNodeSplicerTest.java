@@ -4,7 +4,6 @@ import static clojure.lang.TestUtils.assertArrayNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
@@ -46,10 +45,8 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
 	// check everything is as expected...
 	assertEquals(expectedCounts, actualCounts.sameKey);
-	if (same)
-	    assertSame(actual, expected);
-	else
-	    assertArrayNodeEquals(actual, expected);
+	assertArrayNodeEquals(actual, expected);
+	if (same) assertSame(actual, expected);
     }
 
     @Test
@@ -67,7 +64,6 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 	test(0, 18, 13, 30, false);	// overlap a few entries and leave empty cells at end of array
     }
 
-    @Ignore
     @Test
     public void testSame() {
 	test(0, 31, 0, 31, true);	// overlap all entries

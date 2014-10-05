@@ -5,7 +5,9 @@ import clojure.lang.PersistentHashMap.INode;
 
 class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
 	
-    public INode splice(int shift, Counts counts, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+    public INode splice(int shift, Counts counts,
+			Object leftKey, Object leftValue,
+			int _, Object rightKey, Object rightValue) {
 
     	// TODO - what if hashCodes do not collide ?
     	

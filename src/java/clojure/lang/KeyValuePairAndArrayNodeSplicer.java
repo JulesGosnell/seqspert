@@ -11,7 +11,7 @@ class KeyValuePairAndArrayNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
 			Object leftKey, Object leftValue,
-			int rightHash, Object rightKey, Object rightValue) {
+			int _, Object rightKey, Object rightValue) {
 
         final ArrayNode rightNode = (ArrayNode) rightValue;
 
@@ -27,7 +27,7 @@ class KeyValuePairAndArrayNodeSplicer implements Splicer {
 				 cloneAndSet(rightNode.array, index,
 					     create(shift, leftHash, leftKey, leftValue)));
 	} else {
-	    final INode newNode = NodeUtils.splice(shift + 5, counts, leftKey, leftValue, nodeHash(subNode), null, subNode);
+	    final INode newNode = NodeUtils.splice(shift + 5, counts, leftKey, leftValue, 0, null, subNode);
 	    return newNode == subNode ? 
 		rightNode :
 		new ArrayNode(null,

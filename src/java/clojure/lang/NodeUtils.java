@@ -58,12 +58,8 @@ public class NodeUtils {
 	return new BitmapIndexedNode(null, BitmapIndexedNodeUtils.bitpos(hash, shift), new Object[]{key, value});
     }
 
-    public static int nodeHash(Object rv) {
-	return (rv instanceof HashCollisionNode ? ((HashCollisionNode)rv).hash : 0);
-    }
-
-    public static int nodeHash(Object rk, Object rv) {
-	return (rk == null ? nodeHash(rv) : hash(rk));
+    public static int nodeHash(Object rk) {
+	return (rk == null ? 0 : hash(rk));
     }
 
     // HashMap
@@ -111,7 +107,9 @@ public class NodeUtils {
 	null
     };
 
-    static INode splice(int shift, Counts counts, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+    static INode splice(int shift, Counts counts,
+			Object leftKey, Object leftValue,
+			int rightHash, Object rightKey, Object rightValue) {
 	return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
 	    splice(shift, counts, leftKey, leftValue, rightHash, rightKey, rightValue);
     }
