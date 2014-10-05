@@ -50,22 +50,22 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
     }
 
     @Test
-    public void testNoCollision() {
+    public void testDifferent() {
 	test(0, 17, 17 << 5, 31 << 5, false);	// overlap - but keys and hashcodes different
     }
 
     @Test
-    public void testCollision() {
+    public void testSameKeyHashCode() {
 	//test(0, 17, 17, 31, false);	// overlap - hashcodes same but keys not equal
     }
 	
     @Test
-    public void testDuplication() {
+    public void testSameKey() {
 	test(0, 18, 13, 30, false);	// overlap a few entries and leave empty cells at end of array
     }
 
     @Test
-    public void testSame() {
+    public void testSameKeyAndValue() {
 	test(0, 31, 0, 31, true);	// overlap all entries
     }
 }

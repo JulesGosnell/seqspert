@@ -50,7 +50,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     }
 
     @Test
-    public void testNoCollision() {
+    public void testDifferent() {
 	final int rightHash = 1;
     	test(2, 30,
 	     rightHash, 
@@ -60,7 +60,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     }
 
     @Test
-    public void testCollision() {
+    public void testSameKeyHashCode() {
 	final int rightHash = 1;
     	test(1, 30,
 	     rightHash, 
@@ -70,7 +70,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     }
 	
     @Test
-    public void testDuplication() {
+    public void testSameKey() {
 	final int rightHash = 1;
     	test(1, 30,
 	     rightHash, 
@@ -80,7 +80,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     }
 
     @Test
-    public void testSame() {
+    public void testSameKeyAndValue() {
 	final int rightHash = 1;
     	test(1, 30,
 	     rightHash, 

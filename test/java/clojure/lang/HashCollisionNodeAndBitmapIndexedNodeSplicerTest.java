@@ -56,27 +56,25 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 
     @Test
     @Override
-    public void testNoCollision() {
+    public void testDifferent() {
+	// TODO
     }
 
     @Test
     @Override
-    public void testCollision() {
+    public void testSameKeyHashCode() {
+	// TODO
     }
 
     @Test
     @Override
-    public void testDuplication() {
+    public void testSameKey() {
     }
 
     @Test
-    //@Override
-    public void testSomeIdentical() {
-    }
-
-    @Test
-    //@Override
-    public void testAllIdentical() {
+    @Override
+    public void testSameKeyAndValue() {
+	// TODO
     }
 
 }

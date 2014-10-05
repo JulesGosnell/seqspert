@@ -17,8 +17,9 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
     
     final Splicer splicer = new BitmapIndexedNodeAndKeyValuePairSplicer();
     
+    @Override
     @Test
-    public void testNoCollision() {
+    public void testDifferent() {
 	
 	final int rightHashCode = 2;
 	final Object rightKey = new HashCodeKey("rightKey", rightHashCode);
@@ -33,8 +34,9 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
 	assertNodeEquals(expected, actual);
     }
 
+    @Override
     @Test
-    public void testCollision() {
+    public void testSameKeyHashCode() {
 	final Object rightKey = new HashCodeKey("rightKey", leftHashCode);
 	final Object rightValue = "rightValue";
 
@@ -47,8 +49,9 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
 	assertNodeEquals(expected, actual);
     }
 
+    @Override
     @Test
-    public void testDuplication() {
+    public void testSameKey() {
 	
 	final Object rightValue = "rightValue";
 
@@ -61,4 +64,10 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
 	assertNodeEquals(expected, actual);
     }
 
+    @Override
+    @Test
+    public void testSameKeyAndValue() {
+	// TODO
+    }
+    
 }

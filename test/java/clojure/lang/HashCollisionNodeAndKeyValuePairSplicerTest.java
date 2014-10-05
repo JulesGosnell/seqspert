@@ -37,7 +37,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
 	@Test
 	@Override
-	public void testNoCollision() {
+	public void testDifferent() {
 		final int rightHashCode = 3;
 		final Object rightKey = new HashCodeKey("key2", rightHashCode);
 		final Object rightValue = "value2";
@@ -46,7 +46,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
 	@Test
 	@Override
-	public void testCollision() {
+	public void testSameKeyHashCode() {
 		final int rightHashCode = hashCode;
 		final Object rightKey = new HashCodeKey("key2", rightHashCode);
 		final Object rightValue = "value2";
@@ -55,7 +55,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
 	@Test
 	@Override
-	public void testDuplication() {
+	public void testSameKey() {
 		final int rightHashCode = hashCode;
 		final Object rightKey = new HashCodeKey("key1", rightHashCode);
 		final Object rightValue = "value2";
@@ -64,7 +64,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
 	@Test
 	//@Override
-	public void testSame() {
+	public void testSameKeyAndValue() {
 		final int rightHashCode = hashCode;
 		final Object rightKey = new HashCodeKey("key1", rightHashCode);
 		final Object rightValue = "value1";

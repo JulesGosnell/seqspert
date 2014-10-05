@@ -42,22 +42,22 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
     }
 
     @Test
-    public void testNoCollision() {
+    public void testDifferent() {
 	test(new HashCodeKey("key1", 1), 1, 2, 30, false);
     }
 
     @Test
-    public void testCollision() {
+    public void testSameKeyHashCode() {
 	test(new HashCodeKey("collision", 1), 1, 1, 30, false);
     }
 	
     @Test
-    public void testDuplication() {
+    public void testSameKey() {
 	test(new HashCodeKey("key1", 2), 1, 1, 30, false);
     }
 
     @Test
-    public void testSame() {
+    public void testSameKeyAndValue() {
 	test(new HashCodeKey("key1", 1), 1, 1, 30, true);
     }
 }

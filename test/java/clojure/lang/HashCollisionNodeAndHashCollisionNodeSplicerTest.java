@@ -15,9 +15,9 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
-    @Test
     @Override
-    public void testNoCollision() {
+    @Test
+    public void testDifferent() {
 	final int shift = 0;
 	final int leftHashCode = 1;
 	final int rightHashCode = 33;
@@ -90,17 +90,17 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 	if (same) assertSame(expected, actual);
     }
 
-    @Test
     @Override
-    public void testCollision() {
+    @Test
+    public void testSameKeyHashCode() {
 	// differing keys all have same hashcode but values are different...
 	test(key0, value0, key1, value1, key2, value2, key3, value3, false);
 	test(key0, value0, key1, value1, key3, value3, key2, value2, false);
     }
 
-    @Test
     @Override
-    public void testDuplication() {
+    @Test
+    public void testSameKey() {
 	// as above, but one pair of keys is identical...
 	final Object leftValue1 = "left-" + (String) value1;
 	final Object rightValue1 = "right-" + (String) value1;
@@ -108,18 +108,14 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 	test(key0, value0, key1, leftValue1, key2, value2, key1, rightValue1, false);
     }
 
+    @Override
     @Test
-    //@Override
-    public void testSomeIdentical() {
+    public void testSameKeyAndValue() {
 	// as above but one pair of values is also identical...
+	// some
 	test(key0, value0, key1, value1, key1, value1, key2, value2, false);
 	test(key0, value0, key1, value1, key2, value2, key1, value1, false);
-    }
-
-    @Test
-    //@Override
-    public void testAllIdentical() {
-	// all keys and values are also identical...
+	// all
 	test(key0, value0, key1, value1, key0, value0, key1, value1, true);
     }
 

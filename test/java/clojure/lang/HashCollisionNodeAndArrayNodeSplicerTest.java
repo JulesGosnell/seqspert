@@ -20,7 +20,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest
     final Object value1 = "value1";
     
     @Test
-    public void testNoCollision() {
+    public void testDifferent() {
 	
 	// The HashCollisionNode
 	final INode leftNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});

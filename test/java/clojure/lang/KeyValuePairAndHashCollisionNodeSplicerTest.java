@@ -49,25 +49,25 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
 
 	@Test
 	@Override
-	public void testNoCollision() {
+	public void testDifferent() {
 		test(new HashCodeKey("key2", 3), "value2", false);
 	}
 
 	@Test
 	@Override
-	public void testCollision() {
+	public void testSameKeyHashCode() {
 		test(new HashCodeKey("key2", hashCode), "value2", false);
 	}
 
 	@Test
 	@Override
-	public void testDuplication() {
+	public void testSameKey() {
 		test(new HashCodeKey("key1", hashCode), "value2", false);
 	}
 
 	@Test
 	//@Override
-	public void testSame() {
+	public void testSameKeyAndValue() {
 		test(new HashCodeKey("key1", hashCode), "value1", true);
 	}
 

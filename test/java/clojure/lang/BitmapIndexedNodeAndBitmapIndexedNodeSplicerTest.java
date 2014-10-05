@@ -43,7 +43,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     
     @Override
     @Test
-    public void testNoCollision() {
+    public void testDifferent() {
 	test(new HashCodeKey("leftKey", 2), "leftValue",
 	     new HashCodeKey("rightKey", 4), "rightValue",
 	     false);
@@ -51,7 +51,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     
     @Override
     @Test
-    public void testCollision() {
+    public void testSameKeyHashCode() {
 	final int hashCode = 3;
 	test(new HashCodeKey("leftKey", hashCode), "leftValue",
 	     new HashCodeKey("rightKey", hashCode), "rightValue",
@@ -60,7 +60,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 
     @Override
     @Test
-    public void testDuplication() {
+    public void testSameKey() {
 	final int hashCode = 3;
 	test(new HashCodeKey("key", hashCode), "leftValue",
 	     new HashCodeKey("key", hashCode), "rightValue",

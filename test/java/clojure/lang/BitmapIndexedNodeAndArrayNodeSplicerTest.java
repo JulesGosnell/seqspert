@@ -10,8 +10,9 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
+    @Override
     @Test
-    public void testNoCollision() {
+    public void testDifferent() {
 	
 	final int shift = 5;
 	
@@ -34,8 +35,9 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
 	assertNodeEquals(actual, expected);
     }
 
+    @Override
     @Test
-    public void testCollision() {
+    public void testSameKeyHashCode() {
 	
 	final int shift = 5;
 	
@@ -58,8 +60,9 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
 	assertNodeEquals(actual, expected);
     }
 
+    @Override
     @Test
-    public void testDuplication() {
+    public void testSameKey() {
 	
 	final int shift = 5;
 	
@@ -82,4 +85,10 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
 	assertNodeEquals(actual, expected);
     }
 
+    @Override
+    @Test
+    public void testSameKeyAndValue() {
+	// TODO
+    }
+    
 }

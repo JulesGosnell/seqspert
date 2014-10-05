@@ -52,7 +52,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     }
 
     @Test
-    public void testNoCollision() {
+    public void testDifferent() {
     	test(3, 30,
 	     new HashCodeKey("key1", 1), "value1",
 	     new HashCodeKey("key2", 2), "value2",
@@ -60,7 +60,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     }
 
     @Test
-    public void testCollision() {
+    public void testSameKeyHashCode() {
 	final int rightHash = 1;
     	test(2, 30,
 	     new HashCodeKey("key1", 1), "value1",
@@ -69,7 +69,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     }
 	
     @Test
-    public void testDuplication() {
+    public void testSameKey() {
 	final int rightHash = 1;
     	test(2, 30,
 	     new HashCodeKey("key1", 1), "value1",
@@ -78,7 +78,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     }
 
     @Test
-    public void testSame() {
+    public void testSameKeyAndValue() {
 	final int rightHash = 1;
     	test(1, 30,
 	     new HashCodeKey("key1", 1), "value1",
