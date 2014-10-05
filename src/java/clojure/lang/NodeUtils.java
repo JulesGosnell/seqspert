@@ -15,15 +15,29 @@ public class NodeUtils {
 
     // TODO: rationalise the way cloneAndSet and cloneAndInsert work...
 
+    public static INode[] cloneAndSetNode(INode[] oldArray, int index, INode node) {
+	final INode[] newArray = oldArray.clone();
+	newArray[index - 1] = null; // yeugh
+	newArray[index] = node;
+	return newArray;
+    }
+
+    public static Object[] cloneAndSetNode(Object[] oldArray, int index, INode node) {
+	final Object[] newArray = oldArray.clone();
+	newArray[index - 1] = null; // yeugh
+	newArray[index] = node;
+	return newArray;
+    }
+    
     public static INode[] cloneAndSet(INode[] oldArray, int index, INode node) {
 	final INode[] newArray = oldArray.clone();
 	newArray[index] = node;
 	return newArray;
     }
 
-    public static Object[] cloneAndSet(Object[] oldArray, int index, Object node) {
+    public static Object[] cloneAndSet(Object[] oldArray, int index, Object value) {
 	final Object[] newArray = oldArray.clone();
-	newArray[index] = node;
+	newArray[index] = value;
 	return newArray;
     }
 
@@ -55,7 +69,7 @@ public class NodeUtils {
     }
 
     public static INode create(int shift, int hash, Object key, Object value) {
-	return new BitmapIndexedNode(null, BitmapIndexedNodeUtils.bitpos(hash, shift), new Object[]{key, value});
+	return new BitmapIndexedNode(null, PersistentHashMap.mask(hash, shift), new Object[]{key, value});
     }
 
     public static int nodeHash(Object rk) {

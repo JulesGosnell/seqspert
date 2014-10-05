@@ -13,7 +13,8 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
 			int _, Object rightKey, Object rightValue) {
 
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
-        final int bit = BitmapIndexedNodeUtils.bitpos(hash(leftKey), shift);
+        final int leftHash = hash(leftKey);
+		final int bit = BitmapIndexedNodeUtils.bitpos(leftHash, shift);
         if((rightNode.bitmap & bit) == 0) {
             // no collision - we should just be able to add lhs to rhs
             // TODO - do not use assoc here - reference similar code
@@ -32,7 +33,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
             } else {
                 // collision...
                 final Object v = rightNode.array[idx + 1];
-                int lhash = hash(leftKey);
+                int lhash = leftHash;
                 if (lhash == hash(k))
                     return new HashCollisionNode(null, lhash, 2, new Object[]{leftKey, leftValue, k, v});
                 else
