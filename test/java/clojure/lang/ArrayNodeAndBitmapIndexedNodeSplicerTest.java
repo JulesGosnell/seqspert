@@ -9,6 +9,7 @@ import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
+	
     final int shift = 0;
     final Splicer splicer = new ArrayNodeAndBitmapIndexedNodeSplicer();
     

@@ -51,8 +51,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
 	@Test
 	public void testDifferent() {
-		// TODO
-		//test(0, 17, 17 << 5, 31 << 5, false);	// overlap - but keys and hashcodes different
+		test(0, 17, 17 << 5, 31 << 5, false);	// overlap - but keys and hashcodes different
 	}
 
 	@Test
@@ -63,8 +62,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
 	@Test
 	public void testSameKey() {
-		// TODO
-		//test(0, 18, 13, 30, false);	// overlap a few entries and leave empty cells at end of array
+		test(0, 18, 13, 30, false);	// overlap a few entries and leave empty cells at end of array
 	}
 
 	@Test

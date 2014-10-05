@@ -3,6 +3,7 @@ package clojure.lang;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
@@ -11,6 +12,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
+	@Ignore
     @Override
     @Test
     public void testDifferent() {
@@ -46,6 +48,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 	assertEquals(actual1.array[3], expected1.array[3]);
     }
 
+    @Ignore
     @Override
     @Test
     public void testSameKeyHashCode() {
@@ -79,6 +82,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 	assertArrayEquals(actualNode1.array, expectedNode1.array);
     }
 	
+    @Ignore
     @Override
     @Test
     public void testSameKey() {

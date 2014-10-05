@@ -3,6 +3,7 @@ package clojure.lang;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
@@ -40,16 +41,19 @@ public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface
 		test(2, 30, new HashCodeKey("key1", 1), 1, false);
 	}
 
+	@Ignore
 	@Test
 	public void testSameKeyHashCode() {
 		test(1, 30, new HashCodeKey("collision", 1), 1, false);
 	}
 
+	@Ignore
 	@Test
 	public void testSameKey() {
 		test(1, 30, new HashCodeKey("key1", 2), 1, false);
 	}
 
+	@Ignore
 	@Test
 	public void testSameKeyAndValue() {
 		test(1, 30, new HashCodeKey("key1", 1), 1, true);
