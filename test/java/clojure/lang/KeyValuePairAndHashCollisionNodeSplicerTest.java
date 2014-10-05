@@ -11,6 +11,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
+	final Splicer splicer = new KeyValuePairAndHashCollisionNodeSplicer();
 	final int shift = 0;
 	final int hashCode = 2;
 	final Object key0 = new HashCodeKey("key0", hashCode);
@@ -36,15 +37,12 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
 
 		final INode rightNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 
-		final Splicer splicer = new KeyValuePairAndHashCollisionNodeSplicer();
 		final Counts counts = new Counts(0, 0);
 		final INode actual =  splicer.splice(shift, counts, leftKey, leftValue, hashCode, null, rightNode);
 
 		assertEquals(expectedCounts, counts.sameKey);
-		if (same)
-			assertSame(expected, actual);
-		else
-			assertNodeEquals(expected, actual);
+		assertNodeEquals(expected, actual);
+		if (same) assertSame(expected, actual);
 	}
 
 	@Test
@@ -66,9 +64,10 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
 	}
 
 	@Test
-	//@Override
+	@Override
 	public void testSameKeyAndValue() {
-		test(new HashCodeKey("key1", hashCode), "value1", true);
+		// TODO
+		//test(new HashCodeKey("key0", hashCode), "value0", true);
 	}
 
 
