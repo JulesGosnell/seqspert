@@ -31,9 +31,10 @@ class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
 		final Object rv = rightArray[j++];
 		if (haveLeft) {
 		    // both sides present - splice them...
-		    final INode newNode = NodeUtils.splice(shift + 5, counts, null, lv, NodeUtils.nodeHash(rk), rk, rv);
-		    newArray[i] = newNode;
-		    if (lv != newNode) differences++;
+		    if (lv !=
+			(newArray[i]
+			 = NodeUtils.splice(shift + 5, counts, null, lv, NodeUtils.nodeHash(rk), rk, rv)))
+			differences++;
 		} else {
 		    // only rhs present
 		    newArray[i] = (rk == null) ? (INode) rv : NodeUtils.create(shift + 5, rk, rv);
