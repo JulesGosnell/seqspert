@@ -4,7 +4,6 @@ import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
@@ -35,7 +34,7 @@ public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface
 
 	assertEquals(expectedCounts, actualCounts.sameKey);
 	assertNodeEquals(expected, actual);
-	if (same) assertSame(expected, actual);
+	if (same) assertSame(leftNode, actual);
     }
 
     @Test
@@ -53,7 +52,6 @@ public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface
 	test(1, 30, new HashCodeKey("key1", 1), "differentValue", false);
     }
 
-    @Ignore
     @Test
     public void testSameKeyAndValue() {
 	test(1, 30, new HashCodeKey("key1", 1), "value1", true);
