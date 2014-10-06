@@ -1,7 +1,8 @@
 package clojure.lang;
 
-import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static clojure.lang.TestUtils.assertNodeEquals;
 
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
 	for (int i = leftStart; i < leftEnd + 1; i++) {
 	    final int hashCode = i;
 	    final Object key = new HashCodeKey("key" + i, hashCode);
-	    final Object value = i;
+	    final Object value = "value" + i;
 	    leftNode = leftNode.assoc(shift, hashCode, key, value, new Box(null));
 	}
 	INode expected = leftNode;
@@ -48,6 +49,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
 	// check everything is as expected...
 	assertEquals(expectedCounts, actualCounts.sameKey);
 	assertNodeEquals(expected, actual);
+	if (same) assertSame(expected, actual);
     }
 
     @Test
@@ -76,9 +78,17 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
 
     @Test
     public void testSameKeyAndValue() {
+	// rhs is two KVPs
     	test(1, 30,
 	     new HashCodeKey("key1", 1), "value1",
 	     new HashCodeKey("key2", 2), "value2",
+	     // TODO: should be true
 	     false);
+	// TODO: might work
+	// rhs is an HCN
+    	// test(1, 30,
+	//      new HashCodeKey("key1", 1), "value1",
+	//      new HashCodeKey("key2", 1), "value2",
+	//      true);
     }
 }
