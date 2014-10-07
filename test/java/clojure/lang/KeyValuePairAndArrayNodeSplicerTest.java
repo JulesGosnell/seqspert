@@ -1,11 +1,10 @@
 package clojure.lang;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static clojure.lang.NodeUtils.create;
 import static clojure.lang.NodeUtils.nodeHash;
 import static clojure.lang.TestUtils.assertNodeEquals;
-import static clojure.lang.TestUtils.assertNodeEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -38,13 +37,13 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 
     @Test
     public void testDifferent() {
-	test(new HashCodeKey("key1", 1), 1, 2, 30, false);
+	test(new HashCodeKey("key1", 1), "value1", 2, 30, false);
     }
 
     @Ignore
     @Test
     public void testSameKeyHashCode() {
-	test(new HashCodeKey("collision", 1), 1, 1, 30, false);
+	test(new HashCodeKey("collision", 1), "collision1", 1, 30, false);
     }
 
     @Ignore
