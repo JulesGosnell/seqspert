@@ -14,4 +14,12 @@ public class Counts {
         this.sameKey = sameKey;
         this.sameKeyAndValue = sameKeyAndValue;
     }
+
+    public boolean equals(Counts that) {
+	return this.sameKey == that.sameKey && this.sameKeyAndValue == that.sameKeyAndValue;
+    }
+
+    public boolean equals(Object that) {
+	return (that instanceof Counts) && this.equals((Counts) that);
+    }
 }

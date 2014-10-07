@@ -19,18 +19,17 @@ public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface
 	final INode empty = BitmapIndexedNode.EMPTY;
 	final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
 
-	INode expected = leftNode;
-	int expectedCounts = 0;
-	final Box addedLeaf = new Box(null);
-	expected = expected.assoc(shift, NodeUtils.hash(rightKey) , rightKey, rightValue, addedLeaf);
-	expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
+	final Counts expectedCounts = new Counts();
+	final INode expectedNode =
+	    TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
 
-	final Counts actualCounts = new Counts(0, 0);
-	final INode actual = splicer.splice(shift, actualCounts, null, leftNode, NodeUtils.hash(rightKey), rightKey, rightValue);
+	final Counts actualCounts = new Counts();
+	final INode actualNode =
+	    splicer.splice(shift, actualCounts, null, leftNode, NodeUtils.hash(rightKey), rightKey, rightValue);
 
-	assertEquals(expectedCounts, actualCounts.sameKey);
-	assertNodeEquals(expected, actual);
-	if (same) assertSame(leftNode, actual);
+	assertEquals(expectedCounts, actualCounts);
+	assertNodeEquals(expectedNode, actualNode);
+	if (same) assertSame(leftNode, actualNode);
     }
 
     @Test
