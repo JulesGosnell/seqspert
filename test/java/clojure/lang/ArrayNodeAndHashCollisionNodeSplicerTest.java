@@ -31,11 +31,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
 			    TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, expectedCounts),
 			    rightKey1, rightValue1, expectedCounts);
 
-	final Counts rightCounts = new Counts();
-	final INode rightNode = 
-	    TestUtils.assoc(shift,
-			    TestUtils.assoc(shift, empty, rightKey0, rightValue0, rightCounts),
-			    rightKey1, rightValue1, rightCounts);
+	final INode rightNode = HashCollisionNodeUtils.create(rightHash, rightKey0, rightValue0, rightKey1, rightValue1);
 	
 	final Counts actualCounts = new Counts();
 	final INode actualNode =
@@ -46,7 +42,6 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
 	if (same) assertSame(expectedNode, actualNode);
     }
 
-    @Ignore
     @Test
     public void testDifferent() {
 	final int rightHash = 1;
@@ -60,6 +55,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     @Ignore
     @Test
     public void testSameKeyHashCode() {
+    		// HCN is getting buried in one too many BINs	
 	final int rightHash = 1;
 	test(1, 30,
 	     rightHash, 
@@ -71,6 +67,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     @Ignore
     @Test
     public void testSameKey() {
+		// HCN is getting buried in one too many BINs	
 	final int rightHash = 1;
 	test(1, 30,
 	     rightHash, 
