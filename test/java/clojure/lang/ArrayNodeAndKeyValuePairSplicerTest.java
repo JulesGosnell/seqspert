@@ -20,12 +20,12 @@ public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface
 	final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
 
 	final Counts expectedCounts = new Counts();
-	final INode expectedNode =
-	    TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
+	final INode expectedNode = TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
 
 	final Counts actualCounts = new Counts();
-	final INode actualNode =
-	    splicer.splice(shift, actualCounts, null, leftNode, NodeUtils.hash(rightKey), rightKey, rightValue);
+	final INode actualNode = splicer.splice(shift, actualCounts,
+						null, leftNode,
+						NodeUtils.hash(rightKey), rightKey, rightValue);
 
 	assertEquals(expectedCounts, actualCounts);
 	assertNodeEquals(expectedNode, actualNode);
