@@ -25,10 +25,8 @@ public class HashCollisionNodeAndArrayNodeSplicerTest
 	// The HashCollisionNode
 	final INode leftNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 	// The ArrayNode...
-	INode rightNode = BitmapIndexedNode.EMPTY;
-	for (int i = 2; i < 19; i++) {
-	    rightNode = rightNode.assoc(shift, i , new HashCodeKey("value" + i, i), i, new Box(null));
-	}
+	final INode empty = BitmapIndexedNode.EMPTY;
+	final INode rightNode = TestUtils.assocN(shift, empty, 2, 19, new Counts());
 
 	// The expected ArrayNode
 	INode expected = rightNode;
