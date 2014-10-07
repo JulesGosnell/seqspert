@@ -32,7 +32,7 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 
 	assertEquals(expectedCounts, actualCounts);
 	assertNodeEquals(expectedNode, actualNode);
-	if (same) assertSame(expectedNode, actualNode);
+	if (same) assertSame(rightNode, actualNode); // TODO: is this the right thing to assert ?
     }
 
     @Test
@@ -49,12 +49,11 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
     @Ignore
     @Test
     public void testSameKey() {
-	test(new HashCodeKey("key1", 2), 1, 1, 30, false);
+	test(new HashCodeKey("key1", 1), "differentValue1", 1, 30, false);
     }
 
-    @Ignore
     @Test
     public void testSameKeyAndValue() {
-	test(new HashCodeKey("key1", 1), 1, 1, 30, true);
+	test(new HashCodeKey("key1", 1), "value1", 1, 30, true);
     }
 }
