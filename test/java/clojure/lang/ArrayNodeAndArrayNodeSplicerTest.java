@@ -34,18 +34,20 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     @Test
     public void testDifferent() {
+	// TODO: need to be able to vary hashCodes
 	test(0, 17, 17 << 5, 31 << 5, false);	// overlap - but keys and hashcodes different
     }
 
     @Test
     public void testSameKeyHashCode() {
-	// TODO
-	//test(0, 17, 17, 31, false);	// overlap - hashcodes same but keys not equal
+	// TODO - need to be able to vary keys
+	// test(0, 17, 17, 31, false);
     }
 
     @Test
     public void testSameKey() {
-	test(0, 18, 13, 30, false);	// overlap a few entries and leave empty cells at end of array
+	// TODO - need to be able to vary values
+	// test(0, 18, 13, 30, false);
     }
 
     @Test

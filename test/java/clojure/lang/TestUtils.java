@@ -38,10 +38,10 @@ public class TestUtils {
 
     public static void assertArrayNodeEquals(ArrayNode actual, ArrayNode expected) {
     	if (actual != expected) {
-    		assertEquals(actual.count, expected.count);
-    		for (int i = 0; i < expected.count;) {
-    			assertNodeEquals(actual.array[i], expected.array[i++]);
-    		}
+	    assertEquals(actual.count, expected.count);
+	    for (int i = 0; i < expected.count;) {
+		assertNodeEquals(actual.array[i], expected.array[i++]);
+	    }
     	}
     }
 
@@ -60,17 +60,16 @@ public class TestUtils {
 	}
     }
 
-    public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
+    public static INode assoc(int shift, INode node, Object key, Object value, Counts counts) {
+	final Box box = new Box(null);
+	node = node.assoc(shift, NodeUtils.hash(key), key, value, box);
+	counts.sameKey += (box.val == box) ? 0 : 1;
+	return node;
+    }
 
-	for (int i = start; i < end + 1; i++) {
-	    final int hashCode = i;
-	    final Object key = new HashCodeKey("left" + i, hashCode);
-	    final Object value = i;
-	    final Box box = new Box(null);
-	    node = node.assoc(shift, hashCode , key, value, box);
-	    counts.sameKey += (box.val == box) ? 0 : 1;
-	}
-	
+    public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
+	for (int i = start; i < end + 1; i++)
+	    node = assoc(shift, node , new HashCodeKey("key" + i, i), i, counts);
 	return node;
     }
 
