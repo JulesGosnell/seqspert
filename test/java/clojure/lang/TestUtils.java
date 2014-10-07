@@ -68,8 +68,9 @@ public class TestUtils {
     }
 
     public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
+	// TODO: should not need to intern here - debug...
 	for (int i = start; i < end + 1; i++)
-	    node = assoc(shift, node , new HashCodeKey("key" + i, i), i, counts);
+	    node = assoc(shift, node , new HashCodeKey("key" + i, i), ("value"+i).intern(), counts);
 	return node;
     }
 
