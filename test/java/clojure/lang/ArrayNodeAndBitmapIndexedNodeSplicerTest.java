@@ -19,33 +19,29 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
 		     Object rightKey1, Object rightValue1,
 		     boolean same) {
 
-	
 	final INode empty = BitmapIndexedNode.EMPTY;
+
 	final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
-
-	INode expected = leftNode;
-	int expectedCounts = 0;
-	Box addedLeaf = null;
-	addedLeaf = new Box(null);
-	expected = expected.assoc(shift, NodeUtils.hash(rightKey0) , rightKey0, rightValue0, addedLeaf);
-	expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
-	addedLeaf = new Box(null);
-	expected = expected.assoc(shift, NodeUtils.hash(rightKey1) , rightKey1, rightValue1, addedLeaf);
-	expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 	
-	final INode rightNode = BitmapIndexedNode.EMPTY
-	    .assoc(shift, NodeUtils.hash(rightKey0), rightKey0, rightValue0, new Box(null))
-	    .assoc(shift, NodeUtils.hash(rightKey1), rightKey1, rightValue1, new Box(null));
-
-	// do the splice
-	final Counts actualCounts = new Counts(0, 0);
-	final INode actual = splicer.splice(shift, actualCounts, null, leftNode,
-					    NodeUtils.nodeHash(rightNode), null, rightNode);
-
-	// check everything is as expected...
-	assertEquals(expectedCounts, actualCounts.sameKey);
-	assertNodeEquals(expected, actual);
-	if (same) assertSame(expected, actual);
+	final Counts expectedCounts = new Counts();
+	final INode expectedNode =
+	    TestUtils.assoc(shift,
+			    TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, expectedCounts),
+			    rightKey1, rightValue1, expectedCounts);
+	
+	final Counts rightCounts = new Counts();
+	final INode rightNode = 
+	    TestUtils.assoc(shift,
+			    TestUtils.assoc(shift, empty, rightKey0, rightValue0, rightCounts),
+			    rightKey1, rightValue1, rightCounts);
+	
+	final Counts actualCounts = new Counts();
+	final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode,
+						NodeUtils.nodeHash(rightNode), null, rightNode);
+	
+	assertEquals(expectedCounts, actualCounts);
+	assertNodeEquals(expectedNode, actualNode);
+	if (same) assertSame(expectedNode, actualNode);
     }
 
     @Test
