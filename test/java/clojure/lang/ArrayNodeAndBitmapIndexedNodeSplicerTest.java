@@ -19,14 +19,10 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
 		     Object rightKey1, Object rightValue1,
 		     boolean same) {
 
-	// set up lhs and expected
-	INode leftNode = BitmapIndexedNode.EMPTY;
-	for (int i = leftStart; i < leftEnd + 1; i++) {
-	    final int hashCode = i;
-	    final Object key = new HashCodeKey("key" + i, hashCode);
-	    final Object value = "value" + i;
-	    leftNode = leftNode.assoc(shift, hashCode, key, value, new Box(null));
-	}
+	
+	final INode empty = BitmapIndexedNode.EMPTY;
+	final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
+
 	INode expected = leftNode;
 	int expectedCounts = 0;
 	Box addedLeaf = null;
