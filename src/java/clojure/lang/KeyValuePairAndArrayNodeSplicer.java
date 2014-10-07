@@ -31,7 +31,7 @@ class KeyValuePairAndArrayNodeSplicer implements Splicer {
 		rightNode :
 		new ArrayNode(null,
 			      rightNode.count,
-			      cloneAndSet(rightNode.array, index, newNode));
+			      NodeUtils.cloneAndSetNode(rightNode.array, index, newNode));
 	}
     }
 
