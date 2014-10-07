@@ -46,6 +46,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
 	if (same) assertSame(expectedNode, actualNode);
     }
 
+    @Ignore
     @Test
     public void testDifferent() {
 	final int rightHash = 1;
