@@ -1,6 +1,6 @@
 package clojure.lang;
 
-import static clojure.lang.TestUtils.assertArrayNodeEquals;
+import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -11,62 +11,45 @@ import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
-	final int shift = 0;
-	final Splicer splicer = new ArrayNodeAndArrayNodeSplicer();
 
-	public void test(int leftStart, int leftEnd, int rightStart, int rightEnd, boolean same) {
+    final int shift = 0;
+    final Splicer splicer = new ArrayNodeAndArrayNodeSplicer();
 
-		// set up lhs
-		INode leftNode = BitmapIndexedNode.EMPTY;
-		for (int i = leftStart; i < leftEnd + 1; i++) {
-			final int hashCode = i;
-			final Object key = new HashCodeKey("left" + i, hashCode);
-			final Object value = i;
-			leftNode = leftNode.assoc(shift, hashCode , key, value, new Box(null));
-		}
+    public void test(int leftStart, int leftEnd, int rightStart, int rightEnd, boolean same) {
+	final INode empty = BitmapIndexedNode.EMPTY;
 
-		// set up rhs and expected
-		ArrayNode expected = (ArrayNode) leftNode;
-		int expectedCounts = 0;
-		INode rightNode = BitmapIndexedNode.EMPTY;
-		for (int i = rightStart; i < rightEnd + 1; i++) {
-			final int hash = i;
-			final Object key = new HashCodeKey("left" + i, hash);
-			final Object value = i;
-			rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
-			final Box addedLeaf = new Box(null);
-			expected = (ArrayNode) expected.assoc(shift, hash , key, value, addedLeaf);
-			expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
-		}
+	final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
+	final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
 
-		// do the splice
-		final Counts actualCounts = new Counts(0, 0);
-		final ArrayNode actual = (ArrayNode)splicer.splice(shift, actualCounts, null, leftNode, 0, null, rightNode);
+	final Counts expectedCounts = new Counts();
+	final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
 
-		// check everything is as expected...
-		assertEquals(expectedCounts, actualCounts.sameKey);
-		assertArrayNodeEquals(actual, expected);
-		if (same) assertSame(actual, expected);
-	}
+	final Counts actualCounts = new Counts();
+	final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, 0, null, rightNode);
 
-	@Test
-	public void testDifferent() {
-		test(0, 17, 17 << 5, 31 << 5, false);	// overlap - but keys and hashcodes different
-	}
+	assertEquals(expectedCounts.sameKey, actualCounts.sameKey);
+	assertNodeEquals(actualNode, expectedNode);
+	if (same) assertSame(actualNode, expectedNode);
+    }
 
-	@Test
-	public void testSameKeyHashCode() {
-		// TODO
-		//test(0, 17, 17, 31, false);	// overlap - hashcodes same but keys not equal
-	}
+    @Test
+    public void testDifferent() {
+	test(0, 17, 17 << 5, 31 << 5, false);	// overlap - but keys and hashcodes different
+    }
 
-	@Test
-	public void testSameKey() {
-		test(0, 18, 13, 30, false);	// overlap a few entries and leave empty cells at end of array
-	}
+    @Test
+    public void testSameKeyHashCode() {
+	// TODO
+	//test(0, 17, 17, 31, false);	// overlap - hashcodes same but keys not equal
+    }
 
-	@Test
-	public void testSameKeyAndValue() {
-		test(0, 31, 0, 31, true);	// overlap all entries
-	}
+    @Test
+    public void testSameKey() {
+	test(0, 18, 13, 30, false);	// overlap a few entries and leave empty cells at end of array
+    }
+
+    @Test
+    public void testSameKeyAndValue() {
+	test(0, 31, 0, 31, true);	// overlap all entries
+    }
 }

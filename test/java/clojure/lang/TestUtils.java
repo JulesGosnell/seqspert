@@ -60,4 +60,18 @@ public class TestUtils {
 	}
     }
 
+    public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
+
+	for (int i = start; i < end + 1; i++) {
+	    final int hashCode = i;
+	    final Object key = new HashCodeKey("left" + i, hashCode);
+	    final Object value = i;
+	    final Box box = new Box(null);
+	    node = node.assoc(shift, hashCode , key, value, box);
+	    counts.sameKey += (box.val == box) ? 0 : 1;
+	}
+	
+	return node;
+    }
+
 }
