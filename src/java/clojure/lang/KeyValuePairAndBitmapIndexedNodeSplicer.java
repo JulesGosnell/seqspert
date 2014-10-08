@@ -24,7 +24,10 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
             // TODO: need a BIN insert fn.... how is that different from assoc ?
             // TODO: consider whether to return a BIN or an AN
             // TODO: inline logic and lose Box churn ...
-            return rightNode.assoc(shift, leftHash, leftKey, leftValue, new Box(null));
+	    final Box addedLeaf = new Box(null);
+	    final INode n = rightNode.assoc(shift, leftHash, leftKey, leftValue, addedLeaf);
+	    counts.sameKey += (addedLeaf.val == null ? 1 : 0);
+	    return n;
         } else {
             // collision maybe duplication...
             final int idx = rightNode.index(bit);

@@ -23,14 +23,13 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 	
 	final Counts expectedCounts = new Counts();
 	final INode expectedNode =
-	    TestUtils.assocN(shift, create(shift, leftKey, leftValue), rightStart, rightEnd, new Counts());
+	    TestUtils.assocN(shift, create(shift, leftKey, leftValue), rightStart, rightEnd, expectedCounts);
 
 	final Counts actualCounts = new Counts(0, 0);
 	final INode actualNode =
 	    splicer.splice(shift, actualCounts, leftKey, leftValue, nodeHash(rightNode), null, rightNode);
 
-	// TODO: reenable
-	//assertEquals(expectedCounts, actualCounts);
+	assertEquals(expectedCounts, actualCounts);
 	assertNodeEquals(expectedNode, actualNode);
 	if (same) assertSame(rightNode, actualNode); // TODO: is this the right thing to assert ?
     }
