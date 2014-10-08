@@ -14,25 +14,28 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
 
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
         final int leftHash = hash(leftKey);
-		final int bit = BitmapIndexedNodeUtils.bitpos(leftHash, shift);
+	// TODO
+	// the next two lines do not work - splicing two keys with
+	// same hashcode end up in two different partitions...
+	final int bit = BitmapIndexedNodeUtils.bitpos(leftHash, shift);
         if((rightNode.bitmap & bit) == 0) {
             // no collision - we should just be able to add lhs to rhs
             // TODO - do not use assoc here - reference similar code
             // TODO: need a BIN insert fn.... how is that different from assoc ?
             // TODO: consider whether to return a BIN or an AN
             // TODO: inline logic and lose Box churn ...
-            return rightNode.assoc(shift + 5, 0, leftKey, leftValue, new Box(null));
+            return rightNode.assoc(shift, leftHash, leftKey, leftValue, new Box(null));
         } else {
             // collision maybe duplication...
             final int idx = rightNode.index(bit);
-            final Object k = rightNode.array[idx];
+            final Object k = rightNode.array[idx * 2];
             if (Util.equiv(leftKey, k)) { // TODO - expensive
                 // duplication - no change
                 counts.sameKey++;
                 return rightNode;
             } else {
                 // collision...
-                final Object v = rightNode.array[idx + 1];
+                final Object v = rightNode.array[(idx * 2) + 1];
                 int lhash = leftHash;
                 if (lhash == hash(k))
                     return new HashCollisionNode(null, lhash, 2, new Object[]{leftKey, leftValue, k, v});
