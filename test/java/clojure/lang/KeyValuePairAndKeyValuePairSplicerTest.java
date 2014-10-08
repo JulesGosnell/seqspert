@@ -54,6 +54,7 @@ public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterf
     @Test
     @Override
     public void testSameKey() {
+    	// TODO: returns null...
 	test(new HashCodeKey("key1", 1), "value1", new HashCodeKey("key1", 1), "value2", false);
     }
 

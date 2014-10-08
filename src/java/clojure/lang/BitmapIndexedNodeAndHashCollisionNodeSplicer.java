@@ -13,7 +13,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
 
 		final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
 		final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
-		int bit = PersistentHashMap.mask(rightNode.hash, shift);
+		int bit = BitmapIndexedNodeUtils.bitpos(rightNode.hash, shift);
 		int index = leftNode.index(bit);
 		int keyIndex = index * 2;
 		int valueIndex = keyIndex + 1;
@@ -34,7 +34,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
 					leftNode.bitmap,
 					NodeUtils.cloneAndSetNode(leftNode.array,
 							valueIndex,
-							NodeUtils.splice(shift, counts,
+							NodeUtils.splice(shift + 5, counts,
 									subKey, subVal,
 									rightNode.hash, rightKey, rightValue)
 							));

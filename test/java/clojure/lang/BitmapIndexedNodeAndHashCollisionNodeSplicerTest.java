@@ -12,7 +12,6 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
-	@Ignore
     @Override
     @Test
     public void testDifferent() {
