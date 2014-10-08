@@ -2,7 +2,9 @@ package clojure.lang;
 
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
@@ -10,85 +12,51 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
+	final int shift = 0;
+	final Splicer splicer = new BitmapIndexedNodeAndArrayNodeSplicer();
+	
+	public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1, int rightStart, int rightEnd, boolean same) {
+		
+		final INode leftNode = TestUtils.assoc(shift,
+				TestUtils.assoc(shift, BitmapIndexedNode.EMPTY, leftKey0, leftValue0, new Counts()),
+				leftKey1, leftValue1, new Counts());
+
+		final Counts expectedCounts = new Counts();
+		final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
+		
+		final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
+		
+		final Counts actualCounts = new Counts(0, 0);
+		final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, 0, null, rightNode);
+
+		assertEquals(expectedCounts, actualCounts);
+		assertNodeEquals(expectedNode, actualNode);
+		//if (same) assertSame(rightNode, actualNode); // is this right ?
+	}
+	
     @Override
     @Test
     public void testDifferent() {
-	
-	final int shift = 5;
-	
-	final INode leftNode  = NodeUtils.create(shift, new HashCodeKey("left" + 0, 0 * 32), 0);
-	
-	INode expected = leftNode;
-	INode rightNode = BitmapIndexedNode.EMPTY;
-	for (int i = 1; i < 18; i++) {
-	    final int hash = i * 32;
-	    final Object key = new HashCodeKey("left" + i, hash);
-	    final Object value = i;
-	    expected = expected.assoc(shift, hash , key, value, new Box(null));
-	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
-	}
-	
-	final Counts counts = new Counts(0, 0);
-	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, counts, null, leftNode, 0, null, rightNode);
-
-	assertEquals(0, counts.sameKey);
-	assertNodeEquals(actual, expected);
+    	test(new HashCodeKey("key" + 1, 1), "value1", new HashCodeKey("key" + 2, 2), "value2", 3, 30, false);
     }
 
+    @Ignore
     @Override
     @Test
     public void testSameKeyHashCode() {
-	
-	final int shift = 5;
-	
-	final INode leftNode  = NodeUtils.create(shift, new HashCodeKey("initial-left" + 0, 0 * 32), 0);
-	
-	INode expected = leftNode;
-	INode rightNode = BitmapIndexedNode.EMPTY;
-	for (int i = 0; i < 17; i++) {
-	    final int hash = i * 32;
-	    final Object key = new HashCodeKey("left" + i, hash);
-	    final Object value = i;
-	    expected = expected.assoc(shift, hash , key, value, new Box(null));
-	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
+    	test(new HashCodeKey("key" + 1, 3), "value1", new HashCodeKey("key" + 2, 4), "value2", 3, 30, false);
 	}
-	
-	final Counts counts = new Counts(0, 0);
-	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, counts, null, leftNode, 0, null, rightNode);
-
-	assertEquals(0, counts.sameKey);
-	assertNodeEquals(actual, expected);
-    }
 
     @Override
     @Test
     public void testSameKey() {
-	
-	final int shift = 5;
-	
-	final INode leftNode  = NodeUtils.create(shift, new HashCodeKey("left" + 0, 0 * 32), 0);
-	
-	INode expected = leftNode;
-	INode rightNode = BitmapIndexedNode.EMPTY;
-	for (int i = 0; i < 17; i++) {
-	    final int hash = i * 32;
-	    final Object key = new HashCodeKey("left" + i, hash);
-	    final Object value = i;
-	    expected = expected.assoc(shift, hash , key, value, new Box(null));
-	    rightNode = rightNode.assoc(shift, hash , key, value, new Box(null));
-	}
-	
-	final Counts counts = new Counts(0, 0);
-	final INode actual = new BitmapIndexedNodeAndArrayNodeSplicer().splice(shift, counts, null, leftNode, 0, null, rightNode);
-
-	assertEquals(1, counts.sameKey);
-	assertNodeEquals(actual, expected);
+    	test(new HashCodeKey("key" + 3, 3), "value1", new HashCodeKey("key" + 4, 4), "value2", 3, 30, false);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
-	// TODO
+    	test(new HashCodeKey("key" + 3, 3), "value3", new HashCodeKey("key" + 4, 4), "value4", 3, 30, true);
     }
     
 }

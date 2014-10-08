@@ -41,10 +41,10 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
 				final Object v = rightNode.array[(idx * 2) + 1];
 				if (leftHash == hash(k))
 					return
-					    //NodeUtils.create(shift + 5, leftHash, null, new HashCollisionNode(null, leftHash, 2, leftKey, leftValue, k, v));
+					    NodeUtils.create(shift, leftHash, null, new HashCollisionNode(null, leftHash, 2, leftKey, leftValue, k, v));
 					    //NodeUtils.create(shift, leftHash, null, new HashCollisionNode(null, leftHash, 2, leftKey, leftValue, k, v));
 					    //new HashCollisionNode(null, leftHash, 2, leftKey, leftValue, k, v);
-					    new HashCollisionNode(null, leftHash, 2, new Object[]{leftKey, leftValue, k, v});
+					    //new HashCollisionNode(null, leftHash, 2, new Object[]{leftKey, leftValue, k, v});
 				else
 					return NodeUtils.splice(shift + 5, counts, leftKey, leftValue, NodeUtils.nodeHash(k), k, v);
 			}
