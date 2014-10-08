@@ -69,7 +69,11 @@ public class NodeUtils {
     }
 
     public static INode create(int shift, int hash, Object key, Object value) {
-	return new BitmapIndexedNode(null, PersistentHashMap.mask(hash, shift), new Object[]{key, value});
+	return new BitmapIndexedNode(null,
+				     PersistentHashMap.mask(hash, shift)
+				     //BitmapIndexedNodeUtils.bitpos(hash, shift)
+				     ,
+				     new Object[]{key, value});
     }
 
     public static int nodeHash(Object rk) {

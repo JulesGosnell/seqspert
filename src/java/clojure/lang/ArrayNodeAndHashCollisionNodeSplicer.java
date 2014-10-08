@@ -17,14 +17,18 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
 	final int index = PersistentHashMap.mask(rightNode.hash, shift);
 	final INode subNode = leftArray[index];
 	if (subNode == null) {
-	    return new ArrayNode(null,
-				 leftNode.count + 1,
-				 NodeUtils.cloneAndSetNode(leftArray,
-							   index,
-							   // TODO - this 0 wrong ?
-							   BitmapIndexedNodeUtils.create(0, rightNode)));
+		final INode tmp = BitmapIndexedNodeUtils.create(
+				0, // TODO - this 0 wrong ?
+				//BitmapIndexedNodeUtils.bitpos(rightNode.hash, shift + 5),
+				//BitmapIndexedNodeUtils.bitpos(rightNode.hash, shift),
+				rightNode);
+
+		return new ArrayNode(null, leftNode.count + 1, NodeUtils.cloneAndSetNode(leftArray, index, tmp));
 	} else {
-	    final INode newNode = NodeUtils.splice(shift, counts,
+	    final INode newNode = NodeUtils.splice(
+						   shift,
+						   //shift + 5,
+						   counts,
 						   null, subNode,
 						   rightNode.hash, null, rightNode);
 	    return (subNode == newNode) ?
