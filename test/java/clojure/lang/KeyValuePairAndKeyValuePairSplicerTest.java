@@ -37,7 +37,6 @@ public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterf
 	if (same) assertSame(expectedNode, actualNode);
     }
     
-    @Ignore
     @Test
     @Override
     public void testDifferent() {
@@ -58,7 +57,6 @@ public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterf
 	test(new HashCodeKey("key1", 1), "value1", new HashCodeKey("key1", 1), "value2", false);
     }
 
-    @Ignore
     @Test
     @Override
     public void testSameKeyAndValue() {
