@@ -22,4 +22,9 @@ public class Counts {
     public boolean equals(Object that) {
 	return (that instanceof Counts) && this.equals((Counts) that);
     }
+    
+    public String toString() {
+	return getClass().getSimpleName() + 
+	    "(sameKey=" + sameKey + ", sameKeyAndValue=" + sameKeyAndValue +")";
+    }
 }
