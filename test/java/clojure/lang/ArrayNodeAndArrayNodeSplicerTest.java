@@ -4,6 +4,7 @@ import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
@@ -15,10 +16,15 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
     final int shift = 0;
     final Splicer splicer = new ArrayNodeAndArrayNodeSplicer();
 
-    public void test(int leftStart, int leftEnd, int rightStart, int rightEnd, boolean same) {
+    public void test(Object leftKey, Object leftValue, int leftStart, int leftEnd,
+                     int rightStart, int rightEnd, boolean same) {
         final INode empty = BitmapIndexedNode.EMPTY;
 
-        final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
+        final INode leftNode =
+            TestUtils.assocN(shift,
+                             TestUtils.assoc(shift, empty, leftKey, leftValue, new Counts()),
+                             leftStart, leftEnd, new Counts());
+        
         final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
 
         final Counts expectedCounts = new Counts();
@@ -32,26 +38,26 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         if (same) assertSame(actualNode, expectedNode);
     }
 
+    @Ignore
     @Test
     public void testDifferent() {
-        // TODO: need to be able to vary hashCodes
-        test(0, 17, 17 << 5, 31 << 5, false);   // overlap - but keys and hashcodes different
+        test(new HashCodeKey("key0", 0), "value0", 1, 17, 17, 31, false);
     }
 
+    @Ignore
     @Test
     public void testSameKeyHashCode() {
-        // TODO - need to be able to vary keys
-        // test(0, 17, 17, 31, false);
+        test(new HashCodeKey("key17.1", 17), "value17.1", 0, 17, 17, 31, false);
     }
 
+    @Ignore
     @Test
     public void testSameKey() {
-        // TODO - need to be able to vary values
-        // test(0, 18, 13, 30, false);
+        test(new HashCodeKey("key17", 17), "value17.1", 0, 17, 17, 31, false);
     }
 
     @Test
     public void testSameKeyAndValue() {
-        test(0, 31, 0, 31, true);       // overlap all entries
+        test(new HashCodeKey("key0", 0), "value0", 1, 31, 0, 31, true);
     }
 }
