@@ -20,54 +20,54 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
     @Override
     @Test
     public void testDifferent() {
-	
-	final int rightHashCode = 2;
-	final Object rightKey = new HashCodeKey("rightKey", rightHashCode);
-	final Object rightValue = "rightValue";
+        
+        final int rightHashCode = 2;
+        final Object rightKey = new HashCodeKey("rightKey", rightHashCode);
+        final Object rightValue = "rightValue";
 
-	final INode expected = leftNode.assoc(shift, rightHashCode, rightKey, rightValue, new Box(null));
+        final INode expected = leftNode.assoc(shift, rightHashCode, rightKey, rightValue, new Box(null));
 
-	final Counts counts = new Counts(0, 0);
-	final INode actual = splicer.splice(shift, counts, null, leftNode, rightHashCode, rightKey, rightValue);
-	
-	assertEquals(0, counts.sameKey);
-	assertNodeEquals(expected, actual);
+        final Counts counts = new Counts(0, 0);
+        final INode actual = splicer.splice(shift, counts, null, leftNode, rightHashCode, rightKey, rightValue);
+        
+        assertEquals(0, counts.sameKey);
+        assertNodeEquals(expected, actual);
     }
 
     @Override
     @Test
     public void testSameKeyHashCode() {
-	final Object rightKey = new HashCodeKey("rightKey", leftHashCode);
-	final Object rightValue = "rightValue";
+        final Object rightKey = new HashCodeKey("rightKey", leftHashCode);
+        final Object rightValue = "rightValue";
 
-	final INode expected = leftNode.assoc(shift, leftHashCode, rightKey, rightValue, new Box(null));
+        final INode expected = leftNode.assoc(shift, leftHashCode, rightKey, rightValue, new Box(null));
 
-	final Counts counts = new Counts(0, 0);
-	final INode actual = splicer.splice(shift, counts, null, leftNode, leftHashCode, rightKey, rightValue);
-	
-	assertEquals(0, counts.sameKey);
-	assertNodeEquals(expected, actual);
+        final Counts counts = new Counts(0, 0);
+        final INode actual = splicer.splice(shift, counts, null, leftNode, leftHashCode, rightKey, rightValue);
+        
+        assertEquals(0, counts.sameKey);
+        assertNodeEquals(expected, actual);
     }
 
     @Override
     @Test
     public void testSameKey() {
-	
-	final Object rightValue = "rightValue";
+        
+        final Object rightValue = "rightValue";
 
-	final INode expected = leftNode.assoc(shift, leftHashCode, leftKey, rightValue, new Box(null));
+        final INode expected = leftNode.assoc(shift, leftHashCode, leftKey, rightValue, new Box(null));
 
-	final Counts counts = new Counts(0, 0);
-	final INode actual = splicer.splice(shift, counts, null, leftNode, leftHashCode, leftKey, rightValue);
-	
-	assertEquals(1, counts.sameKey);
-	assertNodeEquals(expected, actual);
+        final Counts counts = new Counts(0, 0);
+        final INode actual = splicer.splice(shift, counts, null, leftNode, leftHashCode, leftKey, rightValue);
+        
+        assertEquals(1, counts.sameKey);
+        assertNodeEquals(expected, actual);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
-	// TODO
+        // TODO
     }
     
 }

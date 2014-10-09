@@ -7,14 +7,14 @@ import clojure.lang.PersistentHashMap.INode;
 class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
-			Object leftKey, Object leftValue,
-			int _, Object rightKey, Object rightValue) {
+                        Object leftKey, Object leftValue,
+                        int _, Object rightKey, Object rightValue) {
 
-	final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;
-	final ArrayNode r = (ArrayNode) rightValue;
+        final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;
+        final ArrayNode r = (ArrayNode) rightValue;
 
-	// TODO: we may not have to make a new Node here !!
-	    
+        // TODO: we may not have to make a new Node here !!
+            
         // make a new array
         final INode[] array = new INode[32];
 

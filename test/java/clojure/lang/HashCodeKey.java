@@ -18,14 +18,14 @@ class HashCodeKey {
     @Override
     public boolean equals(Object that) {
         return that != null &&
-                that instanceof HashCodeKey &&
-                ((HashCodeKey)that).hashCode == hashCode &&
-                ((HashCodeKey)that).key.equals(key);
+            that instanceof HashCodeKey &&
+            ((HashCodeKey)that).hashCode == hashCode &&
+            ((HashCodeKey)that).key.equals(key);
     }
     
     @Override
     public String toString() {
-    	return "[" + hashCode + "]:" + key;
+        return "[" + hashCode + "]:" + key;
     }
 
 }

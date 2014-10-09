@@ -11,64 +11,64 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestInterface {
 
-	final int shift = 0;
-	final int hashCode = 2;
-	final Object key0 = new HashCodeKey("key0", hashCode);
-	final Object key1 = new HashCodeKey("key1", hashCode);
-	final Object value0 = "value0";
-	final Object value1 = "value1";
+    final int shift = 0;
+    final int hashCode = 2;
+    final Object key0 = new HashCodeKey("key0", hashCode);
+    final Object key1 = new HashCodeKey("key1", hashCode);
+    final Object value0 = "value0";
+    final Object value1 = "value1";
 
-	public void test(int rightHashCode, Object rightKey, Object rightValue, boolean same) {
-		final INode leftNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
+    public void test(int rightHashCode, Object rightKey, Object rightValue, boolean same) {
+        final INode leftNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 
-		final Box addedLeaf = new Box(null);
-		final INode expected = leftNode.assoc(shift, rightHashCode , rightKey, rightValue, addedLeaf);
-		final int expectedCounts = (addedLeaf.val == addedLeaf) ? 0 : 1;
-		final Splicer splicer = new HashCollisionNodeAndKeyValuePairSplicer();
-		final Counts counts = new Counts(0, 0);
-		final INode actual =  splicer.splice(shift, counts, null, leftNode, rightHashCode, rightKey, rightValue);
+        final Box addedLeaf = new Box(null);
+        final INode expected = leftNode.assoc(shift, rightHashCode , rightKey, rightValue, addedLeaf);
+        final int expectedCounts = (addedLeaf.val == addedLeaf) ? 0 : 1;
+        final Splicer splicer = new HashCollisionNodeAndKeyValuePairSplicer();
+        final Counts counts = new Counts(0, 0);
+        final INode actual =  splicer.splice(shift, counts, null, leftNode, rightHashCode, rightKey, rightValue);
 
-		assertEquals(expectedCounts, counts.sameKey);
-		if (same) 
-			assertSame(expected, actual);
-		else
-			assertNodeEquals(expected, actual);
-	}
+        assertEquals(expectedCounts, counts.sameKey);
+        if (same) 
+            assertSame(expected, actual);
+        else
+            assertNodeEquals(expected, actual);
+    }
 
-	@Test
-	@Override
-	public void testDifferent() {
-		final int rightHashCode = 3;
-		final Object rightKey = new HashCodeKey("key2", rightHashCode);
-		final Object rightValue = "value2";
-		test(rightHashCode, rightKey, rightValue, false);
-	}
+    @Test
+    @Override
+    public void testDifferent() {
+        final int rightHashCode = 3;
+        final Object rightKey = new HashCodeKey("key2", rightHashCode);
+        final Object rightValue = "value2";
+        test(rightHashCode, rightKey, rightValue, false);
+    }
 
-	@Test
-	@Override
-	public void testSameKeyHashCode() {
-		final int rightHashCode = hashCode;
-		final Object rightKey = new HashCodeKey("key2", rightHashCode);
-		final Object rightValue = "value2";
-		test(rightHashCode, rightKey, rightValue, false);
-	}
+    @Test
+    @Override
+    public void testSameKeyHashCode() {
+        final int rightHashCode = hashCode;
+        final Object rightKey = new HashCodeKey("key2", rightHashCode);
+        final Object rightValue = "value2";
+        test(rightHashCode, rightKey, rightValue, false);
+    }
 
-	@Test
-	@Override
-	public void testSameKey() {
-		final int rightHashCode = hashCode;
-		final Object rightKey = new HashCodeKey("key1", rightHashCode);
-		final Object rightValue = "value2";
-		test(rightHashCode, rightKey, rightValue, false);
-	}
+    @Test
+    @Override
+    public void testSameKey() {
+        final int rightHashCode = hashCode;
+        final Object rightKey = new HashCodeKey("key1", rightHashCode);
+        final Object rightValue = "value2";
+        test(rightHashCode, rightKey, rightValue, false);
+    }
 
-	@Test
-	//@Override
-	public void testSameKeyAndValue() {
-		final int rightHashCode = hashCode;
-		final Object rightKey = new HashCodeKey("key1", rightHashCode);
-		final Object rightValue = "value1";
-		test(rightHashCode, rightKey, rightValue, true);
-	}
+    @Test
+    //@Override
+    public void testSameKeyAndValue() {
+        final int rightHashCode = hashCode;
+        final Object rightKey = new HashCodeKey("key1", rightHashCode);
+        final Object rightValue = "value1";
+        test(rightHashCode, rightKey, rightValue, true);
+    }
 
 }

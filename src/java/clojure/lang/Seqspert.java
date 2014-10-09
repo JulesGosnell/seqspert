@@ -13,7 +13,7 @@ public class Seqspert {
     // Vector
 
     static public PersistentVector createPersistentVector(int cnt, int shift, PersistentVector.Node root, Object[] tail) {
-	return new PersistentVector(cnt, shift, root, tail);
+        return new PersistentVector(cnt, shift, root, tail);
     }
 
     // HashMap
@@ -24,26 +24,26 @@ public class Seqspert {
     // TODO - create new AtomicRef or not ?
     
     public static PersistentHashMap spliceHashMaps(PersistentHashMap lMap, PersistentHashMap rMap) {
-	// check null config the same
-	final INode lRoot = lMap.root;
-	final INode rRoot = rMap.root;
-	if (lRoot == null)
-	    return rMap;
-	else if (rRoot == null)
-	    return lMap;
+        // check null config the same
+        final INode lRoot = lMap.root;
+        final INode rRoot = rMap.root;
+        if (lRoot == null)
+            return rMap;
+        else if (rRoot == null)
+            return lMap;
 
         final Counts counts = new Counts(0, 0);
         final PersistentHashMap.INode root = NodeUtils.splice(0, counts, null, lRoot, 0, null, rRoot);
-	final int count = lMap.count + rMap.count - counts.sameKey;
-	return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);
+        final int count = lMap.count + rMap.count - counts.sameKey;
+        return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);
     }
-	
+        
     // HashSet
-	
+        
     public static PersistentHashSet spliceHashSets(PersistentHashSet lSet, PersistentHashSet rSet) {
-	final PersistentHashMap meta = PersistentHashMap.EMPTY; // TODO - consider merging METAs
-	final IPersistentMap impl = spliceHashMaps((PersistentHashMap)lSet.impl, (PersistentHashMap)rSet.impl);
-	return new PersistentHashSet(meta, impl);
+        final PersistentHashMap meta = PersistentHashMap.EMPTY; // TODO - consider merging METAs
+        final IPersistentMap impl = spliceHashMaps((PersistentHashMap)lSet.impl, (PersistentHashMap)rSet.impl);
+        return new PersistentHashSet(meta, impl);
     }
 
 }

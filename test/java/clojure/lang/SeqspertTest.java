@@ -47,8 +47,8 @@ public class SeqspertTest {
             final AtomicReference<Thread> edit = new AtomicReference<Thread>();
             final Box addedLeaf = new Box(null);
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
-                    assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
-                    assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
+                assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
+                assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
             final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
@@ -59,8 +59,8 @@ public class SeqspertTest {
             final AtomicReference<Thread> edit = new AtomicReference<Thread>();
             final Box addedLeaf = new Box(null);
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
-                    assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
-                    assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
+                assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
+                assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
             final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
@@ -71,8 +71,8 @@ public class SeqspertTest {
             final AtomicReference<Thread> edit = new AtomicReference<Thread>();
             final Box addedLeaf = new Box(null);
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
-                    assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
-                    assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
+                assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
+                assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
             final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
@@ -83,8 +83,8 @@ public class SeqspertTest {
             final AtomicReference<Thread> edit = new AtomicReference<Thread>();
             final Box addedLeaf = new Box(null);
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
-                    assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
-                    assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
+                assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
+                assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
             final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
@@ -95,8 +95,8 @@ public class SeqspertTest {
             final Box addedLeaf = new Box(null);
             final AtomicReference<Thread> edit = new AtomicReference<Thread>();
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
-                    assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
-                    assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
+                assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
+                assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
             final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
@@ -107,8 +107,8 @@ public class SeqspertTest {
             final Box addedLeaf = new Box(null);
             final AtomicReference<Thread> edit = new AtomicReference<Thread>();
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
-                    assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
-                    assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
+                assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
+                assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
             final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);
@@ -119,8 +119,8 @@ public class SeqspertTest {
             final Box addedLeaf = new Box(null);
             final AtomicReference<Thread> edit = new AtomicReference<Thread>();
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
-                    assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
-                    assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
+                assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
+                assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
             final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             final BitmapIndexedNode expectedNested = (BitmapIndexedNode) expected.array[1];
@@ -134,8 +134,8 @@ public class SeqspertTest {
             final Box addedLeaf = new Box(null);
             final AtomicReference<Thread> edit = new AtomicReference<Thread>();
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
-                    assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
-                    assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
+                assoc(edit, shift, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
+                assoc(edit, shift, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
             final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             final HashCollisionNode expectedNested = (HashCollisionNode) expected.array[1];
@@ -152,8 +152,8 @@ public class SeqspertTest {
             final Box addedLeaf = new Box(null);
             final AtomicReference<Thread> edit = new AtomicReference<Thread>();
             final BitmapIndexedNode expected = (BitmapIndexedNode) BitmapIndexedNode.EMPTY.
-                    assoc(edit, shift2, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
-                    assoc(edit, shift2, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
+                assoc(edit, shift2, PersistentHashMap.hash(key0), key0, value0, addedLeaf).
+                assoc(edit, shift2, PersistentHashMap.hash(key1), key1, value1, addedLeaf);
             final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift2, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             assertArrayEquals(expected.array, actual.array);

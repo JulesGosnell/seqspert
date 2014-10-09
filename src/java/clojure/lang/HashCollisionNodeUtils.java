@@ -7,120 +7,120 @@ import clojure.lang.PersistentHashMap.HashCollisionNode;
 
 public class HashCollisionNodeUtils {
 
-	// only used for tests
-	public static HashCollisionNode create(int hashCode, Object key0, Object value0, Object key1, Object value1) {
-		final AtomicReference<Thread> edit = null;
-		final int count = 2;
-		final int hash = hashCode;
-		final Object[] array = new Object[]{key0, value0, key1, value1};
-		final HashCollisionNode node  = new HashCollisionNode(edit, hash, count, array);
-//		assertEquals(hash, node.hash);
-//		assertEquals(count, node.count);
-//		assertArrayEquals(array, node.array);
-		return node;
-	}
-	
-	/*
-	 * return a copy of oldArray of 'newLength' - content may be truncated
-	 */
-	public static Object[] clone(Object[] oldArray, int oldLength, int newLength) {
-		final Object[] newArray = new Object[newLength];
-		System.arraycopy(oldArray, 0, newArray, 0, oldLength);
-		return newArray;
-	}
+    // only used for tests
+    public static HashCollisionNode create(int hashCode, Object key0, Object value0, Object key1, Object value1) {
+        final AtomicReference<Thread> edit = null;
+        final int count = 2;
+        final int hash = hashCode;
+        final Object[] array = new Object[]{key0, value0, key1, value1};
+        final HashCollisionNode node  = new HashCollisionNode(edit, hash, count, array);
+        //              assertEquals(hash, node.hash);
+        //              assertEquals(count, node.count);
+        //              assertArrayEquals(array, node.array);
+        return node;
+    }
+        
+    /*
+     * return a copy of oldArray of 'newLength' - content may be truncated
+     */
+    public static Object[] clone(Object[] oldArray, int oldLength, int newLength) {
+        final Object[] newArray = new Object[newLength];
+        System.arraycopy(oldArray, 0, newArray, 0, oldLength);
+        return newArray;
+    }
 
-	// trimming is used to keep unit test happy (uses
-	// AssertArrayEquals) - could be dropped to make things faster...
-	/*
-	 * return an array, maybe 'oldArray', of 'newLength' and with the same contents as 'oldArray'
-	 */
-	public static Object[] trim(Object[] oldArray, int newLength) {
-		return (oldArray.length == newLength) ? oldArray : clone(oldArray, newLength, newLength);
-	}
+    // trimming is used to keep unit test happy (uses
+    // AssertArrayEquals) - could be dropped to make things faster...
+    /*
+     * return an array, maybe 'oldArray', of 'newLength' and with the same contents as 'oldArray'
+     */
+    public static Object[] trim(Object[] oldArray, int newLength) {
+        return (oldArray.length == newLength) ? oldArray : clone(oldArray, newLength, newLength);
+    }
 
-	/*
-	 * return a copy of 'oldArray' of 'newLength' with 'key' and 'value' appended at 'oldLength'
-	 */
-	public static Object[] append(Object[] oldArray, int oldLength, int newLength, Object key, Object value) {
-		final Object[] newArray = clone(oldArray, oldLength, newLength);
-		newArray[oldLength + 0] = key;
-		newArray[oldLength + 1] = value;
-		return newArray;
-	}
+    /*
+     * return a copy of 'oldArray' of 'newLength' with 'key' and 'value' appended at 'oldLength'
+     */
+    public static Object[] append(Object[] oldArray, int oldLength, int newLength, Object key, Object value) {
+        final Object[] newArray = clone(oldArray, oldLength, newLength);
+        newArray[oldLength + 0] = key;
+        newArray[oldLength + 1] = value;
+        return newArray;
+    }
 
-	public static int keyIndex(Object[] array, int length, Object key) {
-		for (int i = 0; i < length; i += 2) if (Util.equiv(array[i], key)) return i;
-		return -1;
-	}
+    public static int keyIndex(Object[] array, int length, Object key) {
+        for (int i = 0; i < length; i += 2) if (Util.equiv(array[i], key)) return i;
+        return -1;
+    }
 
-	/*
-	 * return an array equivalent to 'array' with the value at 'index'
-	 * set to 'value'.
-	 */
-	public static Object[] maybeSet(Object[] array, int index, Object value, Counts counts) {
-		counts.sameKey++;
-		if (Util.equiv(array[index + 1], value)) {
-			return array;
-		} else {
-			final Object[] newArray = array.clone();
-			newArray[index + 1] = value;
-			return newArray;
-		}
-	}
+    /*
+     * return an array equivalent to 'array' with the value at 'index'
+     * set to 'value'.
+     */
+    public static Object[] maybeSet(Object[] array, int index, Object value, Counts counts) {
+        counts.sameKey++;
+        if (Util.equiv(array[index + 1], value)) {
+            return array;
+        } else {
+            final Object[] newArray = array.clone();
+            newArray[index + 1] = value;
+            return newArray;
+        }
+    }
 
-	/*
-	 * return an array, the set of which's key:value pairs is
-	 * equivalent to the union of 'array' and {'key':'value'}
-	 */
-	public static Object[] maybeAdd(Object[] array, int length, Object key, Object value, Counts counts) {
-	    final int i = keyIndex(array, length, key);
-	    return (i == -1) ?
-		append(array, length, length + 2, key, value) :
-		maybeSet(array, i, value, counts);
-	}
+    /*
+     * return an array, the set of which's key:value pairs is
+     * equivalent to the union of 'array' and {'key':'value'}
+     */
+    public static Object[] maybeAdd(Object[] array, int length, Object key, Object value, Counts counts) {
+        final int i = keyIndex(array, length, key);
+        return (i == -1) ?
+            append(array, length, length + 2, key, value) :
+            maybeSet(array, i, value, counts);
+    }
 
 
-	/*
-	 * return an array, the set of which's key:value pairs is
-	 * equivalent to the union of 'leftArray' and 'rightArray'
-	 */
-	public static Object[] maybeAddAll(Object[] leftArray, int leftLength,
-			Object[] rightArray, int rightLength, Counts counts) {
-		// start with the assumption that no kvps will be added.
-		Object[] newArray = leftArray;
-		int l = leftLength;
-		// walk rightArray potentially adding each kvp
-		for (int r = 0; r < rightLength; r += 2) {
-			// check whether key is already present in leftArray
-			final Object rightKey = rightArray[r];
-			final int i = keyIndex(leftArray, leftLength, rightKey);
-			if (i == -1) {
-				// key is not present
-				// the first time this happens we need to clone leftArray to create space for additions
-				if (newArray == leftArray)
-					newArray = clone(leftArray, leftLength, leftLength + rightLength - r);
-				// append the kvp
-				newArray[l++] = rightKey;
-				newArray[l++] = rightArray[r + 1];
-			} else {
-				// key is present
-				final Object rightValue = rightArray[r + 1];
-				counts.sameKey++;
-				// is the value the same as well ?
-				if (Util.equiv(leftArray[i + 1], rightValue)) {
-					// value is same
-					// leave as is
-				} else {
-					// value is different
-					// the first time this happens we need to clone leftArray to create space for additions
-					if (newArray == leftArray)
-						newArray = clone(leftArray, leftLength, leftLength + rightLength - r);
-					// overwrite old value
-					newArray[i + 1] = rightValue;
-				}
-			}
-		}
-		return newArray;
-	}
+    /*
+     * return an array, the set of which's key:value pairs is
+     * equivalent to the union of 'leftArray' and 'rightArray'
+     */
+    public static Object[] maybeAddAll(Object[] leftArray, int leftLength,
+                                       Object[] rightArray, int rightLength, Counts counts) {
+        // start with the assumption that no kvps will be added.
+        Object[] newArray = leftArray;
+        int l = leftLength;
+        // walk rightArray potentially adding each kvp
+        for (int r = 0; r < rightLength; r += 2) {
+            // check whether key is already present in leftArray
+            final Object rightKey = rightArray[r];
+            final int i = keyIndex(leftArray, leftLength, rightKey);
+            if (i == -1) {
+                // key is not present
+                // the first time this happens we need to clone leftArray to create space for additions
+                if (newArray == leftArray)
+                    newArray = clone(leftArray, leftLength, leftLength + rightLength - r);
+                // append the kvp
+                newArray[l++] = rightKey;
+                newArray[l++] = rightArray[r + 1];
+            } else {
+                // key is present
+                final Object rightValue = rightArray[r + 1];
+                counts.sameKey++;
+                // is the value the same as well ?
+                if (Util.equiv(leftArray[i + 1], rightValue)) {
+                    // value is same
+                    // leave as is
+                } else {
+                    // value is different
+                    // the first time this happens we need to clone leftArray to create space for additions
+                    if (newArray == leftArray)
+                        newArray = clone(leftArray, leftLength, leftLength + rightLength - r);
+                    // overwrite old value
+                    newArray[i + 1] = rightValue;
+                }
+            }
+        }
+        return newArray;
+    }
 
 }
