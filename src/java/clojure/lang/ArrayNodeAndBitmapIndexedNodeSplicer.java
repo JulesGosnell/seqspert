@@ -37,7 +37,9 @@ class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
                         differences++;
                 } else {
                     // only rhs present
-                    newArray[i] = (rk == null) ? (INode) rv : NodeUtils.create(shift + 5, rk, rv);
+                    newArray[i] = (rk == null) ?
+                        (INode) rv :
+                        NodeUtils.create(shift + 5, rk, rv);
                     differences++;
                 }
             } else { // not haveRight
