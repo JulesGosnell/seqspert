@@ -51,7 +51,6 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              false);
     }
 
-    @Ignore
     @Override
     @Test
     public void testSameKeyHashCode() {
@@ -72,7 +71,8 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              new HashCodeKey("key1.1", 1), "value1.1",
              false);
     }
-    
+
+
     @Ignore
     @Override
     @Test
