@@ -13,12 +13,14 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
 
         final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
         final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
-        int bit = BitmapIndexedNodeUtils.bitpos(rightNode.hash, shift);
-        int index = leftNode.index(bit);
-        int keyIndex = index * 2;
-        int valueIndex = keyIndex + 1;
+        final int rightHash = rightNode.hash;
+        int bit = BitmapIndexedNodeUtils.bitpos(rightHash, shift);
+        final int index = leftNode.index(bit);
+        final int keyIndex = index * 2;
+        final int valueIndex = keyIndex + 1;
         if((leftNode.bitmap & bit) == 0) {
             // TODO: BIN or AN ?
+            System.out.println("[1]HERE!: " + rightHash);
             return new BitmapIndexedNode(null,
                                          leftNode.bitmap | bit,
                                          cloneAndInsert(leftNode.array,
@@ -27,6 +29,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
                                                         rightNode));
 
         } else {
+            System.out.println("[2]HERE!: " + rightHash);
             // left hand side already occupied...
             final Object subKey = leftNode.array[keyIndex];
             final Object subVal = leftNode.array[valueIndex];
@@ -36,7 +39,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
                                                                    valueIndex,
                                                                    NodeUtils.splice(shift + 5, counts,
                                                                                     subKey, subVal,
-                                                                                    rightNode.hash, rightKey, rightValue)
+                                                                                    rightHash, rightKey, rightValue)
                                                                    ));
 
         }

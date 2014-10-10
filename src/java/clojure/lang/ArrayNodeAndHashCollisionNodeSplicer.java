@@ -14,23 +14,25 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
         final HashCollisionNode rightNode  = (HashCollisionNode) rightValue;
 
         final INode[] leftArray = leftNode.array;
-        final int index = PersistentHashMap.mask(rightNode.hash, shift);
+        final int rightHash = rightNode.hash;
+        final int index = PersistentHashMap.mask(rightHash, shift);
         final INode subNode = leftArray[index];
         if (subNode == null) {
             final INode tmp = BitmapIndexedNodeUtils.create(
                                                             0, // TODO - this 0 wrong ?
-                                                            //BitmapIndexedNodeUtils.bitpos(rightNode.hash, shift + 5),
-                                                            //BitmapIndexedNodeUtils.bitpos(rightNode.hash, shift),
+                                                            //BitmapIndexedNodeUtils.bitpos(rightHash, shift + 5),
+                                                            //BitmapIndexedNodeUtils.bitpos(rightHash, shift),
                                                             rightNode);
 
             return new ArrayNode(null, leftNode.count + 1, NodeUtils.cloneAndSetNode(leftArray, index, tmp));
         } else {
+            System.out.println("HERE!" + rightHash);
             final INode newNode = NodeUtils.splice(
-                                                   shift,
-                                                   //shift + 5,
+                                                   //shift,
+                                                   shift + 5,
                                                    counts,
                                                    null, subNode,
-                                                   rightNode.hash, null, rightNode);
+                                                   rightHash, null, rightNode);
             return (subNode == newNode) ?
                 leftNode:
                 new ArrayNode(null, leftNode.count, NodeUtils.cloneAndSetNode(leftArray, index, newNode));

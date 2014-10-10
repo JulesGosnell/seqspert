@@ -14,36 +14,48 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
         final int leftHash = NodeUtils.hash(leftKey);
         final int rightHash = rightNode.hash;
 
-
-        // TODO - what if kvp is already contained within HCN ?
+        System.out.println("[3]HERE!: " + rightHash);
         if (leftHash == rightHash) {
-            final int length = (rightNode.count + 1) * 2;
-            final Object[] rarray = rightNode.array;
-            final Object[] array = new Object[length];
-            array[0] = leftKey;
-            array[1] = leftValue;
-            int r = 0;
-            int j = 2;
-            for (int i = 0; i < rightNode.count; i++) {
-                final Object rKey = rarray[r++];
-                final Object rVal = rarray[r++];
-                if (Util.equiv(leftKey, rKey)) {
-                    // duplication - overwrite lhs k:v pair
-                    array[1] = rVal;
-                    counts.sameKey++;
+            System.out.println("[4]HERE!: " + rightHash);
+            final Object[] rightArray = rightNode.array;
+            final int rightLength = rightNode.count * 2;
+            final int keyIndex = HashCollisionNodeUtils.keyIndex(rightArray, rightLength, leftKey);
+            if (keyIndex == -1) {
+                final INode newNode = new HashCollisionNode(null,
+                                                            rightHash,
+                                                            rightNode.count + 1,
+                                                            // since KVP is from LHS, insert at front of HCN
+                                                            NodeUtils.cloneAndInsert(rightArray, rightLength,
+                                                                                     0, leftKey, leftValue));
+                System.out.println("[5]HERE!: " + rightHash);
+                //return BitmapIndexedNodeUtils
+                //    .create(PersistentHashMap.mask(rightNode.hash, shift), null, newNode);
+                return newNode;
+            } else {
+                counts.sameKey++;
+                System.out.println("[6]HERE!: " + rightHash);
+                if (keyIndex == 1) {
+                    return rightNode;
                 } else {
-                    // simple collision
-                    array[j++] = rKey;
-                    array[j++] = rVal;
+                    // strictly speaking the left KVP should be first
+                    // in the HCN - not efficient, but then I would
+                    // imagine that this does not happen very often.
+                    final Object[] newArray = rightArray.clone();
+                    newArray[0] = leftKey;
+                    newArray[1] = rightArray[keyIndex + 1];
+                    System.arraycopy(rightArray, 0, newArray, 2, keyIndex);
+                    System.arraycopy(rightArray, keyIndex + 2, newArray, keyIndex, rightLength - keyIndex - 2);
+                    return new HashCollisionNode(null, rightHash, rightNode.count, newArray);
+                    //return BitmapIndexedNodeUtils
+                    //.create(PersistentHashMap.mask(rightNode.hash, shift), null, rightNode);
                 }
             }
-            return BitmapIndexedNodeUtils.create(
-                                                 PersistentHashMap.mask(rightNode.hash, shift), null,
-                                                 new HashCollisionNode(null, rightNode.hash, j / 2, HashCollisionNodeUtils.trim(array, j)));
+            
         } else {
-            return BitmapIndexedNodeUtils.create(
-                                                 PersistentHashMap.mask(leftHash, shift), leftKey, leftValue,
-                                                 PersistentHashMap.mask(rightHash, shift), null, rightNode);
+            System.out.println("[7]HERE!: " + rightHash);
+            return BitmapIndexedNodeUtils
+                .create(PersistentHashMap.mask(leftHash, shift), leftKey, leftValue,
+                        PersistentHashMap.mask(rightHash, shift), null, rightNode);
         }
 
     }

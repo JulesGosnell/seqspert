@@ -52,7 +52,6 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
              false);
     }
 
-    @Ignore
     @Test
     public void testSameKeyHashCode() {
         // HCN is getting buried in one too many BINs   
@@ -64,10 +63,8 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
              false);
     }
 
-    @Ignore
     @Test
     public void testSameKey() {
-        // HCN is getting buried in one too many BINs   
         final int rightHash = 1;
         test(1, 30,
              rightHash, 
@@ -76,7 +73,6 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
              false);
     }
 
-    @Ignore
     @Test
     public void testSameKeyAndValue() {
         final int rightHash = 1;
