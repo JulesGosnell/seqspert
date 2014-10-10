@@ -26,7 +26,6 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
 
             return new ArrayNode(null, leftNode.count + 1, NodeUtils.cloneAndSetNode(leftArray, index, tmp));
         } else {
-            System.out.println("HERE!" + rightHash);
             final INode newNode = NodeUtils.splice(
                                                    //shift,
                                                    shift + 5,

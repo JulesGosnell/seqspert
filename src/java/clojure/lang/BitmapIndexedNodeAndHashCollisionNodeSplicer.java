@@ -20,7 +20,6 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
         final int valueIndex = keyIndex + 1;
         if((leftNode.bitmap & bit) == 0) {
             // TODO: BIN or AN ?
-            System.out.println("[1]HERE!: " + rightHash);
             return new BitmapIndexedNode(null,
                                          leftNode.bitmap | bit,
                                          cloneAndInsert(leftNode.array,
@@ -29,7 +28,6 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
                                                         rightNode));
 
         } else {
-            System.out.println("[2]HERE!: " + rightHash);
             // left hand side already occupied...
             final Object subKey = leftNode.array[keyIndex];
             final Object subVal = leftNode.array[valueIndex];

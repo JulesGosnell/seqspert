@@ -14,26 +14,21 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
         final int leftHash = NodeUtils.hash(leftKey);
         final int rightHash = rightNode.hash;
 
-        System.out.println("[3]HERE!: " + rightHash);
         if (leftHash == rightHash) {
-            System.out.println("[4]HERE!: " + rightHash);
             final Object[] rightArray = rightNode.array;
             final int rightLength = rightNode.count * 2;
             final int keyIndex = HashCollisionNodeUtils.keyIndex(rightArray, rightLength, leftKey);
             if (keyIndex == -1) {
-                final INode newNode = new HashCollisionNode(null,
-                                                            rightHash,
-                                                            rightNode.count + 1,
-                                                            // since KVP is from LHS, insert at front of HCN
-                                                            NodeUtils.cloneAndInsert(rightArray, rightLength,
-                                                                                     0, leftKey, leftValue));
-                System.out.println("[5]HERE!: " + rightHash);
-                //return BitmapIndexedNodeUtils
-                //    .create(PersistentHashMap.mask(rightNode.hash, shift), null, newNode);
+                final INode newNode =
+                    new HashCollisionNode(null,
+                                          rightHash,
+                                          rightNode.count + 1,
+                                          // since KVP is from LHS, insert at front of HCN
+                                          NodeUtils.cloneAndInsert(rightArray, rightLength,
+                                                                   0, leftKey, leftValue));
                 return newNode;
             } else {
                 counts.sameKey++;
-                System.out.println("[6]HERE!: " + rightHash);
                 if (keyIndex == 1) {
                     return rightNode;
                 } else {
@@ -46,13 +41,10 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
                     System.arraycopy(rightArray, 0, newArray, 2, keyIndex);
                     System.arraycopy(rightArray, keyIndex + 2, newArray, keyIndex, rightLength - keyIndex - 2);
                     return new HashCollisionNode(null, rightHash, rightNode.count, newArray);
-                    //return BitmapIndexedNodeUtils
-                    //.create(PersistentHashMap.mask(rightNode.hash, shift), null, rightNode);
                 }
             }
             
         } else {
-            System.out.println("[7]HERE!: " + rightHash);
             return BitmapIndexedNodeUtils
                 .create(PersistentHashMap.mask(leftHash, shift), leftKey, leftValue,
                         PersistentHashMap.mask(rightHash, shift), null, rightNode);
@@ -61,3 +53,4 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
     }
 
 }
+
