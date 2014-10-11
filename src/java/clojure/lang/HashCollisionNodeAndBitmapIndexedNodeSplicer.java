@@ -21,6 +21,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
         if((rightNode.bitmap & bit) == 0) {
             // different hash partitions
             // TODO: check and maybe promote to ArrayNode ?
+            System.out.println("[0] HERE");
             return new BitmapIndexedNode(null,
                                          rightNode.bitmap | bit,
                                          cloneAndInsert(rightNode.array,
@@ -29,6 +30,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                                         leftNode));
         } else {
             // same hash partitions
+            System.out.println("[1] HERE");
             final Object[] rightArray = rightNode.array;
             final int subKeyIndex = index * 2;
             final Object subKey = rightArray[subKeyIndex];
@@ -36,15 +38,15 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                          rightNode.bitmap,
                                          cloneAndSet(rightNode.array,
                                                      index,
-                                                     (Object) splice(shift, 
-                                                                     counts,
-                                                                     null,
-                                                                     leftNode,
-                                                                     subKey == null ? 0 : hash(subKey),
-                                                                     subKey,
-                                                                     rightArray[subKeyIndex + 1])));
+                                                     NodeUtils.splice(shift, 
+                                                                      counts,
+                                                                      null,
+                                                                      leftNode,
+                                                                      subKey == null ? 0 : hash(subKey),
+                                                                      subKey,
+                                                                      rightArray[subKeyIndex + 1])));
         }
-         
+        
     }
-
+    
 }
