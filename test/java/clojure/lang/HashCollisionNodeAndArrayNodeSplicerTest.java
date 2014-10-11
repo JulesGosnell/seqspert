@@ -41,6 +41,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
         if (same) assertSame(expectedNode, actualNode);
     }
 
+    @Ignore
     @Override
     @Test
     public void testDifferent() {
@@ -73,6 +74,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
              false);
     }
 
+    @Ignore
     @Override
     @Test
     public void testSameKeyAndValue() {
