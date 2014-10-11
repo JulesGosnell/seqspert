@@ -54,7 +54,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
         //      new HashCodeKey("key1", 1), "value1",
         //      new HashCodeKey("key2", 1), "value2",
         //      false);
-            }
+    }
 
     @Test
     public void testSameKeyHashCode() {
@@ -78,8 +78,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
         test(1, 30,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 2), "value2",
-             // TODO: should be true
-             false);
+             true);
         // TODO: might work
         // rhs is an HCN
         // test(1, 30,

@@ -29,15 +29,6 @@ public class HashCollisionNodeUtils {
         return newArray;
     }
 
-    // trimming is used to keep unit test happy (uses
-    // AssertArrayEquals) - could be dropped to make things faster...
-    /*
-     * return an array, maybe 'oldArray', of 'newLength' and with the same contents as 'oldArray'
-     */
-    public static Object[] trim(Object[] oldArray, int newLength) {
-        return (oldArray.length == newLength) ? oldArray : clone(oldArray, newLength, newLength);
-    }
-
     /*
      * return a copy of 'oldArray' of 'newLength' with 'key' and 'value' appended at 'oldLength'
      */
