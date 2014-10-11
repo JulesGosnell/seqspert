@@ -18,6 +18,7 @@ class HashCollisionNodeAndArrayNodeSplicer implements Splicer {
         final INode subNode = rightArray[index];
         return (subNode == null) ?
             new ArrayNode(null, rightNode.count + 1, cloneAndSet(rightArray, index + 1, leftNode)) :
+            // TODO: this does not look right to me ...?
             NodeUtils.splice(shift, counts, null, leftNode, 0, null, subNode);
     }
 
