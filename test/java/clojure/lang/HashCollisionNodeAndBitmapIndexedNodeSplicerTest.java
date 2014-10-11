@@ -50,7 +50,6 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              false);
     }
 
-    @Ignore
     @Override
     @Test
     public void testSameKeyHashCode() {
@@ -61,7 +60,6 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              false);
     }
 
-    @Ignore
     @Override
     @Test
     public void testSameKey() {
@@ -72,7 +70,6 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              false);
     }
 
-    @Ignore
     @Override
     @Test
     public void testSameKeyAndValue() {

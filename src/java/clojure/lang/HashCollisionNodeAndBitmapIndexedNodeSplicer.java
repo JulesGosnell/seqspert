@@ -21,7 +21,6 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
         if((rightNode.bitmap & bit) == 0) {
             // different hash partitions
             // TODO: check and maybe promote to ArrayNode ?
-            System.out.println("[0] HERE");
             return new BitmapIndexedNode(null,
                                          rightNode.bitmap | bit,
                                          cloneAndInsert(rightNode.array,
@@ -30,21 +29,28 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                                         leftNode));
         } else {
             // same hash partitions
-            System.out.println("[1] HERE");
             final Object[] rightArray = rightNode.array;
             final int subKeyIndex = index * 2;
             final Object subKey = rightArray[subKeyIndex];
-            return new BitmapIndexedNode(null,
-                                         rightNode.bitmap,
-                                         cloneAndSet(rightNode.array,
-                                                     index,
-                                                     NodeUtils.splice(shift, 
-                                                                      counts,
-                                                                      null,
-                                                                      leftNode,
-                                                                      subKey == null ? 0 : hash(subKey),
-                                                                      subKey,
-                                                                      rightArray[subKeyIndex + 1])));
+            final INode spliced = NodeUtils.splice(shift + 5, 
+			                  counts,
+			                  null,
+			                  leftNode,
+			                  subKey == null ? 0 : hash(subKey),
+			                  subKey,
+			                  rightArray[subKeyIndex + 1]);
+            
+            if ((~bit & rightNode.bitmap) > 0) {
+            	// BIN contains other subNodes - return a new BIN containing them
+            	return new BitmapIndexedNode(null,
+            			rightNode.bitmap,
+            			cloneAndSet(rightNode.array,
+            					index,
+            					spliced));
+            } else {
+            	// this was the only subNode, now it is spliced into the LHC - return the result
+				return spliced;
+			}
         }
         
     }

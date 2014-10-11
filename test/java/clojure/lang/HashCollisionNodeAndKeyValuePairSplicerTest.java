@@ -22,17 +22,17 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
         final INode leftNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 
         final Box addedLeaf = new Box(null);
-        final INode expected = leftNode.assoc(shift, rightHashCode , rightKey, rightValue, addedLeaf);
+        final INode expectedNode = leftNode.assoc(shift, rightHashCode , rightKey, rightValue, addedLeaf);
         final int expectedCounts = (addedLeaf.val == addedLeaf) ? 0 : 1;
         final Splicer splicer = new HashCollisionNodeAndKeyValuePairSplicer();
-        final Counts counts = new Counts(0, 0);
-        final INode actual =  splicer.splice(shift, counts, null, leftNode, rightHashCode, rightKey, rightValue);
+        final Counts actualCounts = new Counts(0, 0);
+        final INode actualNode =  splicer.splice(shift, actualCounts, null, leftNode, rightHashCode, rightKey, rightValue);
 
-        assertEquals(expectedCounts, counts.sameKey);
+        assertEquals(expectedCounts, actualCounts.sameKey);
         if (same) 
-            assertSame(expected, actual);
+            assertSame(expectedNode, actualNode);
         else
-            assertNodeEquals(expected, actual);
+            assertNodeEquals(expectedNode, actualNode);
     }
 
     @Test

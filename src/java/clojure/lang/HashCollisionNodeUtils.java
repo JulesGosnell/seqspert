@@ -65,9 +65,11 @@ public class HashCollisionNodeUtils {
      */
     public static Object[] maybeAdd(Object[] array, int length, Object key, Object value, Counts counts) {
         final int i = keyIndex(array, length, key);
-        return (i == -1) ?
-            append(array, length, length + 2, key, value) :
-            maybeSet(array, i, value, counts);
+        if (i == -1) {
+            return append(array, length, length + 2, key, value);
+        } else {
+        	return maybeSet(array, i, value, counts);
+        }
     }
 
 
