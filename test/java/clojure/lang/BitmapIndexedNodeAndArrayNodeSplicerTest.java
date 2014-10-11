@@ -2,9 +2,7 @@ package clojure.lang;
 
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;

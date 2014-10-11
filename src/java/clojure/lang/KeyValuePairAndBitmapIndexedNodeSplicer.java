@@ -2,7 +2,6 @@ package clojure.lang;
 
 import static clojure.lang.NodeUtils.hash;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 // why is this so complicated ?
