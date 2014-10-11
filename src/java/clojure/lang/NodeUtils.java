@@ -75,9 +75,10 @@ public class NodeUtils {
                                      ,
                                      new Object[]{key, value});
     }
-
+    
+    // TODO - inline all uses...
     public static int nodeHash(Object rk) {
-        return (rk == null ? 0 : hash(rk));
+        return hash(rk);
     }
 
     // HashMap
