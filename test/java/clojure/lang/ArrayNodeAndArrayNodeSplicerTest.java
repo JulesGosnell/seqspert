@@ -3,6 +3,7 @@ package clojure.lang;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,8 +25,10 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
             TestUtils.assocN(shift,
                              TestUtils.assoc(shift, empty, leftKey, leftValue, new Counts()),
                              leftStart, leftEnd, new Counts());
-        
+        assertTrue(leftNode instanceof ArrayNode);
+
         final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
+        assertTrue(rightNode instanceof ArrayNode);
 
         final Counts expectedCounts = new Counts();
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
@@ -38,22 +41,19 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         if (same) assertSame(actualNode, expectedNode);
     }
 
-    @Ignore
     @Test
     public void testDifferent() {
-        test(new HashCodeKey("key0", 0), "value0", 1, 17, 17, 31, false);
+        test(new HashCodeKey("key0", 0), "value0", 1, 17, 15, 31, false);
     }
 
-    @Ignore
     @Test
     public void testSameKeyHashCode() {
-        test(new HashCodeKey("key17.1", 17), "value17.1", 0, 17, 17, 31, false);
+        test(new HashCodeKey("key17.1", 17), "value17.1", 0, 17, 15, 31, false);
     }
 
-    @Ignore
     @Test
     public void testSameKey() {
-        test(new HashCodeKey("key17", 17), "value17.1", 0, 17, 17, 31, false);
+        test(new HashCodeKey("key17", 17), "value17.1", 0, 17, 15, 31, false);
     }
 
     @Test
