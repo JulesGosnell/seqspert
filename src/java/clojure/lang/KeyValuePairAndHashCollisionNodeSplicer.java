@@ -29,17 +29,17 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
                 return newNode;
             } else {
                 counts.sameKey++;
-                if (keyIndex == 1) {
+                if (keyIndex == 0) {
                     return rightNode;
                 } else {
                     // strictly speaking the left KVP should be first
                     // in the HCN - not efficient, but then I would
                     // imagine that this does not happen very often.
-                    final Object[] newArray = rightArray.clone();
+                    final Object[] newArray = new Object[rightLength];
                     newArray[0] = leftKey;
                     newArray[1] = rightArray[keyIndex + 1];
                     System.arraycopy(rightArray, 0, newArray, 2, keyIndex);
-                    System.arraycopy(rightArray, keyIndex + 2, newArray, keyIndex, rightLength - keyIndex - 2);
+                    System.arraycopy(rightArray, keyIndex + 2, newArray, keyIndex + 2, rightLength - keyIndex - 2);
                     return new HashCollisionNode(null, rightHash, rightNode.count, newArray);
                 }
             }

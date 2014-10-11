@@ -1,15 +1,11 @@
 package clojure.lang;
 
 import static clojure.lang.TestUtils.assertNodeEquals;
-
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import clojure.lang.PersistentHashMap.BitmapIndexedNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
@@ -61,7 +57,6 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              false);
     }
         
-    @Ignore
     @Override
     @Test
     public void testSameKey() {
@@ -73,7 +68,6 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
     }
 
 
-    @Ignore
     @Override
     @Test
     public void testSameKeyAndValue() {
