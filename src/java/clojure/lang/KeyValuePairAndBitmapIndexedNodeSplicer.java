@@ -1,6 +1,7 @@
 package clojure.lang;
 
 import static clojure.lang.NodeUtils.hash;
+
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
@@ -28,9 +29,8 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                                      NodeUtils.promoteAndSet(shift,
                                                              rightNode.bitmap,
                                                              rightNode.array,
-                                                             keyIndex,
-                                                             NodeUtils.promote(shift + 5,
-                                                                               leftKey, leftValue)));
+                                                             PersistentHashMap.mask(NodeUtils.hash(leftKey), shift),
+                                                             NodeUtils.promote(shift + 5, leftKey, leftValue)));
             else
                 // lets assume that we could not have received an empty
                 // BIN, therefore we have at least 2 subNodes, so there is

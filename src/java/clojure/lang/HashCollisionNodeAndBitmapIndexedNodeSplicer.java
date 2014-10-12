@@ -2,6 +2,7 @@ package clojure.lang;
 
 import static clojure.lang.NodeUtils.cloneAndInsert;
 import static clojure.lang.NodeUtils.cloneAndSet;
+
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
@@ -28,8 +29,8 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                      NodeUtils.promoteAndSet(shift,
                                                              rightNode.bitmap,
                                                              rightNode.array,
-                                                             keyIndex,
-                                                             leftNode));
+							     PersistentHashMap.mask(leftNode.hash, shift),
+                                                             NodeUtils.create(shift + 5, null, leftNode)));
             else
                 return new BitmapIndexedNode(null,
                                              rightNode.bitmap | bit,
