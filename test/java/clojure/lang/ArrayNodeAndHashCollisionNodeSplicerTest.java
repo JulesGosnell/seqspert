@@ -34,7 +34,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
         
         final Counts actualCounts = new Counts();
         final INode actualNode =
-            splicer.splice(shift, actualCounts, null, leftNode, rightHash, null, rightNode);
+            splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
         
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

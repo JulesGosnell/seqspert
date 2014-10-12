@@ -7,10 +7,11 @@ class ArrayNodeAndKeyValuePairSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
                         Object leftKey, Object leftValue,
-                        int rightHash, Object rightKey, Object rightValue) {
+                        Object rightKey, Object rightValue) {
 
         final ArrayNode leftNode = (ArrayNode) leftValue;
 
+        final int rightHash = NodeUtils.hash(rightKey);
         final int index = PersistentHashMap.mask(rightHash, shift);
 
         final INode[] leftArray = leftNode.array;

@@ -9,7 +9,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts, 
                         Object leftKey, Object leftValue,
-                        int _, Object rightKey, Object rightValue) {
+                        Object rightKey, Object rightValue) {
 
         final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
         final HashCollisionNode rightNode = (HashCollisionNode) rightValue;

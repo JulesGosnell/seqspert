@@ -9,13 +9,14 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts, 
                         Object leftKey, Object leftValue,
-                        int rightHash, Object rightKey, Object rightValue) {
+                        Object rightKey, Object rightValue) {
         final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
 
-        int bit = BitmapIndexedNodeUtils.bitpos(rightHash, shift);
-        int index = leftNode.index(bit);
-        int keyIndex = index * 2;
-        int valueIndex = keyIndex + 1;
+        final int rightHash = NodeUtils.hash(rightKey);
+        final int bit = BitmapIndexedNodeUtils.bitpos(rightHash, shift);
+        final int index = leftNode.index(bit);
+        final int keyIndex = index * 2;
+        final int valueIndex = keyIndex + 1;
         if((leftNode.bitmap & bit) == 0) {
             // left hand side unoccupied
             // TODO: BIN or AN ?

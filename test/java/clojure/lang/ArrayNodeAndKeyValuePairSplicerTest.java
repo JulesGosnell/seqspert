@@ -25,7 +25,7 @@ public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface
         final Counts actualCounts = new Counts();
         final INode actualNode = splicer.splice(shift, actualCounts,
                                                 null, leftNode,
-                                                NodeUtils.hash(rightKey), rightKey, rightValue);
+                                                rightKey, rightValue);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

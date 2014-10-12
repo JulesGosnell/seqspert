@@ -8,7 +8,7 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
                         Object leftKey, Object leftValue,
-                        int _, Object rightKey, Object rightValue) {
+                        Object rightKey, Object rightValue) {
 
         final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;
         final ArrayNode r = (ArrayNode) rightValue;

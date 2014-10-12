@@ -9,7 +9,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
                         Object leftKey, Object leftValue,
-                        int _, Object rightKey, Object rightValue) {
+                        Object rightKey, Object rightValue) {
 
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
         final Object[] rightArray = rightNode.array;
@@ -38,8 +38,6 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
             // rhs occupied...
             final Object subKey = rightArray[index];
             final Object subValue = rightArray[index + 1];
-            final int oldSameKey = counts.sameKey;
-            final int oldSameKeyAndValue = counts.sameKeyAndValue;
             final INode spliced = NodeUtils.splice(shift + 5, counts,
                                                    leftKey, leftValue,
                                                    NodeUtils.nodeHash(subKey), subKey, subValue);

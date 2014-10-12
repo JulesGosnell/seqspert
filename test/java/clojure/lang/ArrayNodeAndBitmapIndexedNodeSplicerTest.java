@@ -37,7 +37,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
         
         final Counts actualCounts = new Counts();
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode,
-                                                NodeUtils.nodeHash(rightNode), null, rightNode);
+                                                null, rightNode);
         
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

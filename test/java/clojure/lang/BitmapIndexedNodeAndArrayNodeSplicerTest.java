@@ -25,7 +25,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
         final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
                 
         final Counts actualCounts = new Counts(0, 0);
-        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, 0, null, rightNode);
+        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

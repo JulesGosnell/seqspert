@@ -10,9 +10,10 @@ class HashCollisionNodeAndKeyValuePairSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
                         Object leftKey, Object leftValue,
-                        int rightHash, Object rightKey, Object rightValue) {
+                        Object rightKey, Object rightValue) {
         final HashCollisionNode leftNode = (HashCollisionNode) leftValue;
         final int leftHash = leftNode.hash;
+        final int rightHash = NodeUtils.hash(rightKey);
         if (rightHash == leftHash) {
             final int leftCount = leftNode.count;
             final Object[] leftArray = leftNode.array;

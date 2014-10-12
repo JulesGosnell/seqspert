@@ -6,10 +6,11 @@ class KeyValuePairAndKeyValuePairSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
                         Object leftKey, Object leftValue,
-                        int rightHash, Object rightKey, Object rightValue) {
+                        Object rightKey, Object rightValue) {
         
         // TODO: expensive - can we pass this down ?
         final int leftHash = NodeUtils.hash(leftKey);
+        final int rightHash = NodeUtils.hash(rightKey);
         // TODO: might be more efficient to check for reference equality first...
         if (leftHash == rightHash) {
             if (Util.equiv(leftKey, rightKey)) {

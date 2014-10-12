@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
@@ -33,7 +32,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         final INode expectedNode = TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
 
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, 0, null, rightNode);
+        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
@@ -48,6 +47,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key0", 0), "value0",
              false);
+        // TODO: a test where the RHS is promoted from BIN to AN as a result of the splice...
     }
 
     @Override
@@ -58,6 +58,8 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1.2", 1), "value1.2",
              new HashCodeKey("key1.0", 1), "value1.0",
              false);
+        
+        // TODO:  a test where we merge with a sub-node rather than a sub-KVP on the RHS.
     }
 
     @Override

@@ -26,7 +26,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
         final int expectedCounts = (addedLeaf.val == addedLeaf) ? 0 : 1;
         final Splicer splicer = new HashCollisionNodeAndKeyValuePairSplicer();
         final Counts actualCounts = new Counts(0, 0);
-        final INode actualNode =  splicer.splice(shift, actualCounts, null, leftNode, rightHashCode, rightKey, rightValue);
+        final INode actualNode =  splicer.splice(shift, actualCounts, null, leftNode, rightKey, rightValue);
 
         assertEquals(expectedCounts, actualCounts.sameKey);
         if (same) 

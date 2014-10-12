@@ -39,7 +39,7 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
         final INode rightNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 
         final Counts counts = new Counts(0, 0);
-        final INode actual =  splicer.splice(shift, counts, leftKey, leftValue, hashCode, null, rightNode);
+        final INode actual =  splicer.splice(shift, counts, leftKey, leftValue, null, rightNode);
 
         assertEquals(expectedCounts, counts.sameKey);
         assertNodeEquals(expected, actual);

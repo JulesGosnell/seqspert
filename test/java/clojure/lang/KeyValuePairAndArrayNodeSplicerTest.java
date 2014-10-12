@@ -1,7 +1,6 @@
 package clojure.lang;
 
 import static clojure.lang.NodeUtils.create;
-import static clojure.lang.NodeUtils.nodeHash;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -28,7 +27,7 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 
         final Counts actualCounts = new Counts(0, 0);
         final INode actualNode =
-            splicer.splice(shift, actualCounts, leftKey, leftValue, nodeHash(rightNode), null, rightNode);
+            splicer.splice(shift, actualCounts, leftKey, leftValue, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

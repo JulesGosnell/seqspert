@@ -6,6 +6,6 @@ interface Splicer {
         
     INode splice(int shift, Counts counts,
                  Object leftKey, Object leftValue,
-                 int rightHash, Object rightKey, Object rightValue);
+                 Object rightKey, Object rightValue);
         
 }

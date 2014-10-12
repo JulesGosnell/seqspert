@@ -33,7 +33,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
             .assoc(shift, rightHash, rightKey, rightValue, new Box(null));
 
         final Counts counts = new Counts(0, 0);
-        final INode actual = splicer.splice(shift, counts, null, leftNode, rightHash, null, rightNode);
+        final INode actual = splicer.splice(shift, counts, null, leftNode, null, rightNode);
 
         assertEquals(expectedSameKey, counts.sameKey);
         //assertEquals(expectedSameKeyAndValue, counts.sameKeyAndValue);

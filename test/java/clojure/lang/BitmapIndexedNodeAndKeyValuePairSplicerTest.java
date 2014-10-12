@@ -28,7 +28,7 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
         final INode expected = leftNode.assoc(shift, rightHashCode, rightKey, rightValue, new Box(null));
 
         final Counts counts = new Counts(0, 0);
-        final INode actual = splicer.splice(shift, counts, null, leftNode, rightHashCode, rightKey, rightValue);
+        final INode actual = splicer.splice(shift, counts, null, leftNode, rightKey, rightValue);
         
         assertEquals(0, counts.sameKey);
         assertNodeEquals(expected, actual);
@@ -43,7 +43,7 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
         final INode expected = leftNode.assoc(shift, leftHashCode, rightKey, rightValue, new Box(null));
 
         final Counts counts = new Counts(0, 0);
-        final INode actual = splicer.splice(shift, counts, null, leftNode, leftHashCode, rightKey, rightValue);
+        final INode actual = splicer.splice(shift, counts, null, leftNode, rightKey, rightValue);
         
         assertEquals(0, counts.sameKey);
         assertNodeEquals(expected, actual);
@@ -58,7 +58,7 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
         final INode expected = leftNode.assoc(shift, leftHashCode, leftKey, rightValue, new Box(null));
 
         final Counts counts = new Counts(0, 0);
-        final INode actual = splicer.splice(shift, counts, null, leftNode, leftHashCode, leftKey, rightValue);
+        final INode actual = splicer.splice(shift, counts, null, leftNode, leftKey, rightValue);
         
         assertEquals(1, counts.sameKey);
         assertNodeEquals(expected, actual);

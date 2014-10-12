@@ -9,7 +9,7 @@ class HashCollisionNodeAndArrayNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
                         Object leftKey, Object leftValue,
-                        int _, Object rightKey, Object rightValue) {
+                        Object rightKey, Object rightValue) {
         final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
         final ArrayNode rightNode = (ArrayNode) rightValue;
         
