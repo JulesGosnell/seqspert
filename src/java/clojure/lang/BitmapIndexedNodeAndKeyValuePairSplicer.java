@@ -1,5 +1,6 @@
 package clojure.lang;
 
+import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
@@ -17,17 +18,27 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
         final int index = leftNode.index(bit);
         final int keyIndex = index * 2;
         final int valueIndex = keyIndex + 1;
-        if((leftNode.bitmap & bit) == 0) {
+        if ((leftNode.bitmap & bit) == 0) {
             // left hand side unoccupied
-            // TODO: BIN or AN ?
-            return new BitmapIndexedNode(null,
-                                         leftNode.bitmap | bit,
-                                         NodeUtils.cloneAndInsert(leftNode.array,
-                                                                  Integer.bitCount(leftNode.bitmap) * 2,
-                                                                  keyIndex,
-                                                                  rightKey,
-                                                                  rightValue));
-
+            final int leftBitCount = Integer.bitCount(leftNode.bitmap);
+            if (leftBitCount == 16)
+                return new ArrayNode(null,
+                                     17,
+                                     NodeUtils.promoteAndSet(shift,
+                                                             leftNode.bitmap,
+                                                             leftNode.array,
+                                                             keyIndex,
+                                                             NodeUtils.promote(shift + 5,
+                                                                               leftKey, leftValue)));
+            else
+                return new BitmapIndexedNode(null,
+                                             leftNode.bitmap | bit,
+                                             NodeUtils.cloneAndInsert(leftNode.array,
+                                                                      leftBitCount * 2,
+                                                                      keyIndex,
+                                                                      rightKey,
+                                                                      rightValue));
+            
         } else {
             // left hand side already occupied...
             final Object subKey = leftNode.array[keyIndex];

@@ -20,11 +20,12 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
         final int keyIndex = index * 2;
         final int valueIndex = keyIndex + 1;
         if((leftNode.bitmap & bit) == 0) {
+            // left hand side unoccupied...
             final int leftBitCount = Integer.bitCount(leftNode.bitmap);
             if (leftBitCount == 16)
                 return new ArrayNode(null,
                                      17,
-                                     NodeUtils.promoteAndSet(shift + 5,
+                                     NodeUtils.promoteAndSet(shift,
                                                              leftNode.bitmap,
                                                              leftNode.array,
                                                              keyIndex,

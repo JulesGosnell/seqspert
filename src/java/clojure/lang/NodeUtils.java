@@ -64,10 +64,11 @@ public class NodeUtils {
     
     public static INode[] promoteAndSet(int shift, int bitmap, Object[] bitIndexedArray, int index, INode newNode) {
         final INode[] newArray = new INode[32];
+        final int newShift = shift + 5;
         int j = 0;
         for (int i = 0; i < 32 ; i++) {
             if ((bitmap & (1 << i)) != 0) {
-                promote(shift, bitIndexedArray[j++], bitIndexedArray[j++]);
+                promote(newShift, bitIndexedArray[j++], bitIndexedArray[j++]);
             }
         }
         return newArray;
