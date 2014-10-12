@@ -22,7 +22,7 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
         INode newNode;
         if (subNode == null) {
             newCount = leftNode.count + 1;
-            newNode = BitmapIndexedNodeUtils.create(0, rightNode); // TODO - this 0 wrong ?
+            newNode = BitmapIndexedNodeUtils.create(0, null, rightNode); // TODO - this 0 wrong ?
         } else {
             newCount = leftNode.count;;
             newNode = NodeUtils.splice(shift + 5, counts, null, subNode, rightHash, null, rightNode);

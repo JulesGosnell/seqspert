@@ -1,18 +1,11 @@
 package clojure.lang;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
-import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeUtils {
         
     static int bitpos(int hash, int shift){
         return 1 << PersistentHashMap.mask(hash, shift);
-    }
-
-    public static BitmapIndexedNode create(int index, INode node) {
-        return new BitmapIndexedNode(null,
-                                     1 << index,
-                                     new Object[]{null, node});
     }
         
     public static  BitmapIndexedNode create(int leftIndex, Object leftKey, Object leftValue) {

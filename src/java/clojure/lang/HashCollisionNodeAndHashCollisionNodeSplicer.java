@@ -16,7 +16,7 @@ class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
             (leftBits == rightBits) ?
             // keep recursing down...
             BitmapIndexedNodeUtils.create(leftBits,
-                                          foo(shift + 5,
+                                          null, foo(shift + 5,
                                               leftHash, leftNode,
                                               rightHash, rightNode)) :
             // end recursion
