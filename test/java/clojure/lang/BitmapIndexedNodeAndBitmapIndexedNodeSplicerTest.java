@@ -6,7 +6,6 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
-import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
@@ -16,27 +15,17 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 
     public void test(Object leftKey, Object leftValue, Object rightKey, Object rightValue, boolean same) {
 
-        final int leftHash = NodeUtils.hash(leftKey);
-        final int rightHash = NodeUtils.hash(rightKey);
+        final INode leftNode = TestUtils.create(shift, leftKey, leftValue);
 
-        final INode leftNode =  BitmapIndexedNode.EMPTY
-            .assoc(shift, leftHash, leftKey, leftValue, new Box(null));
+        final Counts expectedCounts = new Counts();
+        final INode expected = TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
 
-        final Box addedLeaf = new Box(null);
-        final INode expected = leftNode.
-            assoc(shift, rightHash, rightKey, rightValue, addedLeaf);
-        final int expectedSameKey = (addedLeaf.val == addedLeaf) ? 0 : 1;
-        // TODO
-        //final int expectedSameKeyAndValue = (expectedSameKey == 1 && Util.equiv(leftValue, rightValue))? 1:0;
+        final INode rightNode = TestUtils.create(shift, rightKey, rightValue);
 
-        final INode rightNode =  BitmapIndexedNode.EMPTY
-            .assoc(shift, rightHash, rightKey, rightValue, new Box(null));
+        final Counts actualCounts = new Counts(0, 0);
+        final INode actual = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
-        final Counts counts = new Counts(0, 0);
-        final INode actual = splicer.splice(shift, counts, null, leftNode, null, rightNode);
-
-        assertEquals(expectedSameKey, counts.sameKey);
-        //assertEquals(expectedSameKeyAndValue, counts.sameKeyAndValue);
+        assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expected, actual);
         if (same) assertSame(expected, actual); 
     }
@@ -67,6 +56,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              false);
     }
 
+    @Override
     @Test
     public void testSameKeyAndValue() {
         final int hashCode = 3;
