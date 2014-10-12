@@ -33,7 +33,7 @@ public class Seqspert {
             return lMap;
 
         final Counts counts = new Counts(0, 0);
-        final PersistentHashMap.INode root = NodeUtils.splice(0, counts, null, lRoot, 0, null, rRoot);
+        final PersistentHashMap.INode root = NodeUtils.splice(0, counts, null, lRoot, null, rRoot);
         final int count = lMap.count + rMap.count - counts.sameKey;
         return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);
     }

@@ -26,7 +26,7 @@ class ArrayNodeAndKeyValuePairSplicer implements Splicer {
                                                            ));
         } else {
             final INode newNode =
-                NodeUtils.splice(shift + 5, counts, null, subNode, rightHash, rightKey, rightValue);
+                NodeUtils.splice(shift + 5, counts, null, subNode, rightKey, rightValue);
             
             return newNode == subNode ? 
                 leftNode :

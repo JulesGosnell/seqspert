@@ -37,7 +37,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
                                                                    valueIndex,
                                                                    NodeUtils.splice(shift + 5, counts,
                                                                                     subKey, subVal,
-                                                                                    rightHash, rightKey, rightValue)
+                                                                                    rightKey, rightValue)
                                                                    ));
 
         }

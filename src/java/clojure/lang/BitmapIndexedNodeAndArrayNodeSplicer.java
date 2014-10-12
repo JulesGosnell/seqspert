@@ -34,7 +34,7 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
 
                 if (rb) {
                     // both sides present - merge them...
-                    array[i] = NodeUtils.splice(shift + 5, counts, lk, lv, 0, null, rv);
+                    array[i] = NodeUtils.splice(shift + 5, counts, lk, lv, null, rv);
                 } else {
                     // only lhs present
                     array[i] = (lk == null) ? (INode) lv : NodeUtils.create(shift + 5, lk, lv);

@@ -139,7 +139,7 @@ public class SeqspertTest {
             final BitmapIndexedNode actual = (BitmapIndexedNode) NodeUtils.create(shift, key0, value0, PersistentHashMap.hash(key1), key1, value1);
             assertEquals(expected.bitmap, actual.bitmap);
             final HashCollisionNode expectedNested = (HashCollisionNode) expected.array[1];
-            final HashCollisionNode actualNested = (HashCollisionNode) actual.array[1];
+            //final HashCollisionNode actualNested = (HashCollisionNode) actual.array[1];
             assertEquals(expectedNested.hash, expectedNested.hash);
             assertEquals(expectedNested.count, expectedNested.count);
             assertArrayEquals(expectedNested.array, expectedNested.array);

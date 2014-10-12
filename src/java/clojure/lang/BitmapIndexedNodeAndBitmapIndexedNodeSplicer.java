@@ -1,7 +1,5 @@
 package clojure.lang;
 
-import static clojure.lang.NodeUtils.nodeHash;
-
 import java.util.concurrent.atomic.AtomicReference;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
@@ -50,7 +48,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                         Object rv = rightArray[rPosition++];
 
                         // TODO: ouch
-                        final INode newNode = NodeUtils.splice(shift + 5, counts, lk, lv, nodeHash(rk), rk, rv);
+                        final INode newNode = NodeUtils.splice(shift + 5, counts, lk, lv, rk, rv);
                         if (newNode == null) {
                             // we must have spliced two leaves giving a result of a single leaf...
                             // the key must be unchanged

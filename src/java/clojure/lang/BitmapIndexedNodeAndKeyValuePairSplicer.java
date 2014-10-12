@@ -32,7 +32,7 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
             // left hand side already occupied...
             final Object subKey = leftNode.array[keyIndex];
             final Object subVal = leftNode.array[valueIndex];
-            final INode spliced = NodeUtils.splice(shift + 5, counts, subKey, subVal, rightHash, rightKey, rightValue);
+            final INode spliced = NodeUtils.splice(shift + 5, counts, subKey, subVal, rightKey, rightValue);
             if (spliced == null) {
                 if (Util.equiv(subVal, rightValue)) {
                     return leftNode;

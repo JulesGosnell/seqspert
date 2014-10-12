@@ -25,7 +25,7 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
             newNode = BitmapIndexedNodeUtils.create(0, null, rightNode); // TODO - this 0 wrong ?
         } else {
             newCount = leftNode.count;;
-            newNode = NodeUtils.splice(shift + 5, counts, null, subNode, rightHash, null, rightNode);
+            newNode = NodeUtils.splice(shift + 5, counts, null, subNode, null, rightNode);
         }
         return new ArrayNode(null, newCount, NodeUtils.cloneAndSetNode(leftArray, index, newNode));
     }

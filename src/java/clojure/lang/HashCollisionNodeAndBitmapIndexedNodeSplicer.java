@@ -2,7 +2,6 @@ package clojure.lang;
 
 import static clojure.lang.NodeUtils.cloneAndInsert;
 import static clojure.lang.NodeUtils.cloneAndSet;
-import static clojure.lang.NodeUtils.hash;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
@@ -36,8 +35,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
 					counts,
 					null,
 					leftNode,
-					(subKey == null) ? 0 : hash(subKey),
-							subKey,
+					subKey,
 							rightArray[subKeyIndex + 1]);
 
 			if ((~bit & rightNode.bitmap) > 0) {

@@ -26,7 +26,7 @@ class ArrayNodeAndArrayNodeSplicer implements Splicer {
             final boolean rb = r != null;
             if (lb) {
                 if (rb) {
-                    final INode n = NodeUtils.splice(shift + 5, counts, null, l, 0, null, r);
+                    final INode n = NodeUtils.splice(shift + 5, counts, null, l, null, r);
                     if (l != n) differences++;
                     newArray[i] = n;
                 } else {

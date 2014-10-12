@@ -128,7 +128,7 @@ public class NodeUtils {
 
     static INode splice(int shift, Counts counts,
                         Object leftKey, Object leftValue,
-                        int rightHash, Object rightKey, Object rightValue) {
+                        Object rightKey, Object rightValue) {
         return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
             splice(shift, counts, leftKey, leftValue, rightKey, rightValue);
     }

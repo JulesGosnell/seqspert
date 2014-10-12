@@ -40,7 +40,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
             final Object subValue = rightArray[index + 1];
             final INode spliced = NodeUtils.splice(shift + 5, counts,
                                                    leftKey, leftValue,
-                                                   NodeUtils.nodeHash(subKey), subKey, subValue);
+                                                   subKey, subValue);
             if ((~bit & rightBitmap) > 0) {
                 // the BIN contains more than just this entry
                 if (spliced == null) {

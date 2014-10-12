@@ -33,7 +33,7 @@ class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
                     // both sides present - splice them...
                     if (lv !=
                         (newArray[i]
-                         = NodeUtils.splice(shift + 5, counts, null, lv, NodeUtils.nodeHash(rk), rk, rv)))
+                         = NodeUtils.splice(shift + 5, counts, null, lv, rk, rv)))
                         differences++;
                 } else {
                     // only rhs present
