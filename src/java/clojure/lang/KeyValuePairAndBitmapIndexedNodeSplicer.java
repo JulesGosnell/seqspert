@@ -1,6 +1,7 @@
 package clojure.lang;
 
 import static clojure.lang.NodeUtils.hash;
+import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
@@ -17,27 +18,35 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
         final int leftHash = hash(leftKey);
         final int bit = BitmapIndexedNodeUtils.bitpos(leftHash, shift);
         final int index = rightNode.index(bit) * 2;
+        final int keyIndex = index * 2;
+        final int rightBitCount = Integer.bitCount(rightBitmap);
         if((rightBitmap & bit) == 0) {
             // rhs unoccupied
-
-            // TODO: consider whether to return a BIN or an AN
-            final int rightBitCount = Integer.bitCount(rightBitmap);
-
-            // lets assume that we could not have received an empty
-            // BIN, therefore we have at least 2 subNodes, so there is
-            // no need to consider returning a null from this
-            // branch...
-            return new BitmapIndexedNode(null,
-                                         rightBitmap | bit,
-                                         NodeUtils.cloneAndInsert(rightArray,
-                                                                  rightBitCount * 2,
-                                                                  index,
-                                                                  leftKey,
-                                                                  leftValue));
+            if (rightBitCount == 16)
+                return new ArrayNode(null,
+                                     17,
+                                     NodeUtils.promoteAndSet(shift,
+                                                             rightNode.bitmap,
+                                                             rightNode.array,
+                                                             keyIndex,
+                                                             NodeUtils.promote(shift + 5,
+                                                                               leftKey, leftValue)));
+            else
+                // lets assume that we could not have received an empty
+                // BIN, therefore we have at least 2 subNodes, so there is
+                // no need to consider returning a null from this
+                // branch...
+                return new BitmapIndexedNode(null,
+                                             rightBitmap | bit,
+                                             NodeUtils.cloneAndInsert(rightArray,
+                                                                      rightBitCount * 2,
+                                                                      keyIndex,
+                                                                      leftKey,
+                                                                      leftValue));
         } else {
             // rhs occupied...
-            final Object subKey = rightArray[index];
-            final Object subValue = rightArray[index + 1];
+            final Object subKey = rightArray[keyIndex];
+            final Object subValue = rightArray[keyIndex + 1];
             final INode spliced = NodeUtils.splice(shift + 5, counts,
                                                    leftKey, leftValue,
                                                    subKey, subValue);
@@ -57,8 +66,8 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                     return new BitmapIndexedNode(null,
                                                  rightBitmap,
                                                  NodeUtils.cloneAndInsert(rightArray,
-                                                                          Integer.bitCount(rightBitmap) * 2,
-                                                                          index,
+                                                                          rightBitCount * 2,
+                                                                          keyIndex,
                                                                           null,
                                                                           spliced));
                 }
