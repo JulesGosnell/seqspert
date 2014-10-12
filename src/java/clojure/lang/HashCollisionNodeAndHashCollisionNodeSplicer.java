@@ -20,8 +20,8 @@ class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
                                               leftHash, leftNode,
                                               rightHash, rightNode)) :
             // end recursion
-            BitmapIndexedNodeUtils.create(leftBits, leftNode,
-                                          rightBits, rightNode);
+            BitmapIndexedNodeUtils.create(leftBits, null,
+                                          leftNode, rightBits, null, rightNode);
     }
     
     public INode splice(int shift, Counts counts,

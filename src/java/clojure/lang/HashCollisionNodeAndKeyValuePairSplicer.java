@@ -23,7 +23,7 @@ class HashCollisionNodeAndKeyValuePairSplicer implements Splicer {
             return (leftArray == newArray) ?
                 leftNode : new HashCollisionNode(null, leftHash, leftCount + (added ? 1 : 0), newArray);
         } else {
-            return create(mask(leftHash, shift), leftNode, mask(rightHash, shift), rightKey, rightValue);
+            return create(mask(leftHash, shift), null, leftNode, mask(rightHash, shift), rightKey, rightValue);
         }
     }
 
