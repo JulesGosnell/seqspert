@@ -18,7 +18,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
         final int rightBitmap = rightNode.bitmap;
         final int leftHash = hash(leftKey);
         final int bit = BitmapIndexedNodeUtils.bitpos(leftHash, shift);
-        final int index = rightNode.index(bit) * 2;
+        final int index = rightNode.index(bit);
         final int keyIndex = index * 2;
         final int rightBitCount = Integer.bitCount(rightBitmap);
         if((rightBitmap & bit) == 0) {
