@@ -59,7 +59,6 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1.0", 1), "value1.0",
              false);
         
-        // TODO:  a test where we merge with a sub-node rather than a sub-KVP on the RHS.
     }
 
     @Override
@@ -79,7 +78,8 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1.0", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.0", 1), "value1.0",
-             false);
+             true);
+        // TODO: a test where there is more than one subnode on the rhs...
     }
     
 }
