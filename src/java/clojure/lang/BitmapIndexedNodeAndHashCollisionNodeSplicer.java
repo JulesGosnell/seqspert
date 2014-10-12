@@ -1,6 +1,7 @@
 package clojure.lang;
 
 import static clojure.lang.NodeUtils.cloneAndInsert;
+import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
@@ -19,14 +20,23 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
         final int keyIndex = index * 2;
         final int valueIndex = keyIndex + 1;
         if((leftNode.bitmap & bit) == 0) {
-            // TODO: BIN or AN ?
-            return new BitmapIndexedNode(null,
-                                         leftNode.bitmap | bit,
-                                         cloneAndInsert(leftNode.array,
-                                                        Integer.bitCount(leftNode.bitmap) * 2,
-                                                        keyIndex,
-                                                        rightNode));
-
+            final int leftBitCount = Integer.bitCount(leftNode.bitmap);
+            if (leftBitCount == 16)
+                return new ArrayNode(null,
+                                     17,
+                                     NodeUtils.promoteAndSet(shift + 5,
+                                                             leftNode.bitmap,
+                                                             leftNode.array,
+                                                             keyIndex,
+                                                             rightNode));
+            else
+                return new BitmapIndexedNode(null,
+                                             leftNode.bitmap | bit,
+                                             cloneAndInsert(leftNode.array,
+                                                            leftBitCount * 2,
+                                                            keyIndex,
+                                                            rightNode));
+            
         } else {
             // left hand side already occupied...
             final Object subKey = leftNode.array[keyIndex];

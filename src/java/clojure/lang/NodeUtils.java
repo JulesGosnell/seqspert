@@ -58,6 +58,21 @@ public class NodeUtils {
         return newArray;
     }
 
+    public  static INode promote(int shift, Object key, Object value) {
+        return (key == null) ? (INode) value : create(shift, key, value);
+    }
+    
+    public static INode[] promoteAndSet(int shift, int bitmap, Object[] bitIndexedArray, int index, INode newNode) {
+        final INode[] newArray = new INode[32];
+        int j = 0;
+        for (int i = 0; i < 32 ; i++) {
+            if ((bitmap & (1 << i)) != 0) {
+                promote(shift, bitIndexedArray[j++], bitIndexedArray[j++]);
+            }
+        }
+        return newArray;
+    }
+
     //------------------------------------------------------------------------------
 
     public static int hash(Object key) {
