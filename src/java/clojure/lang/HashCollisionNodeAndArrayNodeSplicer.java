@@ -16,10 +16,19 @@ class HashCollisionNodeAndArrayNodeSplicer implements Splicer {
         final INode[] rightArray = rightNode.array;
         final int index = PersistentHashMap.mask(leftNode.hash, shift);
         final INode subNode = rightArray[index];
-        return (subNode == null) ?
-            new ArrayNode(null, rightNode.count + 1, cloneAndSet(rightArray, index + 1, leftNode)) :
-            // TODO: this does not look right to me ...?
-            NodeUtils.splice(shift, counts, null, leftNode, 0, null, subNode);
+        
+        int newCount;
+        INode newNode;
+        if (subNode == null) {
+        	newCount = rightNode.count + 1;
+        	newNode = leftNode;
+        } else {
+        	newCount = rightNode.count;
+        	newNode = NodeUtils.splice(shift + 5, counts, null, leftNode, 0, null, subNode);
+        }
+
+        return new ArrayNode(null, newCount, cloneAndSet(rightArray, index, newNode));
+            
     }
 
 }
