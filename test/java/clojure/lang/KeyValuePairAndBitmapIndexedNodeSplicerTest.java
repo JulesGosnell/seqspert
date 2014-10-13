@@ -61,7 +61,7 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
         // 1. BIN only contains one kvp - identical to lhs - return lhs ?
         // 2. BIN contains >1 kvp - including lhs - return rhs ?
         
-        test(new HashCodeKey("key1", 1), "value1", 1, 1, false);
+        test(new HashCodeKey("key1", 1), "value1", 1, 1, true);
         test(new HashCodeKey("key1", 1), "value1", 1, 2, true);
     }
 

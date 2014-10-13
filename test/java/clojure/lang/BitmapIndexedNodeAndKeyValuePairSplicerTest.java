@@ -56,8 +56,8 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(2, 3, new HashCodeKey("key2", 2), "value2", false);
-        test(2, 17, new HashCodeKey("key2", 2), "value2", false);
+        test(2, 3, new HashCodeKey("key2", 2), "value2", true);
+        test(2, 17, new HashCodeKey("key2", 2), "value2", true);
     }
     
 }
