@@ -14,16 +14,20 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
     final int shift = 0;
     final Splicer splicer = new BitmapIndexedNodeAndArrayNodeSplicer();
         
-    public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1, int rightStart, int rightEnd, boolean same) {
+    public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1, 
+                     int rightStart, int rightEnd, boolean same) {
                 
-        final INode leftNode = TestUtils.assoc(shift,
-                                               TestUtils.assoc(shift, BitmapIndexedNode.EMPTY, leftKey0, leftValue0, new Counts()),
-                                               leftKey1, leftValue1, new Counts());
+        final INode leftNode =
+            TestUtils.assoc(shift,
+                            TestUtils.assoc(shift, BitmapIndexedNode.EMPTY,
+                                            leftKey0, leftValue0, new Counts()),
+                            leftKey1, leftValue1, new Counts());
 
         final Counts expectedCounts = new Counts();
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
                 
-        final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
+        final INode rightNode =
+            TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
                 
         final Counts actualCounts = new Counts(0, 0);
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);

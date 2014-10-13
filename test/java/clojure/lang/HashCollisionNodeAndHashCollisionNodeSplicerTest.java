@@ -15,6 +15,8 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
+    // TODO: refactor
+
     @Override
     @Test
     public void testDifferent() {

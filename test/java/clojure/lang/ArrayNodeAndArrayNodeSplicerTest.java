@@ -40,21 +40,25 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         if (same) assertSame(actualNode, expectedNode);
     }
 
+    @Override
     @Test
     public void testDifferent() {
         test(new HashCodeKey("key0", 0), "value0", 1, 17, 15, 31, false);
     }
 
+    @Override
     @Test
     public void testSameKeyHashCode() {
         test(new HashCodeKey("key17.1", 17), "value17.1", 0, 17, 15, 31, false);
     }
 
+    @Override
     @Test
     public void testSameKey() {
         test(new HashCodeKey("key17", 17), "value17.1", 0, 17, 15, 31, false);
     }
 
+    @Override
     @Test
     public void testSameKeyAndValue() {
         test(new HashCodeKey("key0", 0), "value0", 1, 31, 0, 31, true);

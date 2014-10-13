@@ -44,6 +44,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
         if (same) assertSame(expectedNode, actualNode);
     }
 
+    @Override
     @Test
     public void testDifferent() {
         test(3, 30,
@@ -56,6 +57,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
         //      false);
     }
 
+    @Override
     @Test
     public void testSameKeyHashCode() {
         test(2, 30,
@@ -64,6 +66,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
              false);
     }
         
+    @Override
     @Test
     public void testSameKey() {
         test(2, 30,
@@ -72,6 +75,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
              false);
     }
 
+    @Override
     @Test
     public void testSameKeyAndValue() {
         // rhs is two KVPs

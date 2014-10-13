@@ -14,7 +14,8 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     final int shift = 0;
     final Splicer splicer = new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
         
-    public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1, int rightStart, int rightEnd, boolean same) {
+    public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1,
+                     int rightStart, int rightEnd, boolean same) {
                 
         final INode leftNode = TestUtils.assoc(shift,
                                                TestUtils.assoc(shift, BitmapIndexedNode.EMPTY, leftKey0, leftValue0, new Counts()),

@@ -34,22 +34,26 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
         if (same) assertSame(rightNode, actualNode); // TODO: is this the right thing to assert ?
     }
 
+    @Override
     @Test
     public void testDifferent() {
         test(new HashCodeKey("key1", 1), "value1", 2, 30, false);
     }
 
     @Ignore
+    @Override
     @Test
     public void testSameKeyHashCode() {
         test(new HashCodeKey("collision", 1), "collision1", 1, 30, false);
     }
 
+    @Override
     @Test
     public void testSameKey() {
         test(new HashCodeKey("key1", 1), "differentValue1", 1, 30, false);
     }
 
+    @Override
     @Test
     public void testSameKeyAndValue() {
         test(new HashCodeKey("key1", 1), "value1", 1, 30, true);

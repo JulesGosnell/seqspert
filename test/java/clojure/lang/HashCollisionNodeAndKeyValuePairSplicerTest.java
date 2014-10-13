@@ -18,6 +18,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
     final Object value0 = "value0";
     final Object value1 = "value1";
 
+    // TODO: refactor
     public void test(int rightHashCode, Object rightKey, Object rightValue, boolean same) {
         final INode leftNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 
@@ -63,7 +64,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
     }
 
     @Test
-    //@Override
+    @Override
     public void testSameKeyAndValue() {
         final int rightHashCode = hashCode;
         final Object rightKey = new HashCodeKey("key1", rightHashCode);

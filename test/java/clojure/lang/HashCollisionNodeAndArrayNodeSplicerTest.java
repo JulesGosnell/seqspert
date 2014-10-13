@@ -70,6 +70,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
              false);
     }
 
+    @Override
     @Test
     public void testSameKeyAndValue() {
         test(1,
