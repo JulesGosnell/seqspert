@@ -39,8 +39,8 @@ public class TestUtils {
     public static void assertArrayNodeEquals(ArrayNode expected, ArrayNode actual) {
     	if (expected != actual) {
 	    assertEquals(expected.count, actual.count);
-	    for (int i = 0; i < actual.count;) {
-		assertNodeEquals(expected.array[i], actual.array[i++]);
+	    for (int i = 0; i < expected.count; i++) {
+		assertNodeEquals(expected.array[i], actual.array[i]);
 	    }
     	}
     }

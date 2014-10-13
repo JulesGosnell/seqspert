@@ -39,6 +39,29 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         if (same) assertSame(expectedNode, actualNode);
     }
 
+    public void test(int leftHash,
+                     Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1,
+                     int rightStart, int rightEnd,
+                     boolean same) {
+
+        final INode leftNode = HashCollisionNodeUtils.create(leftHash,
+                                                             leftKey0, leftValue0, leftKey1, leftValue1);
+        assertTrue(leftNode instanceof HashCollisionNode);
+
+        final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
+        assertTrue(rightNode instanceof BitmapIndexedNode);
+
+        final Counts expectedCounts = new Counts();
+        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
+
+        final Counts actualCounts = new Counts();
+        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
+
+        assertEquals(expectedCounts, actualCounts);
+        assertNodeEquals(expectedNode, actualNode);
+        if (same) assertSame(expectedNode, actualNode);
+    }
+
     @Override
     @Test
     public void testDifferent() {
@@ -46,6 +69,11 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1.0", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key0", 0), "value0",
+             false);
+        test(1,
+             new HashCodeKey("key1.0", 1), "value1.0",
+             new HashCodeKey("key1.1", 1), "value1.1",
+             2, 17,
              false);
         // TODO: a test where the RHS is promoted from BIN to AN as a result of the splice...
     }
@@ -58,7 +86,11 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1.2", 1), "value1.2",
              new HashCodeKey("key1.0", 1), "value1.0",
              false);
-        
+        test(1,
+             new HashCodeKey("key1.1", 1), "value1.1",
+             new HashCodeKey("key1.2", 1), "value1.2",
+             1, 16,
+             false);
     }
 
     @Override
@@ -68,6 +100,11 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1.0", 1), "value1.0.1",
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.0", 1), "value1.0.0",
+             false);
+        test(1,
+             new HashCodeKey("key1", 1), "value1.0",
+             new HashCodeKey("key1.1", 1), "value1.1",
+             1, 16,
              false);
     }
 
@@ -79,6 +116,11 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.0", 1), "value1.0",
              true);
+        test(1,
+             new HashCodeKey("key1", 1), "value1",
+             new HashCodeKey("key1.1", 1), "value1.1",
+             1, 16,
+             false);
         // TODO: a test where there is more than one subnode on the rhs...
     }
     

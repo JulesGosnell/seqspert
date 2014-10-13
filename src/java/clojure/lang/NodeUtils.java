@@ -41,9 +41,17 @@ public class NodeUtils {
         return newArray;
     }
 
+    public static Object[] cloneAndSet(Object[] oldArray, int index, Object key, Object value) {
+        final Object[] newArray = oldArray.clone();
+        newArray[index + 0] = key;
+        newArray[index + 1] = value;
+        return newArray;
+    }
+
     public static Object[] cloneAndInsert(Object[] oldArray, int oldLength, int index, INode node) {
         final Object[] newArray = new Object[oldLength + 2];
         System.arraycopy(oldArray, 0, newArray, 0, index);
+        newArray[index + 0] = null;
         newArray[index + 1] = node;
         System.arraycopy(oldArray, index, newArray, index + 2, oldLength - index);
         return newArray;

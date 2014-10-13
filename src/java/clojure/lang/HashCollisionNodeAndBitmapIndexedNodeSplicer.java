@@ -30,7 +30,9 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                                              rightNode.bitmap,
                                                              rightNode.array,
 							     PersistentHashMap.mask(leftNode.hash, shift),
-                                                             NodeUtils.create(shift + 5, null, leftNode)));
+                                                             //NodeUtils.create(shift + 5, null, leftNode)
+                                                             leftNode
+                                                             ));
             else
                 return new BitmapIndexedNode(null,
                                              rightNode.bitmap | bit,
@@ -55,6 +57,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                              rightNode.bitmap,
                                              cloneAndSet(rightNode.array,
                                                          keyIndex,
+                                                         null,
                                                          spliced));
             } else {
                 // this was the only subNode, now it is spliced into the LHC - return the result
