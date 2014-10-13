@@ -3,6 +3,7 @@ package clojure.lang;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -18,6 +19,7 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
         final INode empty = BitmapIndexedNode.EMPTY;
         final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
+        assertTrue(leftNode instanceof BitmapIndexedNode);
 
         final Counts expectedCounts = new Counts();
         final INode expectedNode = TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
@@ -34,7 +36,7 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
     @Test
     public void testDifferent() {
         test(2, 3, new HashCodeKey("key1", 1), "value1", false);
-        //        test(2, 17, new HashCodeKey("key1", 1), "value1", false);
+        test(2, 17, new HashCodeKey("key1", 1), "value1", false);
     }
 
     @Override
