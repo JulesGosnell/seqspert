@@ -18,16 +18,16 @@ class HashCollisionNodeAndArrayNodeSplicer implements Splicer {
         final INode subNode = rightArray[index];
         
         int newCount;
-        INode newNode;
+        INode newSubNode;
         if (subNode == null) {
         	newCount = rightNode.count + 1;
-        	newNode = leftNode;
+        	newSubNode = leftNode;
         } else {
         	newCount = rightNode.count;
-        	newNode = NodeUtils.splice(shift + 5, counts, null, leftNode, null, subNode);
+        	newSubNode = NodeUtils.splice(shift + 5, counts, null, leftNode, null, subNode);
         }
 
-        return new ArrayNode(null, newCount, cloneAndSet(rightArray, index, newNode));
+        return new ArrayNode(null, newCount, cloneAndSet(rightArray, index, newSubNode));
             
     }
 

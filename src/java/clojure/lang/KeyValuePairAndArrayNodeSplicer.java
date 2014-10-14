@@ -13,8 +13,6 @@ class KeyValuePairAndArrayNodeSplicer implements Splicer {
                         Object rightKey, Object rightValue) {
 
         final ArrayNode rightNode = (ArrayNode) rightValue;
-
-        // TODO: can we pass down the hash to avoid work here ?
         final int leftHash = hash(leftKey);
         final int index = PersistentHashMap.mask(leftHash, shift);
         

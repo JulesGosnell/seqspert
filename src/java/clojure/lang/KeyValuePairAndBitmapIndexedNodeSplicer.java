@@ -58,7 +58,6 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                     // since the BIN contains more than this entry we must return it...
                     return rightNode;
                 } else {
-                    System.out.println("AAARGH! - splice() didn't return null - other entries");
                     // we have successfully merged the LHS and RHS entry
                     // we need to copy over the rest of the RHS and return a new BIN...
                     // since we are replacing a subNode we do not have to worry about promotion to an AN.

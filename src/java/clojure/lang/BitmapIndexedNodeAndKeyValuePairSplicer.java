@@ -4,8 +4,6 @@ import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
-// TODO: this is pretty much identical to BINAndHCNSplicer - can we reuse the same code ?
-
 class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts, 
@@ -42,15 +40,15 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
             // left hand side already occupied...
             final Object subKey = leftNode.array[keyIndex];
             final Object subVal = leftNode.array[valueIndex];
-            final INode spliced = NodeUtils.splice(shift + 5, counts, subKey, subVal, rightKey, rightValue);
-            if (spliced == null) {
+            final INode newSubNode = NodeUtils.splice(shift + 5, counts, subKey, subVal, rightKey, rightValue);
+            if (newSubNode == null) {
                 if (Util.equiv(subVal, rightValue)) {
                     return leftNode;
                 } else {
                     return new BitmapIndexedNode(null, leftNode.bitmap, NodeUtils.cloneAndSet(leftNode.array, valueIndex, rightValue));
                 }
             } else {
-                return new BitmapIndexedNode(null, leftNode.bitmap, NodeUtils.cloneAndSetNode(leftNode.array, valueIndex, spliced));
+                return new BitmapIndexedNode(null, leftNode.bitmap, NodeUtils.cloneAndSetNode(leftNode.array, valueIndex, newSubNode));
             }
         }
     }

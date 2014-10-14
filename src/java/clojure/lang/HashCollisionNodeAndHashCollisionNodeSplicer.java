@@ -5,8 +5,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
 
-    // TODO - think of a good name...
-    public INode foo(int shift,
+    public INode recurse(int shift,
                      int leftHash, HashCollisionNode leftNode,
                      int rightHash, HashCollisionNode rightNode) {
         
@@ -16,7 +15,7 @@ class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
             (leftBits == rightBits) ?
             // keep recursing down...
             BitmapIndexedNodeUtils.create(leftBits,
-                                          null, foo(shift + 5,
+                                          null, recurse(shift + 5,
                                               leftHash, leftNode,
                                               rightHash, rightNode)) :
             // end recursion
@@ -55,7 +54,7 @@ class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
             // into different partitions, then build a BIN with two
             // HCN elements...
 
-            return foo(shift, leftNode.hash, leftNode, rightNode.hash, rightNode);
+            return recurse(shift, leftNode.hash, leftNode, rightNode.hash, rightNode);
         }
     }
         

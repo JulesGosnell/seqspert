@@ -8,6 +8,7 @@ import clojure.lang.PersistentHashMap.INode;
 
 class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
 
+	// TODO: consider a rightSame here...
     public INode splice(int shift, Counts counts, 
                         Object leftKey, Object leftValue,
                         Object rightKey, Object rightValue) {
