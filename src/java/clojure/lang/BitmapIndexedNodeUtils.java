@@ -1,4 +1,4 @@
-=package clojure.lang;
+package clojure.lang;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 
