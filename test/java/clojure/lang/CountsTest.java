@@ -16,8 +16,12 @@ public class CountsTest  {
         assertEquals(counts, new Counts());
         assertEquals(counts, new Counts(false, 0, 0));
         assertNotEquals(counts, new Counts(false, 1, 0));
-        assertNotEquals(counts, new Counts(false, 0, 1));
         assertNotEquals(counts, new Counts(false, 1, 1));
+        assertNotEquals(counts, new Counts(false, 0, 1));
+        assertNotEquals(counts, new Counts(true, 0, 0));
+        assertNotEquals(counts, new Counts(true, 1, 0));
+        assertNotEquals(counts, new Counts(true, 1, 1));
+        assertNotEquals(counts, new Counts(true, 0, 1));
         assertNotEquals(counts, "not a Counts instance");
         
         assertNotNull(counts.toString());
