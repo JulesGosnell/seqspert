@@ -10,46 +10,48 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
                         Object leftKey, Object leftValue,
                         Object rightKey, Object rightValue) {
 
-        final BitmapIndexedNode l = (BitmapIndexedNode) leftValue;
-        final ArrayNode r = (ArrayNode) rightValue;
+        final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
+        final ArrayNode rightNode = (ArrayNode) rightValue;
 
-        // make a new array
-        final INode[] array = new INode[32];
+        final Object[] leftArray = leftNode.array;
+        final INode[] rightArray = rightNode.array;
 
-        // walk through existing l and r nodes, splicing them into array...
+        final INode[] newArray = new INode[32];
+
+        int differences = 0; // can we just return RHS ?
         int count = 0;
-        int lPosition = 0;
+        int leftIndex = 0;
         for (int i = 0; i < 32; i++) {
             final int mask = 1 << i;
-            final boolean lb = ((l.bitmap & mask) != 0);
-            final INode rv = r.array[i];
-            final boolean rb = rv != null;
+            final boolean hasLeft = ((leftNode.bitmap & mask) != 0);
+			final INode rightSubNode = rightArray[i];
+            final boolean hasRight = rightSubNode != null;
 
-            if (lb) {
+            if (hasLeft) {
                 count++;
-                final Object lk = l.array[lPosition++];
-                final Object lv = l.array[lPosition++];
+				final Object leftSubKey = leftArray[leftIndex++];
+                final Object leftSubValue = leftArray[leftIndex++];
 
-                if (rb) {
+                if (hasRight) {
                     // both sides present - merge them...
-                    array[i] = NodeUtils.splice(shift + 5, counts, lk, lv, null, rv);
+                    final INode newSubNode = NodeUtils.splice(shift + 5, counts, leftSubKey, leftSubValue, null, rightSubNode);
+					newArray[i] = newSubNode;
+					differences += (newSubNode == rightSubNode) ? 0 : 1;
                 } else {
-                    // only lhs present
-                    array[i] = (lk == null) ? (INode) lv : NodeUtils.create(shift + 5, lk, lv);
+                    newArray[i] = (leftSubKey == null) ? (INode) leftSubValue : NodeUtils.create(shift + 5, leftSubKey, leftSubValue);
+					differences++;
                 }
             } else { // not lb
-                if (rb) {
+                if (hasRight) {
                     count++;
                     // only rhs present - copy over
-                    array[i] = rv;
-
+                    newArray[i] = rightSubNode;
                 } else {
                     // do nothing...
                 }
             }
         }
 
-        // TODO: if all LHS contents were on RHS we should just return RHS
-        return new ArrayNode(null, count, array);
+        return differences == 0 ? rightNode : new ArrayNode(null, count, newArray);
     }
 }

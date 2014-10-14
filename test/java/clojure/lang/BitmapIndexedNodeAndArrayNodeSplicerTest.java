@@ -58,7 +58,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(new HashCodeKey("key" + 3, 3), "value3", new HashCodeKey("key" + 4, 4), "value4", 3, 30, false); // TODO: FIXME
+        test(new HashCodeKey("key" + 3, 3), "value3", new HashCodeKey("key" + 4, 4), "value4", 3, 30, true);
     }
     
 }
