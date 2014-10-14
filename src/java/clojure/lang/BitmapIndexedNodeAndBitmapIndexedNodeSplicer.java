@@ -25,7 +25,6 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
 		final INode[] newAnArray = new INode[32];
 
 		final boolean promoted = (newBitCount > 16); // TODO: handle this more efficiently
-		// output will be a BitmapIndexedNode or a HashCollisionNode
 		int leftIndex = 0;
 		int rightIndex = 0;
 		int newBinIndex = 0;
@@ -82,10 +81,10 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
 			}
 		}
 
-		return differences == 0 ?
-				leftNode :
-					promoted ?
-							new PersistentHashMap.ArrayNode(null,newBitCount, newAnArray) :
+		return promoted ?
+				new PersistentHashMap.ArrayNode(null,newBitCount, newAnArray) :
+					differences == 0 ?
+							leftNode :
 								new PersistentHashMap.BitmapIndexedNode(new AtomicReference<Thread>(), newBitmap, newBinArray);
 	}
 
