@@ -20,31 +20,29 @@ class ArrayNodeAndArrayNodeSplicer implements Splicer {
         int empty = 0;
         int differences = 0;
         for (int i = 0; i < 32; i++) {
-            final INode l = leftArray[i];
-            final INode r = rightArray[i];
-            final boolean lb = l != null;
-            final boolean rb = r != null;
-            if (lb) {
-                if (rb) {
-                    final INode n = NodeUtils.splice(shift + 5, counts, null, l, null, r);
-                    if (l != n) differences++;
-                    newArray[i] = n;
+            final INode leftSubNode = leftArray[i];
+            final INode rightSubNode = rightArray[i];
+            final boolean hasLeft = leftSubNode != null;
+            final boolean hasRight = rightSubNode != null;
+            if (hasLeft) {
+                if (hasRight) {
+                    final INode newSubNode = NodeUtils.splice(shift + 5, counts, null, leftSubNode, null, rightSubNode);
+                    if (leftSubNode != newSubNode) differences++;
+                    newArray[i] = newSubNode;
                 } else {
-                    newArray[i] = l;
+                    newArray[i] = leftSubNode;
                 }
             } else {
-                if (rb) {
+                if (hasRight) {
                     differences++;
-                    newArray[i] = r;
+                    newArray[i] = rightSubNode;
                 } else {
                     empty++;
                 }
             }
         }
 
-        // now decide whether we need any of the work that we have
-        // done - I expect that we do...
-        return differences > 0 ? new ArrayNode(null, 32 - empty, newArray) : leftNode;
+        return differences == 0 ? leftNode : new ArrayNode(null, 32 - empty, newArray);
     }
 
 }
