@@ -1,7 +1,6 @@
 package clojure.lang;
 
 import static clojure.lang.NodeUtils.hash;
-
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;

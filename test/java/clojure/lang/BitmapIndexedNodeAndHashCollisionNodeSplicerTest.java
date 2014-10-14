@@ -6,8 +6,8 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
-import clojure.lang.PersistentHashMap.INode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
