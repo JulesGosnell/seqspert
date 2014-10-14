@@ -25,7 +25,7 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
         final INode expectedNode =
             TestUtils.assocN(shift, create(shift, leftKey, leftValue), rightStart, rightEnd, expectedCounts);
 
-        final Counts actualCounts = new Counts(0, 0);
+        final Counts actualCounts = new Counts(false, 0, 0);
         final INode actualNode =
             splicer.splice(shift, actualCounts, leftKey, leftValue, null, rightNode);
 
