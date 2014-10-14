@@ -60,6 +60,11 @@ public class TestUtils {
 	}
     }
 
+    public static void assertSame(Object value0, Object value1, Object value2) {
+        org.junit.Assert.assertSame(value0, value1);
+        org.junit.Assert.assertSame(value1, value2);
+    }
+
     public static INode assoc(int shift, INode node, Object key, Object value, Counts counts) {
 	final Box box = new Box(null);
 	node = node.assoc(shift, NodeUtils.hash(key), key, value, box);

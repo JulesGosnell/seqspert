@@ -70,7 +70,8 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
 
     public void test(Object key0, Object value0, Object key1, Object value1,
                      Object key2, Object value2, Object key3, Object value3,
-                     boolean same) {
+                     boolean sameLeft) { // TODO: sameRight
+        // TODO: refactor
         final HashCollisionNode leftNode   = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
         final HashCollisionNode rightNode =  new HashCollisionNode(null, hashCode, 2, new Object[]{key2, value2, key3, value3});
 
@@ -89,7 +90,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
         final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, counts, null, leftNode, null, rightNode);
         assertEquals(expectedCounts, counts.sameKey);
         assertHashCollisionNodeEquals(expected, actual);
-        if (same) assertSame(expected, actual);
+        if (sameLeft) assertSame(expected, actual);
     }
 
     @Override

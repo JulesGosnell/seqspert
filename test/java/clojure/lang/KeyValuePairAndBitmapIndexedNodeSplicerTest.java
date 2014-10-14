@@ -15,7 +15,7 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
     final Splicer splicer = new KeyValuePairAndBitmapIndexedNodeSplicer();
     final int shift = 0;
 
-    public void test(Object leftKey, Object leftValue, int rightStart, int rightEnd, boolean same) {
+    public void test(Object leftKey, Object leftValue, int rightStart, int rightEnd, boolean sameRight) {
 
         final INode empty = BitmapIndexedNode.EMPTY;
 
@@ -30,7 +30,7 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
         
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode); // TODO - except when null
-        if (same) assertSame(expectedNode, actualNode); // ??
+        if (sameRight) assertSame(rightNode, actualNode);
     }
     
     @Test

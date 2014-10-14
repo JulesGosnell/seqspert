@@ -36,8 +36,8 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
         assertEquals(expectedCounts.sameKey, actualCounts.sameKey);
-        assertNodeEquals(actualNode, expectedNode);
-        if (same) assertSame(actualNode, expectedNode);
+        assertNodeEquals(expectedNode, actualNode);
+        if (same) TestUtils.assertSame(leftNode, expectedNode, actualNode);
     }
 
     @Override

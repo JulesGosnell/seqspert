@@ -16,7 +16,7 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
     final int shift = 0;
     final Splicer splicer = new KeyValuePairAndArrayNodeSplicer();
 
-    public void test(Object leftKey, Object leftValue, int rightStart, int rightEnd, boolean same) {
+    public void test(Object leftKey, Object leftValue, int rightStart, int rightEnd, boolean sameRight) {
 
         final INode empty = BitmapIndexedNode.EMPTY;
         final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
@@ -31,7 +31,7 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) assertSame(rightNode, actualNode); // TODO: is this the right thing to assert ?
+        if (sameRight) assertSame(rightNode, actualNode);
     }
 
     @Override

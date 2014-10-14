@@ -38,7 +38,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
         
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) assertSame(expectedNode, actualNode);
+        if (same) TestUtils.assertSame(leftNode, expectedNode, actualNode);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
     final Splicer splicer = new BitmapIndexedNodeAndArrayNodeSplicer();
         
     public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1, 
-                     int rightStart, int rightEnd, boolean same) {
+                     int rightStart, int rightEnd, boolean sameRight) {
                 
         final INode leftNode =
             TestUtils.assoc(shift,
@@ -34,7 +34,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) assertSame(rightNode, actualNode); // is this right ?
+        if (sameRight) assertSame(rightNode, actualNode);
     }
         
     @Override

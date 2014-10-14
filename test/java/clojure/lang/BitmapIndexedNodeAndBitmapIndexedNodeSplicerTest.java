@@ -31,7 +31,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) assertSame(rightNode, actualNode); // is this right ?
+        if (same) TestUtils.assertSame(leftNode, expectedNode, actualNode);
     }
         
     @Override

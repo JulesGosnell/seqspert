@@ -20,7 +20,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
     public void test(int leftHash,
                      Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1,
                      int rightStart, int rightEnd,
-                     boolean same) {
+                     boolean sameRight) {
 
         final INode leftNode = HashCollisionNodeUtils.create(leftHash,
                                                              leftKey0, leftValue0, leftKey1, leftValue1);
@@ -37,7 +37,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) assertSame(expectedNode, actualNode);
+        if (sameRight) assertSame(rightNode, actualNode);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key1.1", 1), "value1.1",
              1, 31,
-             false);
+             false);            // TODO: need an HCN on RHS to test this
     }
     
 }

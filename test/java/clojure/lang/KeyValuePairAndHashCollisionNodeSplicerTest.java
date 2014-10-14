@@ -20,7 +20,7 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
     final Object value0 = "value0";
     final Object value1 = "value1";
 
-    public void test(Object leftKey, Object leftValue, boolean same) {
+    public void test(Object leftKey, Object leftValue, boolean sameRight) {
 
         final INode leftNode = NodeUtils.create(shift, leftKey, leftValue);
 
@@ -43,7 +43,7 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
 
         assertEquals(expectedCounts, counts.sameKey);
         assertNodeEquals(expected, actual);
-        if (same) assertSame(expected, actual);
+        if (sameRight) assertSame(expected, actual);
     }
 
     @Test

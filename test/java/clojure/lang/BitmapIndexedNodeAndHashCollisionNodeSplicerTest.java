@@ -17,7 +17,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
     public void test(Object leftKey, Object leftValue,
                      int rightHash,
                      Object rightKey0, Object rightValue0, Object rightKey1, Object rightValue1,
-                     boolean same) {
+                     boolean sameLeft) { // TODO: sameRight
 
         final INode leftNode = NodeUtils.create(shift, leftKey, leftValue);
         final INode rightNode = HashCollisionNodeUtils.create(rightHash,
@@ -35,13 +35,13 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) assertSame(expectedNode, actualNode);
+        if (sameLeft) TestUtils.assertSame(leftNode, expectedNode, actualNode);
     }
 
     public void test(int leftStart, int leftEnd,
                      int rightHash,
                      Object rightKey0, Object rightValue0, Object rightKey1, Object rightValue1,
-                     boolean same) {
+                     boolean sameLeft) { // TODO: sameRight
 
         final INode empty = BitmapIndexedNode.EMPTY;
         final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
@@ -60,7 +60,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) assertSame(expectedNode, actualNode);
+        if (sameLeft) TestUtils.assertSame(leftNode, expectedNode, actualNode);
     }
 
     @Override
