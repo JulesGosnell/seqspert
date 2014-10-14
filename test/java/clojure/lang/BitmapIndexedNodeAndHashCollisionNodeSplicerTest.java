@@ -17,7 +17,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
     public void test(Object leftKey, Object leftValue,
                      int rightHash,
                      Object rightKey0, Object rightValue0, Object rightKey1, Object rightValue1,
-                     boolean sameLeft) { // TODO: sameRight
+                     boolean sameLeft, boolean sameRight) {
 
         final INode leftNode = NodeUtils.create(shift, leftKey, leftValue);
         final INode rightNode = HashCollisionNodeUtils.create(rightHash,
@@ -36,12 +36,13 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
         if (sameLeft) TestUtils.assertSame(leftNode, expectedNode, actualNode);
+        if (sameRight) assertSame(rightNode, actualNode);
     }
 
     public void test(int leftStart, int leftEnd,
                      int rightHash,
                      Object rightKey0, Object rightValue0, Object rightKey1, Object rightValue1,
-                     boolean sameLeft) { // TODO: sameRight
+                     boolean sameLeft, boolean sameRight) {
 
         final INode empty = BitmapIndexedNode.EMPTY;
         final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
@@ -61,6 +62,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
         if (sameLeft) TestUtils.assertSame(leftNode, expectedNode, actualNode);
+        if (sameRight) assertSame(rightNode, actualNode);
     }
 
     @Override
@@ -70,12 +72,12 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              1,
              new HashCodeKey("key1.0", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
-             false);
+             false, false);
          test(3, 18,
               1,
               new HashCodeKey("key1.0", 1), "value1.0",
               new HashCodeKey("key1.1", 1), "value1.1",
-              false);
+              false, false);
 
     }
 
@@ -86,12 +88,12 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              1,
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.2", 1), "value1.2",
-             false);
+             false, false);
         test(1, 16,
              1,
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.2", 1), "value1.2",
-             false);
+             false, false);
     }
         
     @Override
@@ -101,28 +103,29 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              1,
              new HashCodeKey("key1.0", 1), "value1.0.1",
              new HashCodeKey("key1.1", 1), "value1.1",
-             false);
+             false, false);
         test(1, 16,
              1,
              new HashCodeKey("key1",   1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
-             false);
+             false, false);
     }
 
 
     @Override
     @Test
     public void testSameKeyAndValue() {
+        // TODO: test left and right sameness
         test(new HashCodeKey("key1.0", 1), "value1.0",
              1,
              new HashCodeKey("key1.0", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
-             false);
+             false, false);
         test(1, 16,
              1,
              new HashCodeKey("key1",   1), "value1",
              new HashCodeKey("key1.1", 1), "value1.1",
-             false);
+             false, false);
     }
     
 }

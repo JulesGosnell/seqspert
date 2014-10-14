@@ -84,6 +84,6 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
              new HashCodeKey("collision0", rightHash), "collision0",
              new HashCodeKey("key1", rightHash), "value1",
              false);
-        // to test this we need an HCN in the same place on the lhs
+        // TODO: to test this we need an HCN in the same place on the lhs
     }
 }
