@@ -1,4 +1,4 @@
-package clojure.lang;
+=package clojure.lang;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 
@@ -8,18 +8,16 @@ public class BitmapIndexedNodeUtils {
         return 1 << PersistentHashMap.mask(hash, shift);
     }
         
-    public static  BitmapIndexedNode create(int leftIndex, Object leftKey, Object leftValue) {
-        return new BitmapIndexedNode(null,
-                                     1 << leftIndex,
-                                     new Object[]{leftKey, leftValue});
+    public static  BitmapIndexedNode create(int index, Object key, Object value) {
+        return new BitmapIndexedNode(null, 1 << index, new Object[]{key, value});
     }
     
-    public static  BitmapIndexedNode create(int leftIndex, Object leftKey, Object leftValue, int rightIndex, Object rightKey, Object rightValue) {
+    public static  BitmapIndexedNode create(int index0, Object key0, Object value0, int index1, Object key1, Object value1) {
         return new BitmapIndexedNode(null,
-                                     1 << leftIndex | 1 << rightIndex,
-                                     (leftIndex <= rightIndex) ?
-                                     new Object[]{leftKey, leftValue, rightKey, rightValue} :
-                                     new Object[]{rightKey, rightValue, leftKey, leftValue});
+                                     1 << index0 | 1 << index1,
+                                     (index0 <= index1) ?
+                                     new Object[]{key0, value0, key1, value1} :
+                                     new Object[]{key1, value1, key0, value0});
     }
     
 }
