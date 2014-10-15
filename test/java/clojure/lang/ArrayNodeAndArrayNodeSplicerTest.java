@@ -3,6 +3,7 @@ package clojure.lang;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
     final Splicer splicer = new ArrayNodeAndArrayNodeSplicer();
 
     public void test(Object leftKey, Object leftValue, int leftStart, int leftEnd,
-                     int rightStart, int rightEnd, boolean same) {
+                     int rightStart, int rightEnd, boolean leftSame, boolean rightSame) {
         final INode empty = BitmapIndexedNode.EMPTY;
 
         final INode leftNode =
@@ -28,38 +29,39 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
         assertTrue(rightNode instanceof ArrayNode);
 
-        final Counts expectedCounts = new Counts(same, 0, 0);
+        final Counts expectedCounts = new Counts(leftSame, 0, 0);
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
 
-        final Counts actualCounts = new Counts(same, 0, 0);
+        final Counts actualCounts = new Counts(leftSame, 0, 0);
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
         assertEquals(expectedCounts.sameKey, actualCounts.sameKey);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) TestUtils.assertSame(leftNode, expectedNode, actualNode);
+        if (leftSame) TestUtils.assertSame(leftNode, expectedNode, actualNode);
+        if (rightSame) assertSame(rightNode, actualNode);
     }
 
     @Override
     @Test
     public void testDifferent() {
-        test(new HashCodeKey("key0", 0), "value0", 1, 17, 15, 31, false);
+        test(new HashCodeKey("key0", 0), "value0", 1, 17, 15, 31, false, false);
     }
 
     @Override
     @Test
     public void testSameKeyHashCode() {
-        test(new HashCodeKey("key17.1", 17), "value17.1", 0, 17, 15, 31, false);
+        test(new HashCodeKey("key17.1", 17), "value17.1", 0, 17, 15, 31, false, false);
     }
 
     @Override
     @Test
     public void testSameKey() {
-        test(new HashCodeKey("key17", 17), "value17.1", 0, 17, 15, 31, false);
+        test(new HashCodeKey("key17", 17), "value17.1", 0, 17, 15, 31, false, false);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(new HashCodeKey("key0", 0), "value0", 1, 31, 0, 31, true);
+        test(new HashCodeKey("key0", 0), "value0", 1, 31, 0, 31, true, false);
     }
 }
