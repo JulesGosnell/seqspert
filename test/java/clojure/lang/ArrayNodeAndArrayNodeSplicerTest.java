@@ -63,5 +63,6 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
     @Test
     public void testSameKeyAndValue() {
         test(new HashCodeKey("key0", 0), "value0", 1, 31, 0, 31, true, false);
+        test(new HashCodeKey("key0", 0), "value0", 1, 30, 0, 31, false, true);
     }
 }
