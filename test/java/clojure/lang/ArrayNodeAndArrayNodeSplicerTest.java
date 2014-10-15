@@ -28,15 +28,15 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
         assertTrue(rightNode instanceof ArrayNode);
 
-        final Counts expectedCounts = new Counts();
+        final Counts expectedCounts = new Counts(same, 0, 0);
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
 
-        final Counts actualCounts = new Counts();
+        final Counts actualCounts = new Counts(same, 0, 0);
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
         assertEquals(expectedCounts.sameKey, actualCounts.sameKey);
         assertNodeEquals(expectedNode, actualNode);
-        //if (same) TestUtils.assertSame(leftNode, expectedNode, actualNode);
+        if (same) TestUtils.assertSame(leftNode, expectedNode, actualNode);
     }
 
     @Override
