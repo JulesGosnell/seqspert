@@ -84,8 +84,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 } else {
                     // haveLeft and !haveRight
                     if (promoted) {
-                        newAnArray[i] = (leftSubKey == null) ?
-                            (INode) leftSubValue : NodeUtils.create(shift + 5, leftSubKey, leftSubValue);
+                        newAnArray[i] = NodeUtils.promote(shift + 5, leftSubKey, leftSubValue);
                     } else {
                         newBinArray[newBinIndex++] = leftSubKey;
                         newBinArray[newBinIndex++] = leftSubValue;

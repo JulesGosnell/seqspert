@@ -3,6 +3,8 @@ package clojure.lang;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
+// TODO: support left and right same-ness
+
 class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
 
     public INode recurse(int shift,

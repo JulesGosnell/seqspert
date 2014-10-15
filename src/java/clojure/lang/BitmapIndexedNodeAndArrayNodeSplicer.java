@@ -24,21 +24,21 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
         for (int i = 0; i < 32; i++) {
             final int mask = 1 << i;
             final boolean hasLeft = ((leftNode.bitmap & mask) != 0);
-			final INode rightSubNode = rightArray[i];
+            final INode rightSubNode = rightArray[i];
             final boolean hasRight = rightSubNode != null;
 
             if (hasLeft) {
-				final Object leftSubKey = leftArray[leftIndex++];
+                final Object leftSubKey = leftArray[leftIndex++];
                 final Object leftSubValue = leftArray[leftIndex++];
 
                 if (hasRight) {
                     // both sides present - merge them...
                     final INode newSubNode = NodeUtils.splice(shift + 5, counts, leftSubKey, leftSubValue, null, rightSubNode);
-					newArray[i] = newSubNode;
-					differences += (newSubNode == rightSubNode) ? 0 : 1;
+                    newArray[i] = newSubNode;
+                    differences += (newSubNode == rightSubNode) ? 0 : 1;
                 } else {
-                    newArray[i] = (leftSubKey == null) ? (INode) leftSubValue : NodeUtils.create(shift + 5, leftSubKey, leftSubValue);
-					differences++;
+                    newArray[i] = NodeUtils.promote(shift + 5, leftSubKey, leftSubValue);
+                    differences++;
                 }
             } else { // not lb
                 if (hasRight) {
@@ -46,7 +46,7 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
                     newArray[i] = rightSubNode;
                 } else {
                     // do nothing...
-                	empty++;
+                    empty++;
                 }
             }
         }
