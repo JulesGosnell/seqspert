@@ -21,18 +21,18 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
                                                TestUtils.assoc(shift, BitmapIndexedNode.EMPTY, leftKey0, leftValue0, new Counts()),
                                                leftKey1, leftValue1, new Counts());
 
-        final Counts expectedCounts = new Counts(true, 0, 0);
+        final Counts expectedCounts = new Counts(leftSame, 0, 0);
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
                 
         final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
                 
-        final Counts actualCounts = new Counts(true, 0, 0);
+        final Counts actualCounts = new Counts(leftSame, 0, 0);
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
         if (leftSame) TestUtils.assertSame(leftNode, expectedNode, actualNode);
-        //if (rightSame) assertSame(rightNode, actualNode);
+        if (rightSame) assertSame(rightNode, actualNode);
     }
         
     @Override
