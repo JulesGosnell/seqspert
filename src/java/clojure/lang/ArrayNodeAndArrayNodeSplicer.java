@@ -3,6 +3,7 @@ package clojure.lang;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.INode;
 
+// TODO: support rightDifferences...
 
 class ArrayNodeAndArrayNodeSplicer implements Splicer {
 
@@ -18,7 +19,7 @@ class ArrayNodeAndArrayNodeSplicer implements Splicer {
         final INode[] newArray = new INode[32]; // allocate optimistically...
 
         int empty = 0;
-        int differences = 0;
+        int leftDifferences = 0;
         for (int i = 0; i < 32; i++) {
             final INode leftSubNode = leftArray[i];
             final INode rightSubNode = rightArray[i];
@@ -27,14 +28,14 @@ class ArrayNodeAndArrayNodeSplicer implements Splicer {
             if (hasLeft) {
                 if (hasRight) {
                     final INode newSubNode = NodeUtils.splice(shift + 5, counts, null, leftSubNode, null, rightSubNode);
-                    if (leftSubNode != newSubNode) differences++;
+                    if (leftSubNode != newSubNode) leftDifferences++;
                     newArray[i] = newSubNode;
                 } else {
                     newArray[i] = leftSubNode;
                 }
             } else {
                 if (hasRight) {
-                    differences++;
+                    leftDifferences++;
                     newArray[i] = rightSubNode;
                 } else {
                     empty++;
@@ -42,7 +43,7 @@ class ArrayNodeAndArrayNodeSplicer implements Splicer {
             }
         }
 
-        return differences == 0 ? leftNode : new ArrayNode(null, 32 - empty, newArray);
+        return leftDifferences == 0 ? leftNode : new ArrayNode(null, 32 - empty, newArray);
     }
 
 }
