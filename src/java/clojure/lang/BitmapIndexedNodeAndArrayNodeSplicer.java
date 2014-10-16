@@ -18,7 +18,7 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
 
         final INode[] newArray = new INode[32];
 
-        int differences = 0; // can we just return RHS ?
+        int rightDifferences = 0;
         int empty = 0;
         int leftIndex = 0;
         for (int i = 0; i < 32; i++) {
@@ -35,10 +35,10 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
                     // both sides present - merge them...
                     final INode newSubNode = NodeUtils.splice(shift + 5, counts, leftSubKey, leftSubValue, null, rightSubNode);
                     newArray[i] = newSubNode;
-                    differences += (newSubNode == rightSubNode) ? 0 : 1;
+                    rightDifferences += (newSubNode == rightSubNode) ? 0 : 1;
                 } else {
                     newArray[i] = NodeUtils.promote(shift + 5, leftSubKey, leftSubValue);
-                    differences++;
+                    rightDifferences++;
                 }
             } else { // not lb
                 if (hasRight) {
@@ -51,6 +51,6 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
             }
         }
 
-        return differences == 0 ? rightNode : new ArrayNode(null, 32 - empty, newArray);
+        return rightDifferences == 0 ? rightNode : new ArrayNode(null, 32 - empty, newArray);
     }
 }
