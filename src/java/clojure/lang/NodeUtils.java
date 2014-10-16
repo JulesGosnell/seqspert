@@ -101,11 +101,6 @@ public class NodeUtils {
                                      new Object[]{key, value});
     }
     
-    // TODO - inline all uses...
-    public static int nodeHash(Object rk) {
-        return hash(rk);
-    }
-
     // HashMap
         
     // TODO: this should probably be somewhere else...
