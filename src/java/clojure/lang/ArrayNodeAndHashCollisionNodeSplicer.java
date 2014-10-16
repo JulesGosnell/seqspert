@@ -4,6 +4,8 @@ import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
+// TODO: should support left same-ness...
+
 class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
@@ -16,19 +18,25 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
         final INode[] leftArray = leftNode.array;
         final int rightHash = rightNode.hash;
         final int index = PersistentHashMap.mask(rightHash, shift);
-        final INode subNode = leftArray[index];
+        final INode leftSubNode = leftArray[index];
 
         int newCount;
-        INode newNode;
-        if (subNode == null) {
+        INode newSubNode;
+        int leftDifferences = 0;
+        if (leftSubNode == null) {
             newCount = leftNode.count + 1;
-            newNode = BitmapIndexedNodeUtils.create(PersistentHashMap.mask(rightHash, shift + 5), null, rightNode); 
+            newSubNode = BitmapIndexedNodeUtils.create(PersistentHashMap.mask(rightHash, shift + 5), null, rightNode);
+            leftDifferences++;
         } else {
             newCount = leftNode.count;
-            newNode = NodeUtils.splice(shift + 5, counts, null, subNode, null, rightNode);
+            newSubNode = NodeUtils.splice(shift + 5, counts, null, leftSubNode, null, rightNode);
+            if (leftSubNode != newSubNode) leftDifferences++;
+            
         }
-        return new ArrayNode(null, newCount, NodeUtils.cloneAndSetNode(leftArray, index, newNode));
+
+        return leftDifferences == 0 ?
+            leftNode :
+            new ArrayNode(null, newCount, NodeUtils.cloneAndSetNode(leftArray, index, newSubNode));
     }
 
 }
-
