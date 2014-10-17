@@ -171,5 +171,13 @@ public class NodeUtils {
     public static int mask(int hash, int shift) {
         return PersistentHashMap.mask(hash, shift);
     }
-    
+
+    public static INode makeArrayNode(int count, INode[] nodes) {
+        return new ArrayNode(null, count, nodes);
+    }
+
+    public static PersistentHashMap makeHashMap(int count, INode root) {
+        return new PersistentHashMap(count, root, false, null);
+    }
+
 }
