@@ -13,7 +13,7 @@
     NodeUtils])
   ;;(:require  [clojure.core [reducers :as r]])
   ;;(:require [clojure [pprint :as p]])
-  ;;(:use [clojure set])
+  (:use [seqspert vector])
   )
 
 ;;------------------------------------------------------------------------------
@@ -74,4 +74,9 @@
 
 ;;(int (Math/ceil (/ 1000 32)))
 
-(def data (vec (map vector (range 100000)(range 100000)))) ;100,000 pairs
+;;(def data (vec (map vector (range 100000)(range 100000)))) ;100,000 pairs
+
+(defn into-map [pairs]
+  (let [pm (ParallelHashMap. (create-atoms 32) (AtomicIntegerArray. 32))]
+    (fjvmap (fn [[k v]] (passoc pm k v)) pairs)
+    (persistent pm)))
