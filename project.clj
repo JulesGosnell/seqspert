@@ -23,6 +23,7 @@
   :jvm-opts ["-Xms1g" "-Xmx4g" "-server" "-XX:+UsePopCountInstruction"]
 
   :main seqspert.all
+  :aot :all
 
   :java-source-paths ["src/java" "test/java"]
   :junit ["test/java"]
