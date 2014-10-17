@@ -162,4 +162,14 @@ public class NodeUtils {
         return (key != null) ? 0 : (value instanceof BitmapIndexedNode) ? 1 : (value instanceof ArrayNode) ? 3 : 2;
     }
 
+    public static INode EMPTY = BitmapIndexedNode.EMPTY;
+    
+    public static INode assoc(INode node, int shift, int hash, Object key, Object value, Box addedLeaf) {
+        return node.assoc(shift, hash, key, value, addedLeaf);
+    }
+    
+    public static int mask(int hash, int shift) {
+        return PersistentHashMap.mask(hash, shift);
+    }
+    
 }
