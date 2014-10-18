@@ -23,13 +23,13 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
                                             leftKey0, leftValue0, new Counts()),
                             leftKey1, leftValue1, new Counts());
 
-        final Counts expectedCounts = new Counts();
+        final Counts expectedCounts = new Counts(NodeUtils.resolveRight, 0, 0);
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
                 
         final INode rightNode =
             TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
                 
-        final Counts actualCounts = new Counts(false, 0, 0);
+        final Counts actualCounts = new Counts(NodeUtils.resolveRight, 0, 0); // TODO - what about resolveLeft ?
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);

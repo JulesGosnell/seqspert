@@ -32,7 +32,7 @@ public class Seqspert {
         else if (rRoot == null)
             return lMap;
 
-        final Counts counts = new Counts(false, 0, 0);
+        final Counts counts = new Counts(NodeUtils.resolveLeft, 0, 0); // TODO: pass through correct resolveFn here
         final PersistentHashMap.INode root = NodeUtils.splice(0, counts, null, lRoot, null, rRoot);
         final int count = lMap.count + rMap.count - counts.sameKey;
         return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);

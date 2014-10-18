@@ -48,21 +48,10 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                         // we must have spliced two leaves giving a result of another leaf / KVP...
                         // the key must be unchanged
                         final Object newSubKey = leftSubKey;
-                        // the value could be either from the left or right
-                        // should we just accept the RHS as overwriting ?
-                        Object newSubValue;
-                        if (counts.preserveIdentity) {
-                            if (Util.equiv(leftSubValue, rightSubValue)) { // expensive
-                                newSubValue = leftSubValue;
-                                rightDifferences++;
-                            } else {
-                                newSubValue = rightSubValue;
-                                leftDifferences++;
-                            }
-                        } else {
-                            newSubValue = rightSubValue;
-                            leftDifferences++;
-                        }
+                        // the value could be either from the left or right - delgate decision to resolveFunction...
+                        final Object newSubValue = counts.resolveFunction.invoke(newSubKey, leftSubValue, rightSubValue);
+                        if (newSubValue == leftSubValue) rightDifferences++;
+                        if (newSubValue == rightSubValue) leftDifferences++;
 
                         if (promoted) {
                             newAnArray[i] = NodeUtils.create(shift + 5, newSubKey, newSubValue);

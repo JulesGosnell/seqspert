@@ -180,4 +180,15 @@ public class NodeUtils {
         return new PersistentHashMap(count, root, false, null);
     }
 
+
+	public static IFn resolveLeft  = new AFn() {
+		@Override public Object invoke(Object key, Object leftValue, Object rightValue) {
+			return (Util.equiv(leftValue, rightValue)) ? leftValue : rightValue;
+			}};
+			
+	public static IFn resolveRight = new AFn() {
+		@Override public Object invoke(Object key, Object leftValue, Object rightValue) {
+			return rightValue; 
+			}};
+
 }

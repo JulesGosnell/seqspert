@@ -21,11 +21,11 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
         final INode empty = BitmapIndexedNode.EMPTY;
         final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
         
-        final Counts expectedCounts = new Counts();
+        final Counts expectedCounts = new Counts(NodeUtils.resolveRight, 0, 0);
         final INode expectedNode =
             TestUtils.assocN(shift, create(shift, leftKey, leftValue), rightStart, rightEnd, expectedCounts);
 
-        final Counts actualCounts = new Counts(false, 0, 0);
+        final Counts actualCounts = new Counts(NodeUtils.resolveRight, 0, 0); // TODO: what about resolveLeft ?
         final INode actualNode =
             splicer.splice(shift, actualCounts, leftKey, leftValue, null, rightNode);
 

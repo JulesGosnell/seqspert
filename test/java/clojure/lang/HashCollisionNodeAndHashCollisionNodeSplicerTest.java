@@ -51,7 +51,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
         expected = expected.assoc(edit, shift, key3.hashCode(), key3, value3, addedLeaf);
         expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 
-        final Counts counts = new Counts(false, 0, 0);
+        final Counts counts = new Counts(NodeUtils.resolveRight, 0, 0); // TODO: what about resolveLeft ?
         final INode actual = NodeUtils.splice(shift, counts, null, leftNode, null, rightNode);
         assertNodeEquals(expected, actual);
         assertEquals(expectedCounts, counts.sameKey);
@@ -86,7 +86,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
         expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key3, value3, addedLeaf);
         expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
 
-        final Counts counts = new Counts(false, 0, 0);
+        final Counts counts = new Counts(NodeUtils.resolveRight, 0, 0); // TODO: what about resolveLeft ?
         final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, counts, null, leftNode, null, rightNode);
         assertEquals(expectedCounts, counts.sameKey);
         assertHashCollisionNodeEquals(expected, actual);
