@@ -43,14 +43,10 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
             // left hand side already occupied...
             final Object subKey = leftNode.array[keyIndex];
             final Object subVal = leftNode.array[valueIndex];
-            return new BitmapIndexedNode(null,
-                                         leftNode.bitmap,
-                                         NodeUtils.cloneAndSetNode(leftNode.array,
-                                                                   valueIndex,
-                                                                   NodeUtils.splice(shift + 5, counts,
-                                                                                    subKey, subVal,
-                                                                                    rightKey, rightValue)
-                                                                   ));
+            final INode spliced = NodeUtils.splice(shift + 5, counts, subKey, subVal, rightKey, rightValue);
+            return (subVal == spliced) ?
+            	leftNode :
+            	new BitmapIndexedNode(null, leftNode.bitmap, NodeUtils.cloneAndSetNode(leftNode.array, valueIndex, spliced));
 
         }
     }

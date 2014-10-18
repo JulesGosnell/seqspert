@@ -87,13 +87,12 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testSameKeyAndValue() {
-        final int rightHash = 1;
         test(1, 30,
              new HashCodeKey("key1.1", 1), "value1.1",
-             rightHash, 
+             1, 
              new HashCodeKey("key1",   1), "value1",
              new HashCodeKey("key1.1", 1), "value1.1",
-             false);
+             true);
     }
 
 }
