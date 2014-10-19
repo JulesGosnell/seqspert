@@ -50,8 +50,8 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                         final Object newSubKey = leftSubKey;
                         // the value could be either from the left or right - delgate decision to resolveFunction...
                         final Object newSubValue = counts.resolveFunction.invoke(newSubKey, leftSubValue, rightSubValue);
-                        if (newSubValue == leftSubValue) rightDifferences++;
-                        if (newSubValue == rightSubValue) leftDifferences++;
+                        if (newSubValue != leftSubValue) leftDifferences++;
+                        if (newSubValue != rightSubValue) rightDifferences++;
 
                         if (promoted) {
                             newAnArray[i] = NodeUtils.create(shift + 5, newSubKey, newSubValue);

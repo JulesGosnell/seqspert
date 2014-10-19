@@ -14,10 +14,10 @@ public class CountsTest  {
 
         assertEquals(counts, counts);
         assertEquals(counts, new Counts());
-        assertEquals(counts, new Counts(null, 0, 0));
-        assertNotEquals(counts, new Counts(null, 1, 0));
-        assertNotEquals(counts, new Counts(null, 1, 1));
-        assertNotEquals(counts, new Counts(null, 0, 1));
+        assertEquals(counts, new Counts(NodeUtils.resolveLeft, 0, 0));
+        assertNotEquals(counts, new Counts(NodeUtils.resolveLeft, 1, 0));
+        assertNotEquals(counts, new Counts(NodeUtils.resolveLeft, 1, 1));
+        assertNotEquals(counts, new Counts(NodeUtils.resolveLeft, 0, 1));
         assertNotEquals(counts, "not a Counts instance");
         
         assertNotNull(counts.toString());

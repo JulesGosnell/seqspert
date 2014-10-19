@@ -2,6 +2,7 @@ package clojure.lang;
 
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) TestUtils.assertSame(leftNode, expectedNode, actualNode);
+        if (same) assertSame(leftNode, actualNode); // expectedNode not as expected !
     }
 
     @Override

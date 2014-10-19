@@ -7,7 +7,7 @@ public class Counts {
     public int sameKeyAndValue;
 
     public Counts() {
-        this.resolveFunction = null;
+        this.resolveFunction = NodeUtils.resolveLeft;
         this.sameKey = 0;
         this.sameKeyAndValue = 0;
     }
