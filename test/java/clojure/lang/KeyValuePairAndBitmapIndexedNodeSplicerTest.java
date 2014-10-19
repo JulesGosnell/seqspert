@@ -37,6 +37,7 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
     @Override
     public void testDifferent() {
         test(new HashCodeKey("key1", 1), "value1", 2, 2, false);
+
         // promotion
         test(new HashCodeKey("key1", 1), "value1", 2, 17, false);
     }
@@ -46,6 +47,7 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
     @Override
     public void testSameKeyHashCode() {
         test(new HashCodeKey("key1", 2), "value1", 2, 2, false);
+        test(new HashCodeKey("key1.1", 1), "value1", 1, 2, false);
     }
 
     @Test
