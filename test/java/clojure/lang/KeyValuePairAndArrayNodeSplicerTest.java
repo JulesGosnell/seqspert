@@ -40,7 +40,6 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
         test(new HashCodeKey("key1", 1), "value1", 2, 30, false);
     }
 
-    @Ignore
     @Override
     @Test
     public void testSameKeyHashCode() {

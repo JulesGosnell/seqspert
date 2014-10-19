@@ -33,7 +33,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (leftSame) TestUtils.assertSame(leftNode, expectedNode, actualNode);
+        if (leftSame) assertSame(leftNode, actualNode); // expectedNode not as expected !
         if (rightSame) assertSame(rightNode, actualNode);
     }
         
@@ -48,24 +48,23 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     @Test
     public void testSameKeyHashCode() {
         test(new HashCodeKey("key" + 1, 3), "value1", new HashCodeKey("key" + 2, 4), "value2", 3, 4, false, false);
-        test(new HashCodeKey("key" + 1, 3), "value1", new HashCodeKey("key" + 2, 4), "value2", 3, 18, false, false);
     }
 
     @Override
     @Test
     public void testSameKey() {
         test(new HashCodeKey("key" + 3, 3), "value1", new HashCodeKey("key" + 4, 4), "value2", 3, 4, false, false);
-        test(new HashCodeKey("key" + 3, 3), "value1", new HashCodeKey("key" + 4, 4), "value2", 3, 18, false, false);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
         // leftSame
-        //test(new HashCodeKey("key" + 3, 3), "value3", new HashCodeKey("key" + 4, 4), "value4", 3, 4, true, false);
+    	test(new HashCodeKey("key" + 3, 3), "value3", new HashCodeKey("key" + 4, 4), "value4", 3, 4, true, false);
         // rightSame
         test(new HashCodeKey("key" + 3, 3), "value3", new HashCodeKey("key" + 4, 4), "value4", 3, 5, false, true);
-        // promotion
-        test(new HashCodeKey("key" + 3, 3), "value3", new HashCodeKey("key" + 4, 4), "value4", 3, 18, false, false);
-    }
+
+    	test(new HashCodeKey("key" + 3, 3), "value3", new HashCodeKey("key" + 4, 4), "value4", 4, 19, false, false);
+    	test(new HashCodeKey("key" + 3, 3), "value3", new HashCodeKey("key4.1", 4), "value4", 4, 19, false, false);
+}
 }

@@ -52,7 +52,6 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
         test(new HashCodeKey("key2", 2), "value1", 2, 2, false);
     }
 
-    @Ignore
     @Test
     @Override
     public void testSameKeyAndValue() {
