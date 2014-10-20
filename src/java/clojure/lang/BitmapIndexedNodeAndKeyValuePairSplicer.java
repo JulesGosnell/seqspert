@@ -16,21 +16,23 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
         final int index = leftNode.index(bit);
         final int keyIndex = index * 2;
         final int valueIndex = keyIndex + 1;
-        if ((leftNode.bitmap & bit) == 0) {
+        final int leftBitmap = leftNode.bitmap;
+        final Object[] leftArray = leftNode.array;
+        if ((leftBitmap & bit) == 0) {
             // left hand side unoccupied
-            final int leftBitCount = Integer.bitCount(leftNode.bitmap);
+            final int leftBitCount = Integer.bitCount(leftBitmap);
             if (leftBitCount == 16)
                 return new ArrayNode(null,
                                      17,
                                      NodeUtils.promoteAndSet(shift,
-                                                             leftNode.bitmap,
-                                                             leftNode.array,
+                                                             leftBitmap,
+                                                             leftArray,
                                                              PersistentHashMap.mask(rightHash, shift),
                                                              NodeUtils.promote(shift + 5, rightKey, rightValue)));
             else
                 return new BitmapIndexedNode(null,
-                                             leftNode.bitmap | bit,
-                                             NodeUtils.cloneAndInsert(leftNode.array,
+                                             leftBitmap | bit,
+                                             NodeUtils.cloneAndInsert(leftArray,
                                                                       leftBitCount * 2,
                                                                       keyIndex,
                                                                       rightKey,
@@ -38,18 +40,18 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
             
         } else {
             // left hand side already occupied...
-            final Object subKey = leftNode.array[keyIndex];
-            final Object subVal = leftNode.array[valueIndex];
+            final Object subKey = leftArray[keyIndex];
+            final Object subVal = leftArray[valueIndex];
             final INode newSubNode = NodeUtils.splice(shift + 5, counts, subKey, subVal, rightKey, rightValue);
             if (newSubNode == null) {
             	final Object resolved = counts.resolveFunction.invoke(subKey, subVal, rightValue);
                 if (subVal == resolved) {
                     return leftNode;
                 } else {
-                    return new BitmapIndexedNode(null, leftNode.bitmap, NodeUtils.cloneAndSet(leftNode.array, valueIndex, resolved));
+                    return new BitmapIndexedNode(null, leftBitmap, NodeUtils.cloneAndSet(leftArray, valueIndex, resolved));
                 }
             } else {
-                return new BitmapIndexedNode(null, leftNode.bitmap, NodeUtils.cloneAndSetNode(leftNode.array, valueIndex, newSubNode));
+                return new BitmapIndexedNode(null, leftBitmap, NodeUtils.cloneAndSetNode(leftArray, valueIndex, newSubNode));
             }
         }
     }

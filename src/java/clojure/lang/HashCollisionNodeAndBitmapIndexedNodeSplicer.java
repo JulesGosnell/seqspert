@@ -19,28 +19,29 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
         final int bit = BitmapIndexedNodeUtils.bitpos(leftNode.hash, shift);
         final int index = rightNode.index(bit);
         final int keyIndex = index * 2;
-        if((rightNode.bitmap & bit) == 0) {
+        final int rightBitmap = rightNode.bitmap;
+        final Object[] rightArray = rightNode.array;
+        if((rightBitmap & bit) == 0) {
             // left hand side unoccupied...
-            final int rightBitCount = Integer.bitCount(rightNode.bitmap);
+            final int rightBitCount = Integer.bitCount(rightBitmap);
             if (rightBitCount == 16)
                 return new ArrayNode(null,
                                      17,
                                      NodeUtils.promoteAndSet(shift,
-                                                             rightNode.bitmap,
-                                                             rightNode.array,
+                                                             rightBitmap,
+                                                             rightArray,
 							     PersistentHashMap.mask(leftNode.hash, shift),
                                                              leftNode
                                                              ));
             else
                 return new BitmapIndexedNode(null,
-                                             rightNode.bitmap | bit,
-                                             cloneAndInsert(rightNode.array,
+                                             rightBitmap | bit,
+                                             cloneAndInsert(rightArray,
                                                             rightBitCount * 2,
                                                             keyIndex,
                                                             leftNode));
         } else {
             // same hash partitions
-            final Object[] rightArray = rightNode.array;
             final Object subKey = rightArray[keyIndex];
             final INode spliced = NodeUtils.splice(shift + 5, 
                                                    counts,
@@ -49,14 +50,11 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                                    subKey,
                                                    rightArray[keyIndex + 1]);
 
-            if ((~bit & rightNode.bitmap) > 0) {
+            if ((~bit & rightBitmap) > 0) {
                 // BIN contains other subNodes - return a new BIN containing them
                 return new BitmapIndexedNode(null,
-                                             rightNode.bitmap,
-                                             cloneAndSet(rightNode.array,
-                                                         keyIndex,
-                                                         null,
-                                                         spliced));
+                                             rightBitmap,
+                                             cloneAndSet(rightArray, keyIndex, null, spliced));
             } else {
                 // this was the only subNode, now it is spliced into the LHC - return the result
                 return spliced;
