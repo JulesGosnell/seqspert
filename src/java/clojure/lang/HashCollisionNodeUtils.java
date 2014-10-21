@@ -68,84 +68,46 @@ public class HashCollisionNodeUtils {
         }
     }
 
-    // public static Object[] new_maybeAddAll(Object[] leftArray, int leftLength,
-    //                                    Object[] rightArray, int rightLength, Counts counts) {
-    //     final Object[]  newArray = new Object[leftLength + rightLength];
-    //     // insert lhs first
-    //     System.arraycopy(leftArray, 0, newArray, 0, leftLength);
-    //     // append rhs to end
-    //     int leftDifferences = 0;
-    //     int rightDifferences = 0;
-    //     int j = leftLength;
-    //     for (int i = 0; i < rightLength; i += 2) {
-    //         final Object rightKey = rightArray[i];
-    //         final Object rightValue = rightArray[i + 1];
-    //         final int index = keyIndex(leftArray, leftLength, rightKey);
-    //         if (-1 == index) {
-    //             leftDifferences++;
-    //             if (i != j) rightDifferences++;
-    //             newArray[j++] = rightKey;
-    //             newArray[j++] = rightValue;
-    //         } else {
-    //             counts.sameKey++;
-    //             final Object leftKey = leftArray[index];
-    //             final Object leftValue = leftArray[index + 1];
-    //             final Object newValue = counts.resolveFunction.invoke(leftKey, leftValue, rightValue);
-    //             if (newValue != leftValue) leftDifferences++;
-    //             if (newValue != rightValue || i != j) rightDifferences++;
-    //             j++; // we can skip key
-    //             newArray[j++] = newValue;
-    //         }
-    //     }
-    //     return
-    //         leftDifferences == 0 ?
-    //         leftArray :
-    //         rightDifferences == 0 ?
-    //         rightArray :
-    //         newArray;            
-    // }
-
     /*
      * return an array, the set of which's key:value pairs is
      * equivalent to the union of 'leftArray' and 'rightArray'
      */
-    public static Object[] maybeAddAll(Object[] leftArray, int leftLength,
-                                       Object[] rightArray, int rightLength, Counts counts) {
-        // start with the assumption that no kvps will be added.
-        Object[] newArray = leftArray;
-        int l = leftLength;
-        // walk rightArray potentially adding each kvp
-        for (int r = 0; r < rightLength; r += 2) {
-            // check whether key is already present in leftArray
-            final Object rightKey = rightArray[r];
-            final int i = keyIndex(leftArray, leftLength, rightKey);
-            if (i == -1) {
-                // key is not present
-                // the first time this happens we need to clone leftArray to create space for additions
-                if (newArray == leftArray)
-                    newArray = clone(leftArray, leftLength, leftLength + rightLength - r);
-                // append the kvp
-                newArray[l++] = rightKey;
-                newArray[l++] = rightArray[r + 1];
-            } else {
-                // key is present
-                final Object rightValue = rightArray[r + 1];
-                counts.sameKey++;
-                // is the value the same as well ?
-                if (Util.equiv(leftArray[i + 1], rightValue)) {
-                    // value is same
-                    // leave as is
-                } else {
-                    // value is different
-                    // the first time this happens we need to clone leftArray to create space for additions
-                    if (newArray == leftArray)
-                        newArray = clone(leftArray, leftLength, leftLength + rightLength - r);
-                    // overwrite old value
-                    newArray[i + 1] = rightValue;
-                }
-            }
-        }
-        return newArray;
-    }
+     public static Object[] maybeAddAll(Object[] leftArray, int leftLength,
+                                        Object[] rightArray, int rightLength, Counts counts) {
+         final Object[]  newArray = new Object[leftLength + rightLength];
+         // insert lhs first
+         System.arraycopy(leftArray, 0, newArray, 0, leftLength);
+         // append rhs to end
+         int leftDifferences = 0;
+         int rightDifferences = 0;
+         int j = leftLength;
+         for (int i = 0; i < rightLength; i += 2) {
+             final Object rightKey = rightArray[i];
+             final Object rightValue = rightArray[i + 1];
+             final int index = keyIndex(leftArray, leftLength, rightKey);
+             if (-1 == index) {
+                 leftDifferences++;
+                 if (i != j) rightDifferences++;
+                 newArray[j++] = rightKey;
+                 newArray[j++] = rightValue;
+             } else {
+                 counts.sameKey++;
+                 final Object leftKey = leftArray[index];
+                 final Object leftValue = leftArray[index + 1];
+                 final Object newValue = counts.resolveFunction.invoke(leftKey, leftValue, rightValue);
+                 if (newValue != leftValue) {
+                	 leftDifferences++;
+                     newArray[index + 1] = newValue;
+                 }
+                 if (newValue != rightValue || i != index) rightDifferences++;
+             }
+         }
+         return
+             leftDifferences == 0 ?
+             leftArray :
+             rightDifferences == 0 ?
+             rightArray :
+             newArray;            
+     }
 
 }
