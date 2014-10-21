@@ -3,6 +3,7 @@ package clojure.lang;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,18 +19,24 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
     public void test(Object leftKey, Object leftValue, int rightStart, int rightEnd, boolean sameRight) {
 
         final INode empty = BitmapIndexedNode.EMPTY;
-
-        final INode leftNode = TestUtils.assoc(shift, empty, leftKey, leftValue, new Counts());
         final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
         
         final Counts expectedCounts = new Counts();
-        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
-            
+        final INode expectedNode =
+            TestUtils.assocN(shift,
+                             TestUtils.create(shift, leftKey, leftValue),
+                             rightStart, rightEnd, expectedCounts);
+        
         final Counts actualCounts = new Counts();
         final INode actualNode = splicer.splice(shift, actualCounts, leftKey, leftValue, null, rightNode);
         
         assertEquals(expectedCounts, actualCounts);
-        assertNodeEquals(expectedNode, actualNode); // TODO - except when null
+        //final BitmapIndexedNode bin = (BitmapIndexedNode) rightNode;
+        // if (Integer.bitCount(bin.bitmap) == 1 && Util.equiv(leftKey, bin.array[0]))
+        //     assertNull(actualNode);
+        // else
+            assertNodeEquals(expectedNode, actualNode);
+
         if (sameRight) assertSame(rightNode, actualNode);
     }
     
