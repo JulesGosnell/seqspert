@@ -4,8 +4,6 @@ import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-// TODO: should support left same-ness...
-
 class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,

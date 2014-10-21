@@ -71,26 +71,22 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
     public void test(Object key0, Object value0, Object key1, Object value1,
                      Object key2, Object value2, Object key3, Object value3,
                      boolean sameLeft) { // TODO: sameRight
-        // TODO: refactor
-        final HashCollisionNode leftNode   = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
-        final HashCollisionNode rightNode =  new HashCollisionNode(null, hashCode, 2, new Object[]{key2, value2, key3, value3});
+        final INode leftNode   = TestUtils.create(shift, key0, value0, key1, value1);
+        final INode rightNode =  TestUtils.create(shift, key2, value2, key3, value3);
 
-        final AtomicReference<Thread> edit = new AtomicReference<Thread>();
-        HashCollisionNode expected = (HashCollisionNode) leftNode;
-        Box addedLeaf = null;
-        int expectedCounts = 0;
-        addedLeaf = new Box(null);
-        expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key2, value2, addedLeaf);
-        expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
-        addedLeaf = new Box(null);      
-        expected = (HashCollisionNode) expected.assoc(edit, shift, hashCode, key3, value3, addedLeaf);
-        expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
+        final Counts expectedCounts = new Counts();
+        final INode expectedNode = 
+            TestUtils.assoc(shift, 
+                            TestUtils.assoc(shift, leftNode, key2, value2, expectedCounts),
+                            key3, value3, expectedCounts);
 
-        final Counts counts = new Counts(NodeUtils.resolveRight, 0, 0); // TODO: what about resolveLeft ?
-        final HashCollisionNode actual =  (HashCollisionNode) NodeUtils.splice(shift, counts, null, leftNode, null, rightNode);
-        assertEquals(expectedCounts, counts.sameKey);
-        assertHashCollisionNodeEquals(expected, actual);
-        if (sameLeft) assertSame(expected, actual);
+        //NodeUtils.resolveRight, 0, 0); // TODO: what about resolveLeft ?
+        final Counts actualCounts = new Counts();
+        final INode actualNode = NodeUtils.splice(shift, actualCounts, null, leftNode, null, rightNode);
+
+        assertEquals(expectedCounts, actualCounts);
+        assertNodeEquals(expectedNode, actualNode);
+        if (sameLeft) assertSame(expectedNode, actualNode);
     }
 
     @Override

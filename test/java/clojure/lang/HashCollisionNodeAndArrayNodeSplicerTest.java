@@ -20,17 +20,27 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
     public void test(int leftHash,
                      Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1,
                      int rightStart, int rightEnd,
+                     Object rightExtraKey, Object rightExtraValue,
                      boolean sameRight) {
 
         final INode leftNode = HashCollisionNodeUtils.create(leftHash,
                                                              leftKey0, leftValue0, leftKey1, leftValue1);
         assertTrue(leftNode instanceof HashCollisionNode);
 
-        final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
+        final boolean haveRightExtra = rightExtraKey != null && rightExtraValue != null;
+
+        final INode rightTmpNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
+        final INode rightNode = haveRightExtra ?
+            TestUtils.assoc(shift, rightTmpNode , rightExtraKey, rightExtraValue, new Counts()) :
+            rightTmpNode;
+        
         assertTrue(rightNode instanceof ArrayNode);
 
         final Counts expectedCounts = new Counts();
-        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
+        final INode expectedTmpNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
+        final INode expectedNode = haveRightExtra ?
+            TestUtils.assoc(shift, expectedTmpNode , rightExtraKey, rightExtraValue, expectedCounts) :
+            expectedTmpNode;
 
         final Counts actualCounts = new Counts();
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
@@ -47,6 +57,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
              new HashCodeKey("key1.0", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
              2, 31,
+             null, null,
              false);
     }
 
@@ -57,6 +68,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.2", 1), "value1.2",
              1, 31,
+             null, null,
              false);
     }
 
@@ -67,6 +79,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
              new HashCodeKey("key1", 1), "value1.0.1",
              new HashCodeKey("key1.1", 1), "value1.1",
              1, 31,
+             null, null,
              false);
     }
 
@@ -77,7 +90,18 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key1.1", 1), "value1.1",
              1, 31,
-             false);            // TODO: need an HCN on RHS to test this
+             null, null,
+             false);
+
+        // TODO: needs debugging...
+        test(1,
+             new HashCodeKey("key1", 1), "value1",
+             new HashCodeKey("key1.1", 1), "value1.1",
+             1, 31,
+             new HashCodeKey("key1.1", 1), "value1.1",
+             //true
+             false
+             );
     }
     
 }

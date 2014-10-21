@@ -64,10 +64,46 @@ public class HashCollisionNodeUtils {
         if (i == -1) {
             return append(array, length, length + 2, key, value);
         } else {
-        	return maybeSet(array, i, value, counts);
+            return maybeSet(array, i, value, counts);
         }
     }
 
+    // public static Object[] new_maybeAddAll(Object[] leftArray, int leftLength,
+    //                                    Object[] rightArray, int rightLength, Counts counts) {
+    //     final Object[]  newArray = new Object[leftLength + rightLength];
+    //     // insert lhs first
+    //     System.arraycopy(leftArray, 0, newArray, 0, leftLength);
+    //     // append rhs to end
+    //     int leftDifferences = 0;
+    //     int rightDifferences = 0;
+    //     int j = leftLength;
+    //     for (int i = 0; i < rightLength; i += 2) {
+    //         final Object rightKey = rightArray[i];
+    //         final Object rightValue = rightArray[i + 1];
+    //         final int index = keyIndex(leftArray, leftLength, rightKey);
+    //         if (-1 == index) {
+    //             leftDifferences++;
+    //             if (i != j) rightDifferences++;
+    //             newArray[j++] = rightKey;
+    //             newArray[j++] = rightValue;
+    //         } else {
+    //             counts.sameKey++;
+    //             final Object leftKey = leftArray[index];
+    //             final Object leftValue = leftArray[index + 1];
+    //             final Object newValue = counts.resolveFunction.invoke(leftKey, leftValue, rightValue);
+    //             if (newValue != leftValue) leftDifferences++;
+    //             if (newValue != rightValue || i != j) rightDifferences++;
+    //             j++; // we can skip key
+    //             newArray[j++] = newValue;
+    //         }
+    //     }
+    //     return
+    //         leftDifferences == 0 ?
+    //         leftArray :
+    //         rightDifferences == 0 ?
+    //         rightArray :
+    //         newArray;            
+    // }
 
     /*
      * return an array, the set of which's key:value pairs is
