@@ -3,13 +3,11 @@ package clojure.lang;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-// TODO: support left and right same-ness
-
 class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
-
+    
     public INode recurse(int shift,
-                     int leftHash, HashCollisionNode leftNode,
-                     int rightHash, HashCollisionNode rightNode) {
+                         int leftHash, HashCollisionNode leftNode,
+                         int rightHash, HashCollisionNode rightNode) {
         
         final int leftBits = PersistentHashMap.mask(leftHash, shift);
         final int rightBits = PersistentHashMap.mask(rightHash, shift);
@@ -39,23 +37,17 @@ class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
             final Object[] rightArray = rightNode.array;
             final int oldSameKey = counts.sameKey;
 
-            // TODO: consider tipping smallest into largest ?
-            // strictly speaking, right should come after left...
-
-            // if result of copying is same as left array, return original
-            // if result of ...
-
             final Object[] newArray =
                 HashCollisionNodeUtils.maybeAddAll(leftArray, leftLength, rightArray, rightLength, counts);
-
-            final int newSameKey = counts.sameKey - oldSameKey;
-
+            
             return
                 newArray == leftArray ?
                 leftNode :
+                newArray == rightArray ?
+                rightNode :
                 new HashCollisionNode(null,
                                       leftHash,
-                                      ((leftLength + rightLength) / 2) - newSameKey,
+                                      ((leftLength + rightLength) / 2) - (counts.sameKey - oldSameKey),
                                       newArray);
         } else {
             

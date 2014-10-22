@@ -69,32 +69,42 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
     final Object value3 = "value3";
 
     public void test(Object key0, Object value0, Object key1, Object value1,
-                     Object key2, Object value2, Object key3, Object value3,
-                     boolean sameLeft) { // TODO: sameRight
-        final INode leftNode   = TestUtils.create(shift, key0, value0, key1, value1);
-        final INode rightNode =  TestUtils.create(shift, key2, value2, key3, value3);
+                     Object key2, Object value2, Object key3, Object value3, Object key4, Object value4,
+                     boolean sameLeft, boolean sameRight) {
+
+        final INode leftNode = TestUtils.create(shift, key0, value0, key1, value1);
+
+        final INode rightTmpNode =  TestUtils.create(shift, key2, value2, key3, value3);
+        final INode rightNode =
+            (key4 == null && value4 == null) ?
+            rightTmpNode :
+            TestUtils.assoc(shift, rightTmpNode, key4, value4, new Counts());
 
         final Counts expectedCounts = new Counts();
-        final INode expectedNode = 
+        final INode expectedTmpNode = 
             TestUtils.assoc(shift, 
                             TestUtils.assoc(shift, leftNode, key2, value2, expectedCounts),
                             key3, value3, expectedCounts);
+        final INode expectedNode =
+            (key4 == null && value4 == null) ?
+            expectedTmpNode :
+            TestUtils.assoc(shift, expectedTmpNode, key4, value4, expectedCounts);
 
-        //NodeUtils.resolveRight, 0, 0); // TODO: what about resolveLeft ?
         final Counts actualCounts = new Counts();
         final INode actualNode = NodeUtils.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (sameLeft) assertSame(expectedNode, actualNode);
+        if (sameLeft) TestUtils.assertSame(leftNode, expectedNode, actualNode);
+        if (sameRight) assertSame(rightNode, actualNode);
     }
 
     @Override
     @Test
     public void testSameKeyHashCode() {
         // differing keys all have same hashcode but values are different...
-        test(key0, value0, key1, value1, key2, value2, key3, value3, false);
-        test(key0, value0, key1, value1, key3, value3, key2, value2, false);
+        test(key0, value0, key1, value1, key2, value2, key3, value3, null, null, false, false);
+        test(key0, value0, key1, value1, key3, value3, key2, value2, null, null, false, false);
     }
 
     @Override
@@ -103,8 +113,8 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
         // as above, but one pair of keys is identical...
         final Object leftValue1 = "left-" + (String) value1;
         final Object rightValue1 = "right-" + (String) value1;
-        test(key0, value0, key1, leftValue1, key1, rightValue1, key2, value2, false);
-        test(key0, value0, key1, leftValue1, key2, value2, key1, rightValue1, false);
+        test(key0, value0, key1, leftValue1, key1, rightValue1, key2, value2, null, null, false, false);
+        test(key0, value0, key1, leftValue1, key2, value2, key1, rightValue1, null, null, false, false);
     }
 
     @Override
@@ -112,10 +122,11 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
     public void testSameKeyAndValue() {
         // as above but one pair of values is also identical...
         // some
-        test(key0, value0, key1, value1, key1, value1, key2, value2, false);
-        test(key0, value0, key1, value1, key2, value2, key1, value1, false);
+        test(key0, value0, key1, value1, key1, value1, key2, value2, null, null, false, false);
+        test(key0, value0, key1, value1, key2, value2, key1, value1, null, null, false, false);
         // all
-        test(key0, value0, key1, value1, key0, value0, key1, value1, true);
+        test(key0, value0, key1, value1, key0, value0, key1, value1, null, null, true, false);
+        test(key0, value0, key1, value1, key0, value0, key1, value1, key2, value2, false, true);
     }
 
 }
