@@ -1,6 +1,5 @@
 package clojure.lang;
 
-import static clojure.lang.TestUtils.assertHashCollisionNodeEquals;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -73,22 +72,10 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
                      boolean sameLeft, boolean sameRight) {
 
         final INode leftNode = TestUtils.create(shift, key0, value0, key1, value1);
-
-        final INode rightTmpNode =  TestUtils.create(shift, key2, value2, key3, value3);
-        final INode rightNode =
-            (key4 == null && value4 == null) ?
-            rightTmpNode :
-            TestUtils.assoc(shift, rightTmpNode, key4, value4, new Counts());
+        final INode rightNode =  TestUtils.create(shift, key2, value2, key3, value3, key4, value4);
 
         final Counts expectedCounts = new Counts();
-        final INode expectedTmpNode = 
-            TestUtils.assoc(shift, 
-                            TestUtils.assoc(shift, leftNode, key2, value2, expectedCounts),
-                            key3, value3, expectedCounts);
-        final INode expectedNode =
-            (key4 == null && value4 == null) ?
-            expectedTmpNode :
-            TestUtils.assoc(shift, expectedTmpNode, key4, value4, expectedCounts);
+        final INode expectedNode = TestUtils.assoc(shift, leftNode, key2, value2, key3, value3, key4, value4, expectedCounts);
 
         final Counts actualCounts = new Counts();
         final INode actualNode = NodeUtils.splice(shift, actualCounts, null, leftNode, null, rightNode);

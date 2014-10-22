@@ -27,15 +27,11 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
                                                              leftKey0, leftValue0, leftKey1, leftValue1);
         assertTrue(leftNode instanceof HashCollisionNode);
 
-        final INode right1TmpNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
-        final INode rightTmp2Node = (rightKey0 != null && rightValue0 != null) ? TestUtils.assoc(shift, right1TmpNode, rightKey0, rightValue0, new Counts()) : right1TmpNode;
-        final INode rightNode = (rightKey1 != null && rightValue1 != null) ? TestUtils.assoc(shift, rightTmp2Node, rightKey1, rightValue1, new Counts()) : rightTmp2Node;
+        final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, rightKey0, rightValue0, rightKey1, rightValue1, new Counts());
         assertTrue(rightNode instanceof BitmapIndexedNode);
 
         final Counts expectedCounts = new Counts(sameRight ? NodeUtils.resolveRight :  NodeUtils.resolveLeft, 0, 0);
-        final INode expectedTmp1Node = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
-        final INode expectedmp2Node = (rightKey0 != null && rightValue0 != null) ? TestUtils.assoc(shift, expectedTmp1Node, rightKey0, rightValue0, expectedCounts) : expectedTmp1Node;
-        final INode expectedNode = (rightKey1 != null && rightValue1 != null) ? TestUtils.assoc(shift, expectedmp2Node, rightKey1, rightValue1, expectedCounts) : expectedmp2Node;
+        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
 
         final Counts actualCounts = new Counts(sameRight ? NodeUtils.resolveRight :  NodeUtils.resolveLeft, 0, 0);
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);

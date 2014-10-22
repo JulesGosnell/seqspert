@@ -72,18 +72,54 @@ public class TestUtils {
 	return node;
     }
 
+    public static INode assoc(int shift, INode node, Object key0, Object value0, Object key1, Object value1, Counts counts) {
+    	node = assoc(shift, node, key0, value0, counts);
+    	if (key1 != null && value1 != null) node = assoc(shift, node, key1, value1, counts);
+    	return node;
+    }
+    
+    public static INode assoc(int shift, INode node, Object key0, Object value0, Object key1, Object value1, Object key2, Object value2, Counts counts) {
+    	node = assoc(shift, node, key0, value0, key1, value1, counts);
+    	if (key2 != null && value2 != null) node = assoc(shift, node, key2, value2, counts);
+    	return node;
+    }
+    
     public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
 	for (int i = start; i < end; i++)
 	    node = assoc(shift, node , new HashCodeKey("key" + i, i), ("value"+i), counts);
 	return node;
     }
 
+    public static INode assocN(int shift, INode node, int start, int end,
+    		Object optionalKey0, Object optionalValue0,
+    		Counts counts) {
+	for (int i = start; i < end; i++) node = assoc(shift, node , new HashCodeKey("key" + i, i), ("value"+i), counts);
+	if (optionalKey0 != null && optionalValue0 != null) node = assoc(shift, node, optionalKey0, optionalValue0, counts); 
+	return node;
+    }
+    
+    public static INode assocN(int shift, INode node, int start, int end,
+    		Object optionalKey0, Object optionalValue0,
+    		Object optionalKey1, Object optionalValue1,
+    		Counts counts) {
+	for (int i = start; i < end; i++) node = assoc(shift, node , new HashCodeKey("key" + i, i), ("value"+i), counts);
+	if (optionalKey0 != null && optionalValue0 != null) node = assoc(shift, node, optionalKey0, optionalValue0, counts); 
+	if (optionalKey1 != null && optionalValue1 != null) node = assoc(shift, node, optionalKey1, optionalValue1, counts); 
+	return node;
+    }
+    
     public static INode create(int shift, Object key, Object value) {
         return assoc(shift, BitmapIndexedNode.EMPTY, key, value, new Counts());
     }
     
     public static INode create(int shift, Object key0, Object value0, Object key1, Object value1) {
         return assoc(shift, create(shift, key0, value0), key1, value1, new Counts());
+    }
+    
+    public static INode create(int shift, Object key0, Object value0, Object key1, Object value1, Object key2, Object value2) {
+        INode node = assoc(shift, create(shift, key0, value0), key1, value1, new Counts());
+        if (key2 != null && value2 != null) node = assoc(shift, node, key2, value2, new Counts());
+        return node;
     }
     
 }

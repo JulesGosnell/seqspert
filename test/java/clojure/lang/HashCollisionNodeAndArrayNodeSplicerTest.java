@@ -27,20 +27,11 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
                                                              leftKey0, leftValue0, leftKey1, leftValue1);
         assertTrue(leftNode instanceof HashCollisionNode);
 
-        final boolean haveRightExtra = rightExtraKey != null && rightExtraValue != null;
-
-        final INode rightTmpNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
-        final INode rightNode = haveRightExtra ?
-            TestUtils.assoc(shift, rightTmpNode , rightExtraKey, rightExtraValue, new Counts()) :
-            rightTmpNode;
-        
+        final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, rightExtraKey, rightExtraValue, new Counts());
         assertTrue(rightNode instanceof ArrayNode);
 
         final Counts expectedCounts = new Counts();
-        final INode expectedTmpNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
-        final INode expectedNode = haveRightExtra ?
-            TestUtils.assoc(shift, expectedTmpNode , rightExtraKey, rightExtraValue, expectedCounts) :
-            expectedTmpNode;
+        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, rightExtraKey, rightExtraValue, expectedCounts);
 
         final Counts actualCounts = new Counts();
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
