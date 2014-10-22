@@ -30,15 +30,14 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
         final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, rightExtraKey, rightExtraValue, new Counts());
         assertTrue(rightNode instanceof ArrayNode);
 
-        final Counts expectedCounts = new Counts();
+        final Counts expectedCounts = new Counts(sameRight ? NodeUtils.resolveRight : NodeUtils.resolveLeft, 0, 0);
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, rightExtraKey, rightExtraValue, expectedCounts);
 
-        final Counts actualCounts = new Counts();
+        final Counts actualCounts = new Counts(sameRight ? NodeUtils.resolveRight : NodeUtils.resolveLeft, 0, 0);
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (sameRight) assertSame(rightNode, actualNode);
     }
 
     @Override
@@ -77,12 +76,12 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(1,
-             new HashCodeKey("key1", 1), "value1",
-             new HashCodeKey("key1.1", 1), "value1.1",
-             1, 32,
-             null, null,
-             false);
+//        test(1,
+//             new HashCodeKey("key1", 1), "value1",
+//             new HashCodeKey("key1.1", 1), "value1.1",
+//             1, 32,
+//             null, null,
+//             false);
 
         // TODO: needs debugging...
         test(1,
@@ -90,9 +89,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
              new HashCodeKey("key1.1", 1), "value1.1",
              1, 32,
              new HashCodeKey("key1.1", 1), "value1.1",
-             //true
-             false
-             );
+             true);
     }
     
 }

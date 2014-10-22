@@ -52,12 +52,12 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                                       rightSubKey,
                                                       rightSubValue);
             return
+            	(~bit & rightBitmap) == 0 ?
+                // BIN only had one subNode, now spliced into newSubNode
+                newSubNode :
                 rightSubValue == newSubNode ?
                 rightNode :
                 // TODO: is it possible to be leftSame here ?
-                (~bit & rightBitmap) == 0 ?
-                // BIN only had one subNode, now spliced into newSubNode
-                newSubNode :
                 // BiN had other subNodes, return union of old and new...
                 new BitmapIndexedNode(null,
                                       rightBitmap,
