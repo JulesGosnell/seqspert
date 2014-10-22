@@ -19,6 +19,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     public void test(int leftHash,
                      Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1,
                      int rightStart, int rightEnd,
+                     Object rightKey0, Object rightValue0,
                      boolean sameLeft) { // TODO: sameRight
 
         final INode leftNode = HashCollisionNodeUtils.create(leftHash,
@@ -47,18 +48,21 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 1), "value2",
              3, 4,
+             null, null,
              false);
         // non-singleton BIN
         test(1,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 1), "value2",
              3, 5,
+             null, null,
              false);
         // promotion to AN
         test(1,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 1), "value2",
              3, 19,
+             null, null,
              false);
     }
 
@@ -70,18 +74,21 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.2", 1), "value1.2",
              1, 2,
+             null, null,
              false);
         // non-singleton BIN
         test(1,
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.2", 1), "value1.2",
              1, 3,
+             null, null,
              false);
         // promotion to AN
         test(1,
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.2", 1), "value1.2",
              1, 17,
+             null, null,
              false);
     }
 
@@ -93,18 +100,21 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1", 1), "value1.1",
              new HashCodeKey("key1.1", 1), "value1.1.1",
              1, 2,
+             null, null,
              false);
         // non-singleton BIN
         test(1,
              new HashCodeKey("key1", 1), "value1.1",
              new HashCodeKey("key1.1", 1), "value1.1.1",
              1, 3,
+             null, null,
              false);
         // promotion to AN
         test(1,
              new HashCodeKey("key1", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
              1, 17,
+             null, null,
              false);
     }
 
@@ -116,18 +126,21 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 1), "value2",
              1, 2,
+             null, null,
              false);
         // non-singleton BIN
         test(1,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 1), "value2",
              1, 3,
+             null, null,
              false);
         // promotion to AN
         test(1,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 1), "value2",
              1, 17,
+             null, null,
              false);
         // TODO: we need to be able to put an HCN under the RHS...
     }
