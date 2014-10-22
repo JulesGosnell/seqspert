@@ -42,25 +42,25 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                                             leftNode));
         } else {
             // same hash partitions
-            final Object subKey = rightArray[keyIndex];
-            final INode spliced = NodeUtils.splice(shift + 5, 
-                                                   counts,
-                                                   null,
-                                                   leftNode,
-                                                   subKey,
-                                                   rightArray[keyIndex + 1]);
-
-            if ((~bit & rightBitmap) > 0) {
-                // BIN contains other subNodes - return a new BIN containing them
-                return new BitmapIndexedNode(null,
-                                             rightBitmap,
-                                             cloneAndSet(rightArray, keyIndex, null, spliced));
-            } else {
-                // this was the only subNode, now it is spliced into the LHC - return the result
-                return spliced;
-            }
-        }
-
+            final Object rightSubKey = rightArray[keyIndex];
+            final Object rightSubValue = rightArray[keyIndex + 1];
+            final INode newSubNode = NodeUtils.splice(shift + 5, 
+                                                      counts,
+                                                      null,
+                                                      leftNode,
+                                                      rightSubKey,
+                                                      rightSubValue);
+            return
+                rightSubValue == newSubNode ?
+                rightNode :
+                (~bit & rightBitmap) == 0 ?
+                // BIN only had one subNode, now spliced into newSubNode
+                newSubNode :
+                // BiN had other subNodes, return union of old and new...
+                new BitmapIndexedNode(null,
+                                      rightBitmap,
+                                      cloneAndSet(rightArray, keyIndex, null, newSubNode));
+                }
     }
 
 }
