@@ -59,7 +59,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        if (sameLeft) assertSame(expectedNode, actualNode);
+        if (sameLeft) TestUtils.assertSame(leftNode, expectedNode, actualNode);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         test(1,
              new HashCodeKey("key1.0", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
-             2, 17,
+             2, 18,
              false);
         // TODO: a test where the RHS is promoted from BIN to AN as a result of the splice...
     }
@@ -89,7 +89,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         test(1,
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.2", 1), "value1.2",
-             1, 16,
+             1, 17,
              false);
     }
 
@@ -104,7 +104,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         test(1,
              new HashCodeKey("key1", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
-             1, 16,
+             1, 17,
              false);
     }
 
@@ -112,14 +112,14 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     @Test
     public void testSameKeyAndValue() {
         test(1,
-             new HashCodeKey("key1.0", 1), "value1.0",
-             new HashCodeKey("key1.1", 1), "value1.1",
-             new HashCodeKey("key1.0", 1), "value1.0",
+             new HashCodeKey("key1", 1), "value1",
+             new HashCodeKey("key2", 1), "value2",
+             new HashCodeKey("key1", 1), "value1",
              true);
         test(1,
              new HashCodeKey("key1", 1), "value1",
-             new HashCodeKey("key1.1", 1), "value1.1",
-             1, 16,
+             new HashCodeKey("key2", 1), "value2",
+             1, 17,
              false);
         // TODO: a test where there is more than one subnode on the rhs...
     }

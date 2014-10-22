@@ -35,29 +35,29 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
     @Override
     @Test
     public void testDifferent() {
-        test(2, 3, new HashCodeKey("key1", 1), "value1", false);
-        test(2, 17, new HashCodeKey("key1", 1), "value1", false);
+        test(2, 4, new HashCodeKey("key1", 1), "value1", false);
+        test(2, 18, new HashCodeKey("key1", 1), "value1", false);
     }
 
     @Override
     @Test
     public void testSameKeyHashCode() {
-        test(2, 3, new HashCodeKey("key1", 2), "value1", false);
-        test(2, 17, new HashCodeKey("key1", 2), "value1", false);
+        test(2, 4, new HashCodeKey("key1", 2), "value1", false);
+        test(2, 18, new HashCodeKey("key1", 2), "value1", false);
     }
 
     @Override
     @Test
     public void testSameKey() {
-        test(2, 3, new HashCodeKey("key2", 2), "value1", false);
-        test(2, 17, new HashCodeKey("key2", 2), "value1", false);
+        test(2, 4, new HashCodeKey("key2", 2), "value1", false);
+        test(2, 18, new HashCodeKey("key2", 2), "value1", false);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(2, 3, new HashCodeKey("key2", 2), "value2", true);
-        test(2, 17, new HashCodeKey("key2", 2), "value2", true);
+        test(2, 4, new HashCodeKey("key2", 2), "value2", true);
+        test(2, 18, new HashCodeKey("key2", 2), "value2", true);
     }
     
 }

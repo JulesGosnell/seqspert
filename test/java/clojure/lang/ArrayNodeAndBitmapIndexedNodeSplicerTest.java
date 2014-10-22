@@ -47,11 +47,11 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testDifferent() {
-        test(3, 30,
+        test(3, 31,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 2), "value2",
              false);
-        // test(3, 30,
+        // test(3, 31,
         //      new HashCodeKey("key1", 1), "value1",
         //      new HashCodeKey("key2", 1), "value2",
         //      false);
@@ -60,7 +60,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testSameKeyHashCode() {
-        test(2, 30,
+        test(2, 31,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("collisionKey2", 2), "collisionValue2",
              false);
@@ -69,7 +69,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testSameKey() {
-        test(2, 30,
+        test(2, 31,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 2), "duplicationValue2",
              false);
@@ -79,13 +79,13 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     @Test
     public void testSameKeyAndValue() {
         // rhs is two KVPs
-        test(1, 30,
+        test(1, 31,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 2), "value2",
              true);
         // TODO: might work
         // rhs is an HCN
-        // test(1, 30,
+        // test(1, 31,
         //      new HashCodeKey("key1", 1), "value1",
         //      new HashCodeKey("key2", 1), "value2",
         //      true);

@@ -73,7 +73,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              new HashCodeKey("key1.0", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
              false, false);
-         test(3, 18,
+         test(3, 19,
               1,
               new HashCodeKey("key1.0", 1), "value1.0",
               new HashCodeKey("key1.1", 1), "value1.1",
@@ -89,7 +89,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.2", 1), "value1.2",
              false, false);
-        test(1, 16,
+        test(1, 17,
              1,
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.2", 1), "value1.2",
@@ -104,7 +104,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              new HashCodeKey("key1.0", 1), "value1.0.1",
              new HashCodeKey("key1.1", 1), "value1.1",
              false, false);
-        test(1, 16,
+        test(1, 17,
              1,
              new HashCodeKey("key1",   1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
@@ -121,7 +121,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              new HashCodeKey("key1.0", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
              false, false);
-        test(1, 16,
+        test(1, 17,
              1,
              new HashCodeKey("key1",   1), "value1",
              new HashCodeKey("key1.1", 1), "value1.1",

@@ -35,7 +35,7 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
         // if (Integer.bitCount(bin.bitmap) == 1 && Util.equiv(leftKey, bin.array[0]))
         //     assertNull(actualNode);
         // else
-            assertNodeEquals(expectedNode, actualNode);
+        assertNodeEquals(expectedNode, actualNode);
 
         if (sameRight) assertSame(rightNode, actualNode);
     }
@@ -43,24 +43,24 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
     @Test
     @Override
     public void testDifferent() {
-        test(new HashCodeKey("key1", 1), "value1", 2, 2, false);
+        test(new HashCodeKey("key1", 1), "value1", 2, 3, false);
 
         // promotion
-        test(new HashCodeKey("key1", 1), "value1", 2, 17, false);
+        test(new HashCodeKey("key1", 1), "value1", 2, 18, false);
     }
 
     @Ignore
     @Test
     @Override
     public void testSameKeyHashCode() {
-        test(new HashCodeKey("key1", 2), "value1", 2, 2, false);
-        test(new HashCodeKey("key1.1", 1), "value1", 1, 2, false);
+        test(new HashCodeKey("key1", 2), "value1", 2, 3, false);
+        test(new HashCodeKey("key1.1", 1), "value1", 1, 3, false);
     }
 
     @Test
     @Override
     public void testSameKey() {
-        test(new HashCodeKey("key2", 2), "value1", 2, 2, false);
+        test(new HashCodeKey("key2", 2), "value1", 2, 3, false);
     }
 
     @Test
@@ -71,9 +71,8 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
         // 1. BIN only contains one kvp - identical to lhs - return lhs ?
         // 2. BIN contains >1 kvp - including lhs - return rhs ?
         
-        test(new HashCodeKey("key1", 1), "value1", 1, 1, true);
         test(new HashCodeKey("key1", 1), "value1", 1, 2, true);
+        test(new HashCodeKey("key1", 1), "value1", 1, 3, true);
     }
 
 }
-

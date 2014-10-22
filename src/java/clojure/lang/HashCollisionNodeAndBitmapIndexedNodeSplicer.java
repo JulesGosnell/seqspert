@@ -30,6 +30,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                      NodeUtils.promoteAndSet(shift,
                                                              rightBitmap,
                                                              rightArray,
+                                                             // TODO: already called bitpos - repetition ?
 							     PersistentHashMap.mask(leftNode.hash, shift),
                                                              leftNode
                                                              ));
@@ -53,6 +54,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
             return
                 rightSubValue == newSubNode ?
                 rightNode :
+                // TODO: is it possible to be leftSame here ?
                 (~bit & rightBitmap) == 0 ?
                 // BIN only had one subNode, now spliced into newSubNode
                 newSubNode :

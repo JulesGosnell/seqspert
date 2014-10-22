@@ -73,11 +73,11 @@ public class TestUtils {
     }
 
     public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
-	for (int i = start; i < end + 1; i++)
+	for (int i = start; i < end; i++)
 	    node = assoc(shift, node , new HashCodeKey("key" + i, i), ("value"+i), counts);
 	return node;
     }
-    
+
     public static INode create(int shift, Object key, Object value) {
         return assoc(shift, BitmapIndexedNode.EMPTY, key, value, new Counts());
     }

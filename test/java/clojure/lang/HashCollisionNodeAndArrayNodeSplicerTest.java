@@ -56,7 +56,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
         test(1,
              new HashCodeKey("key1.0", 1), "value1.0",
              new HashCodeKey("key1.1", 1), "value1.1",
-             2, 31,
+             2, 32,
              null, null,
              false);
     }
@@ -67,7 +67,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
         test(1,
              new HashCodeKey("key1.1", 1), "value1.1",
              new HashCodeKey("key1.2", 1), "value1.2",
-             1, 31,
+             1, 32,
              null, null,
              false);
     }
@@ -78,7 +78,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
         test(1,
              new HashCodeKey("key1", 1), "value1.0.1",
              new HashCodeKey("key1.1", 1), "value1.1",
-             1, 31,
+             1, 32,
              null, null,
              false);
     }
@@ -89,7 +89,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
         test(1,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key1.1", 1), "value1.1",
-             1, 31,
+             1, 32,
              null, null,
              false);
 
@@ -97,7 +97,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
         test(1,
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key1.1", 1), "value1.1",
-             1, 31,
+             1, 32,
              new HashCodeKey("key1.1", 1), "value1.1",
              //true
              false

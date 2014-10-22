@@ -55,7 +55,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     @Test
     public void testDifferent() {
         final int rightHash = 1;
-        test(2, 30, null, null,
+        test(2, 31, null, null,
              rightHash, 
              new HashCodeKey("collision0", rightHash), "collision0",
              new HashCodeKey("collision1", rightHash), "collision1",
@@ -67,7 +67,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     public void testSameKeyHashCode() {
         // HCN is getting buried in one too many BINs   
         final int rightHash = 1;
-        test(1, 30, null, null,
+        test(1, 31, null, null,
              rightHash, 
              new HashCodeKey("collision0", rightHash), "collision0",
              new HashCodeKey("collision1", rightHash), "collision1",
@@ -78,7 +78,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     @Test
     public void testSameKey() {
         final int rightHash = 1;
-        test(1, 30, null, null,
+        test(1, 31, null, null,
              rightHash, 
              new HashCodeKey("collision0", rightHash), "collision0",
              new HashCodeKey("key1", rightHash), "collision1",
@@ -88,7 +88,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(1, 30,
+        test(1, 31,
              new HashCodeKey("key1.1", 1), "value1.1",
              1, 
              new HashCodeKey("key1",   1), "value1",
