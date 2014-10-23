@@ -91,18 +91,19 @@ public class TestUtils {
         return assoc(shift, assoc(shift, node, key0, value0, key1, value1, counts), key2, value2, counts);
     }
     
-    public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
+    public static INode assocN(int shift, INode node,
+                               int start, int end,
+                               Counts counts) {
 	for (int i = start; i < end; i++)
 	    node = assoc(shift, node , new HashCodeKey("key" + i, i), ("value"+i), counts);
 	return node;
     }
 
-    public static INode assocN(int shift, INode node, int start, int end,
-    		Object optionalKey0, Object optionalValue0,
-    		Counts counts) {
-	for (int i = start; i < end; i++) node = assoc(shift, node , new HashCodeKey("key" + i, i), ("value"+i), counts);
-	if (optionalKey0 != null && optionalValue0 != null) node = assoc(shift, node, optionalKey0, optionalValue0, counts); 
-	return node;
+    public static INode assocN(int shift, INode node,
+                               int start, int end,
+                               Object key0, Object value0,
+                               Counts counts) {
+	return assoc(shift, assocN(shift, node, start, end, counts), key0, value0, counts); 
     }
     
     public static INode assocN(int shift, INode node, int start, int end,
