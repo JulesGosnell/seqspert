@@ -121,10 +121,13 @@ public class TestUtils {
     public static INode create(int shift,
                                Object key0, Object value0,
                                Object key1, Object value1) {
-        return assoc(shift, create(shift, key0, value0), key1, value1, new Counts());
+        return assoc(shift, BitmapIndexedNode.EMPTY, key0, value0, key1, value1, new Counts());
     }
     
-    public static INode create(int shift, Object key0, Object value0, Object key1, Object value1, Object key2, Object value2) {
+    public static INode create(int shift,
+                               Object key0, Object value0,
+                               Object key1, Object value1,
+                               Object key2, Object value2) {
         INode node = assoc(shift, create(shift, key0, value0), key1, value1, new Counts());
         if (key2 != null && value2 != null) node = assoc(shift, node, key2, value2, new Counts());
         return node;
