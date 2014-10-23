@@ -27,9 +27,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
             HashCollisionNodeUtils.create(leftHash, leftKey0, leftValue0, leftKey1, leftValue1);
         assertTrue(leftNode instanceof HashCollisionNode);
 
-        final INode empty = BitmapIndexedNode.EMPTY;
-        final INode rightNode =
-            TestUtils.assocN(shift, empty, rightStart, rightEnd, rightKey0, rightValue0, new Counts());
+        final INode rightNode = TestUtils.create(shift, rightStart, rightEnd, rightKey0, rightValue0);
         assertTrue(rightNode instanceof ArrayNode);
 
         final IFn resolver = sameRight ? NodeUtils.resolveRight : NodeUtils.resolveLeft;
