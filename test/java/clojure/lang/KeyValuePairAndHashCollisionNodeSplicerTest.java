@@ -14,37 +14,33 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
 
     final Splicer splicer = new KeyValuePairAndHashCollisionNodeSplicer();
     final int shift = 0;
-    final int hashCode = 2;
-    final Object key0 = new HashCodeKey("key0", hashCode);
-    final Object key1 = new HashCodeKey("key1", hashCode);
-    final Object value0 = "value0";
-    final Object value1 = "value1";
 
     public void test(Object leftKey, Object leftValue, boolean sameRight) {
 
         final INode leftNode = NodeUtils.create(shift, leftKey, leftValue);
 
-        Box addedLeaf = null;
-        int expectedCounts = 0;
-        INode expected = leftNode;
+        final INode rightNode =
+            new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
+
+        final Counts expectedCounts = new Counts(NodeUtils.resolveRight, 0, 0);
+        final INode expectedNode =
+            TestUtils.assoc(shift, leftNode, key0, value0, key1, value1, expectedCounts);
                 
-        addedLeaf = new Box(null);
-        expected = expected.assoc(shift, key0.hashCode() , key0, value0, addedLeaf);
-        expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
+        final Counts actualCounts = new Counts(NodeUtils.resolveRight, 0, 0); // TODO: resolveLeft ?
+        final INode actualNode =  splicer.splice(shift, actualCounts, leftKey, leftValue, null, rightNode);
 
-        addedLeaf = new Box(null);
-        expected = expected.assoc(shift, key1.hashCode() , key1, value1, addedLeaf);
-        expectedCounts += (addedLeaf.val == addedLeaf) ? 0 : 1;
-
-        final INode rightNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
-
-        final Counts counts = new Counts(NodeUtils.resolveRight, 0, 0); // TODO: what about resolveLeft ?
-        final INode actual =  splicer.splice(shift, counts, leftKey, leftValue, null, rightNode);
-
-        assertEquals(expectedCounts, counts.sameKey);
-        assertNodeEquals(expected, actual);
-        if (sameRight) assertSame(expected, actual);
+        assertEquals(expectedCounts, actualCounts);
+        assertNodeEquals(expectedNode, actualNode);
+        if (sameRight) assertSame(rightNode, actualNode);
     }
+
+    // TODO: inline and tidy...
+
+    final int hashCode = 2;
+    final Object key0 = new HashCodeKey("key0", hashCode);
+    final Object key1 = new HashCodeKey("key1", hashCode);
+    final Object value0 = "value0";
+    final Object value1 = "value1";
 
     @Test
     @Override
