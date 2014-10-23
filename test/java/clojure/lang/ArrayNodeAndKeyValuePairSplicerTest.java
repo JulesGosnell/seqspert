@@ -15,9 +15,7 @@ public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface
     final Splicer splicer = new ArrayNodeAndKeyValuePairSplicer();
 
     public void test(int leftStart, int leftEnd, Object rightKey, Object rightValue, boolean same) {
-        
-        final INode empty = BitmapIndexedNode.EMPTY;
-        final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
+        final INode leftNode = TestUtils.create(shift, leftStart, leftEnd);
 
         final Counts expectedCounts = new Counts();
         final INode expectedNode = TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
