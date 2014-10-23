@@ -65,7 +65,9 @@ public class TestUtils {
         org.junit.Assert.assertSame(value1, value2);
     }
 
-    public static INode assoc(int shift, INode node, Object key, Object value, Counts counts) {
+    public static INode assoc(int shift, INode node,
+                              Object key, Object value,
+                              Counts counts) {
         if (key != null && value != null) {
             final Box box = new Box(null);
             node = node.assoc(shift, NodeUtils.hash(key), key, value, box);
@@ -74,10 +76,11 @@ public class TestUtils {
 	return node;
     }
 
-    public static INode assoc(int shift, INode node, Object key0, Object value0, Object key1, Object value1, Counts counts) {
-    	node = assoc(shift, node, key0, value0, counts);
-    	if (key1 != null && value1 != null) node = assoc(shift, node, key1, value1, counts);
-    	return node;
+    public static INode assoc(int shift, INode node,
+                              Object key0, Object value0,
+                              Object key1, Object value1,
+                              Counts counts) {
+        return assoc(shift, assoc(shift, node, key0, value0, counts), key1, value1, counts);
     }
     
     public static INode assoc(int shift, INode node, Object key0, Object value0, Object key1, Object value1, Object key2, Object value2, Counts counts) {
