@@ -20,7 +20,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
                      int rightStart, int rightEnd, boolean leftSame, boolean rightSame) {
         final INode empty = BitmapIndexedNode.EMPTY;
 
-        final INode leftNode = TestUtils.assocN(shift, empty, leftKey, leftValue, leftStart, leftEnd, new Counts());
+        final INode leftNode = TestUtils.create(shift, leftKey, leftValue, leftStart, leftEnd);
         assertTrue(leftNode instanceof ArrayNode);
 
         final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
