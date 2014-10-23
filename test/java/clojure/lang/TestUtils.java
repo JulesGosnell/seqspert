@@ -138,5 +138,11 @@ public class TestUtils {
                                Object key2, Object value2) {
         return assoc(shift, BitmapIndexedNode.EMPTY, key0, value0, key1, value1, key2, value2, new Counts());
     }
+
+    // public static INode create(int shift,
+    //                            Object key, Object value,
+    //                            int start, int end) {
+    //     return assoc(shift, BitmapIndexedNode.EMPTY, key, value, start, end, new Counts());
+    // }
     
 }

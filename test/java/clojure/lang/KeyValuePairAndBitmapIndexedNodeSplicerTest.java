@@ -36,7 +36,6 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
         //     assertNull(actualNode);
         // else
         assertNodeEquals(expectedNode, actualNode);
-
         if (sameRight) assertSame(rightNode, actualNode);
     }
     
