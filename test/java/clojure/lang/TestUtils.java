@@ -146,6 +146,12 @@ public class TestUtils {
     }
 
     public static INode create(int shift,
+                               int start, int end,
+                               Object key, Object value) {
+        return assocN(shift, BitmapIndexedNode.EMPTY, start, end, key, value, new Counts());
+    }
+
+    public static INode create(int shift,
                                int start, int end) {
         return assocN(shift, BitmapIndexedNode.EMPTY, start, end, new Counts());
     }

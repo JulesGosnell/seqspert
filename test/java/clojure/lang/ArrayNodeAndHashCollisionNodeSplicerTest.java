@@ -15,27 +15,22 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     final Splicer splicer = new ArrayNodeAndHashCollisionNodeSplicer();
 
     public void test(int leftStart, int leftEnd,
-                     Object leftExtraKey, Object leftExtraValue,
+                     Object leftKey, Object leftValue,
                      int rightHash,
                      Object rightKey0, Object rightValue0,
                      Object rightKey1, Object rightValue1,
                      boolean same) {
-
-        final INode empty = BitmapIndexedNode.EMPTY;
-
-        final INode leftNode =
-            TestUtils.assocN(shift, empty, leftStart, leftEnd, leftExtraKey, leftExtraValue, new Counts());
-
-        final Counts expectedCounts = new Counts();
-        final INode expectedNode =
-            TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
+        final INode leftNode = TestUtils.create(shift, leftStart, leftEnd, leftKey, leftValue);
 
         final INode rightNode =
             HashCollisionNodeUtils.create(rightHash, rightKey0, rightValue0, rightKey1, rightValue1);
         
+        final Counts expectedCounts = new Counts();
+        final INode expectedNode =
+            TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
+
         final Counts actualCounts = new Counts();
-        final INode actualNode =
-            splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
+        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
         
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
