@@ -27,11 +27,8 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
             HashCollisionNodeUtils.create(leftHash, leftKey0, leftValue0, leftKey1, leftValue1);
         assertTrue(leftNode instanceof HashCollisionNode);
 
-        final INode empty = BitmapIndexedNode.EMPTY;
-        final INode rightNode = TestUtils.assocN(shift, empty,
-                                                 rightStart, rightEnd,
-                                                 rightKey0, rightValue0, rightKey1, rightValue1,
-                                                 new Counts());
+        final INode rightNode = TestUtils.create(shift, rightStart, rightEnd,
+                                                 rightKey0, rightValue0, rightKey1, rightValue1);
         assertTrue(rightNode instanceof BitmapIndexedNode);
 
         final IFn resolver = sameRight ? NodeUtils.resolveRight :  NodeUtils.resolveLeft;
