@@ -17,16 +17,17 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1,
                      int rightStart, int rightEnd, boolean leftSame, boolean rightSame) {
                 
-        final INode leftNode = TestUtils.assoc(shift,
-                                               TestUtils.assoc(shift, BitmapIndexedNode.EMPTY, leftKey0, leftValue0, new Counts()),
-                                               leftKey1, leftValue1, new Counts());
+        final INode empty = BitmapIndexedNode.EMPTY;
 
+        final INode leftNode =
+            TestUtils.assoc(shift, empty, leftKey0, leftValue0, leftKey1, leftValue1, new Counts());
+
+        final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
+                
         final IFn resolveFunction = leftSame ? NodeUtils.resolveLeft : NodeUtils.resolveRight;
 
         final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
-                
-        final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, new Counts());
                 
         final Counts actualCounts = new Counts(resolveFunction, 0, 0);
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
