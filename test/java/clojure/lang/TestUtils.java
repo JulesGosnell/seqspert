@@ -83,10 +83,12 @@ public class TestUtils {
         return assoc(shift, assoc(shift, node, key0, value0, counts), key1, value1, counts);
     }
     
-    public static INode assoc(int shift, INode node, Object key0, Object value0, Object key1, Object value1, Object key2, Object value2, Counts counts) {
-    	node = assoc(shift, node, key0, value0, key1, value1, counts);
-    	if (key2 != null && value2 != null) node = assoc(shift, node, key2, value2, counts);
-    	return node;
+    public static INode assoc(int shift, INode node,
+                              Object key0, Object value0,
+                              Object key1, Object value1,
+                              Object key2, Object value2,
+                              Counts counts) {
+        return assoc(shift, assoc(shift, node, key0, value0, key1, value1, counts), key2, value2, counts);
     }
     
     public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
