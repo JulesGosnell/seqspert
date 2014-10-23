@@ -100,6 +100,13 @@ public class TestUtils {
     }
 
     public static INode assocN(int shift, INode node,
+                               Object key0, Object value0,
+                               int start, int end,
+                               Counts counts) {
+	return assocN(shift, assoc(shift, node, key0, value0, counts), start, end, counts); 
+    }
+    
+    public static INode assocN(int shift, INode node,
                                int start, int end,
                                Object key0, Object value0,
                                Counts counts) {
