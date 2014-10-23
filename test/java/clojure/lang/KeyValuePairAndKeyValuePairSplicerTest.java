@@ -21,16 +21,14 @@ public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterf
 
         final Counts expectedCounts = new Counts();
         final INode expectedNode = 
-            TestUtils.assoc(shift,
-                            TestUtils.assoc(shift, BitmapIndexedNode.EMPTY,
-                                            leftKey, leftValue, expectedCounts),
-                            rightKey, rightValue, expectedCounts);
+            TestUtils.assoc(shift, BitmapIndexedNode.EMPTY,
+                            leftKey, leftValue, rightKey, rightValue, expectedCounts);
                             
                             
             
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, leftKey, leftValue,
-                                                rightKey, rightValue);
+        final INode actualNode =
+            splicer.splice(shift, actualCounts, leftKey, leftValue, rightKey, rightValue);
         
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
