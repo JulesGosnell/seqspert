@@ -107,20 +107,20 @@ public class TestUtils {
     }
     
     public static INode assocN(int shift, INode node, int start, int end,
-    		Object optionalKey0, Object optionalValue0,
-    		Object optionalKey1, Object optionalValue1,
-    		Counts counts) {
-	for (int i = start; i < end; i++) node = assoc(shift, node , new HashCodeKey("key" + i, i), ("value"+i), counts);
-	if (optionalKey0 != null && optionalValue0 != null) node = assoc(shift, node, optionalKey0, optionalValue0, counts); 
-	if (optionalKey1 != null && optionalValue1 != null) node = assoc(shift, node, optionalKey1, optionalValue1, counts); 
-	return node;
+                               Object key0, Object value0,
+                               Object key1, Object value1,
+                               Counts counts) {
+        return assoc(shift, assocN(shift, node, start, end, key0, value0, counts), key1, value1, counts);
     }
     
-    public static INode create(int shift, Object key, Object value) {
+    public static INode create(int shift,
+                               Object key, Object value) {
         return assoc(shift, BitmapIndexedNode.EMPTY, key, value, new Counts());
     }
     
-    public static INode create(int shift, Object key0, Object value0, Object key1, Object value1) {
+    public static INode create(int shift,
+                               Object key0, Object value0,
+                               Object key1, Object value1) {
         return assoc(shift, create(shift, key0, value0), key1, value1, new Counts());
     }
     
