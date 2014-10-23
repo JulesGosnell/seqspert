@@ -20,20 +20,26 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
     public void test(int leftHash,
                      Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1,
                      int rightStart, int rightEnd,
-                     Object rightExtraKey, Object rightExtraValue,
+                     Object rightKey0, Object rightValue0,
                      boolean sameRight) {
 
-        final INode leftNode = HashCollisionNodeUtils.create(leftHash,
-                                                             leftKey0, leftValue0, leftKey1, leftValue1);
+        final INode leftNode =
+            HashCollisionNodeUtils.create(leftHash, leftKey0, leftValue0, leftKey1, leftValue1);
         assertTrue(leftNode instanceof HashCollisionNode);
 
-        final INode rightNode = TestUtils.assocN(shift, BitmapIndexedNode.EMPTY, rightStart, rightEnd, rightExtraKey, rightExtraValue, new Counts());
+        final INode empty = BitmapIndexedNode.EMPTY;
+        final INode rightNode =
+            TestUtils.assocN(shift, empty, rightStart, rightEnd, rightKey0, rightValue0, new Counts());
         assertTrue(rightNode instanceof ArrayNode);
 
-        final Counts expectedCounts = new Counts(sameRight ? NodeUtils.resolveRight : NodeUtils.resolveLeft, 0, 0);
-        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, rightExtraKey, rightExtraValue, expectedCounts);
+        final IFn resolver = sameRight ? NodeUtils.resolveRight : NodeUtils.resolveLeft;
 
-        final Counts actualCounts = new Counts(sameRight ? NodeUtils.resolveRight : NodeUtils.resolveLeft, 0, 0);
+        final Counts expectedCounts = new Counts(resolver, 0, 0);
+        final INode expectedNode = TestUtils.assocN(shift, leftNode,
+                                                    rightStart, rightEnd, rightKey0, rightValue0,
+                                                    expectedCounts);
+
+        final Counts actualCounts = new Counts(resolver, 0, 0);
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
