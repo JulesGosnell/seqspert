@@ -18,6 +18,10 @@ public class CountsTest  {
         assertNotEquals(counts, new Counts(NodeUtils.resolveLeft, 1, 0));
         assertNotEquals(counts, new Counts(NodeUtils.resolveLeft, 1, 1));
         assertNotEquals(counts, new Counts(NodeUtils.resolveLeft, 0, 1));
+        assertNotEquals(counts, new Counts(NodeUtils.resolveRight, 0, 0));
+        assertNotEquals(counts, new Counts(NodeUtils.resolveRight, 1, 0));
+        assertNotEquals(counts, new Counts(NodeUtils.resolveRight, 1, 1));
+        assertNotEquals(counts, new Counts(NodeUtils.resolveRight, 0, 1));
         assertNotEquals(counts, "not a Counts instance");
         
         assertNotNull(counts.toString());
