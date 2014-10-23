@@ -17,8 +17,7 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
     public void test(int leftStart, int leftEnd, Object rightKey, Object rightValue, boolean same) {
 
-        final INode empty = BitmapIndexedNode.EMPTY;
-        final INode leftNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
+        final INode leftNode = TestUtils.create(shift, leftStart, leftEnd);
         assertTrue(leftNode instanceof BitmapIndexedNode);
 
         final Counts expectedCounts = new Counts();
