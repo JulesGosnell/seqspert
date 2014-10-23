@@ -66,9 +66,11 @@ public class TestUtils {
     }
 
     public static INode assoc(int shift, INode node, Object key, Object value, Counts counts) {
-	final Box box = new Box(null);
-	node = node.assoc(shift, NodeUtils.hash(key), key, value, box);
-	counts.sameKey += (box.val == box) ? 0 : 1;
+        if (key != null && value != null) {
+            final Box box = new Box(null);
+            node = node.assoc(shift, NodeUtils.hash(key), key, value, box);
+            counts.sameKey += (box.val == box) ? 0 : 1;
+        }
 	return node;
     }
 
