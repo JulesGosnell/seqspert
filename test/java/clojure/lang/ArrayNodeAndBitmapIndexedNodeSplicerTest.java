@@ -25,19 +25,14 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
         
         final Counts expectedCounts = new Counts();
         final INode expectedNode =
-            TestUtils.assoc(shift,
-                            TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, expectedCounts),
-                            rightKey1, rightValue1, expectedCounts);
+            TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
         
         final Counts rightCounts = new Counts();
         final INode rightNode = 
-            TestUtils.assoc(shift,
-                            TestUtils.assoc(shift, empty, rightKey0, rightValue0, rightCounts),
-                            rightKey1, rightValue1, rightCounts);
+            TestUtils.assoc(shift, empty, rightKey0, rightValue0, rightKey1, rightValue1, rightCounts);
         
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode,
-                                                null, rightNode);
+        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
         
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
@@ -51,10 +46,6 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
              new HashCodeKey("key1", 1), "value1",
              new HashCodeKey("key2", 2), "value2",
              false);
-        // test(3, 31,
-        //      new HashCodeKey("key1", 1), "value1",
-        //      new HashCodeKey("key2", 1), "value2",
-        //      false);
     }
 
     @Override
