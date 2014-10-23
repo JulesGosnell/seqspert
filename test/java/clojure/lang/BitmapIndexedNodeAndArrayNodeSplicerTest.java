@@ -16,13 +16,8 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
         
     public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1, 
                      int rightStart, int rightEnd, boolean sameRight) {
-        
-        final INode empty = BitmapIndexedNode.EMPTY;
-    
-        final INode leftNode =
-            TestUtils.assoc(shift, empty, leftKey0, leftValue0, leftKey1, leftValue1, new Counts());
-        
-        final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
+        final INode leftNode = TestUtils.create(shift, leftKey0, leftValue0, leftKey1, leftValue1);
+        final INode rightNode = TestUtils.create(shift, rightStart, rightEnd);
 
         final Counts expectedCounts = new Counts(NodeUtils.resolveRight, 0, 0);
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
