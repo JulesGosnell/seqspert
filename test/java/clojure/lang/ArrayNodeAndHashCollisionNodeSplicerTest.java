@@ -23,24 +23,15 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
 
         final INode empty = BitmapIndexedNode.EMPTY;
 
-        final INode tmpNode = TestUtils.assocN(shift, empty, leftStart, leftEnd, new Counts());
         final INode leftNode =
-            leftExtraKey != null && leftExtraValue != null ? 
-            TestUtils.assoc(shift,
-                            tmpNode,
-                            leftExtraKey,
-                            leftExtraValue,
-                            new Counts()) :
-            tmpNode;
-            
+            TestUtils.assocN(shift, empty, leftStart, leftEnd, leftExtraKey, leftExtraValue, new Counts());
 
         final Counts expectedCounts = new Counts();
         final INode expectedNode =
-            TestUtils.assoc(shift,
-                            TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, expectedCounts),
-                            rightKey1, rightValue1, expectedCounts);
+            TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
 
-        final INode rightNode = HashCollisionNodeUtils.create(rightHash, rightKey0, rightValue0, rightKey1, rightValue1);
+        final INode rightNode =
+            HashCollisionNodeUtils.create(rightHash, rightKey0, rightValue0, rightKey1, rightValue1);
         
         final Counts actualCounts = new Counts();
         final INode actualNode =
