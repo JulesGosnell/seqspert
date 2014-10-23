@@ -18,12 +18,10 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     public void test(Object leftKey, Object leftValue, int leftStart, int leftEnd,
                      int rightStart, int rightEnd, boolean leftSame, boolean rightSame) {
-        final INode empty = BitmapIndexedNode.EMPTY;
-
         final INode leftNode = TestUtils.create(shift, leftKey, leftValue, leftStart, leftEnd);
         assertTrue(leftNode instanceof ArrayNode);
 
-        final INode rightNode = TestUtils.assocN(shift, empty, rightStart, rightEnd, new Counts());
+        final INode rightNode = TestUtils.create(shift, rightStart, rightEnd);
         assertTrue(rightNode instanceof ArrayNode);
 
         final IFn resolveFunction = rightSame ? NodeUtils.resolveRight: NodeUtils.resolveLeft;
