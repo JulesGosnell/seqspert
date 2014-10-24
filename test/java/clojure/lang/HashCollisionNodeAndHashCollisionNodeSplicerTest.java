@@ -49,7 +49,6 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
     @Override
     @Test
     public void testDifferent() {
-        final int shift = 0;
         final int leftHashCode = 1;
         final int rightHashCode = 33;
         final Object key0 = new HashCodeKey("key0", leftHashCode);
