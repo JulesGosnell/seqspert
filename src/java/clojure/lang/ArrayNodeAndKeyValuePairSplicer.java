@@ -20,7 +20,7 @@ class ArrayNodeAndKeyValuePairSplicer implements Splicer {
         if (subNode == null) {
             return new ArrayNode(null,
                                  leftNode.count + 1,
-                                 NodeUtils.cloneAndSetNode(leftArray, index,
+                                 ArrayNodeUtils.cloneAndSetNode(leftArray, index,
                                                            NodeUtils.create(shift + 5, rightHash, rightKey, rightValue)));
         } else {
             final INode newNode =
@@ -30,7 +30,7 @@ class ArrayNodeAndKeyValuePairSplicer implements Splicer {
                 leftNode :
                 new ArrayNode(null,
                               leftNode.count,
-                              NodeUtils.cloneAndSetNode(leftArray, index, newNode));
+                              ArrayNodeUtils.cloneAndSetNode(leftArray, index, newNode));
         }
     }
 

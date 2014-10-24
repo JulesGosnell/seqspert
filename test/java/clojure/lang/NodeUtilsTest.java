@@ -21,7 +21,7 @@ public class NodeUtilsTest  {
         final int shift = 0;
         final Object key = "a";
         final Object value = "1";
-        assertTrue(NodeUtils.promote(shift, key, value) instanceof INode);
+        assertTrue(ArrayNodeUtils.promote(shift, key, value) instanceof INode);
     }
 
     @Test
@@ -29,6 +29,6 @@ public class NodeUtilsTest  {
         final int shift = 0;
         final Object key = null;
         final Object value = BitmapIndexedNode.EMPTY;
-        assertSame(value, NodeUtils.promote(shift, key, value));
+        assertSame(value, ArrayNodeUtils.promote(shift, key, value));
     }
 }

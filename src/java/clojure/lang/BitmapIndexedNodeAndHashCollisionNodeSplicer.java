@@ -27,7 +27,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
             if (leftBitCount == 16)
                 return new ArrayNode(null,
                                      17,
-                                     NodeUtils.promoteAndSet(shift,
+                                     ArrayNodeUtils.promoteAndSet(shift,
                                                              leftBitmap,
                                                              leftArray,
                                                              PersistentHashMap.mask(rightHash, shift),

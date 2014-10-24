@@ -26,7 +26,7 @@ class HashCollisionNodeAndArrayNodeSplicer implements Splicer {
         	newSubNode = NodeUtils.splice(shift + 5, counts, null, leftNode, null, rightSubNode);
         }
 
-        return new ArrayNode(null, newCount, NodeUtils.cloneAndSetNode(rightArray, index, newSubNode));
+        return new ArrayNode(null, newCount, ArrayNodeUtils.cloneAndSetNode(rightArray, index, newSubNode));
             
     }
 

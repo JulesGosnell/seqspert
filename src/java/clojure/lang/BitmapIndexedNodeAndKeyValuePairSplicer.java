@@ -24,11 +24,11 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
             if (leftBitCount == 16)
                 return new ArrayNode(null,
                                      17,
-                                     NodeUtils.promoteAndSet(shift,
+                                     ArrayNodeUtils.promoteAndSet(shift,
                                                              leftBitmap,
                                                              leftArray,
                                                              PersistentHashMap.mask(rightHash, shift),
-                                                             NodeUtils.promote(shift + 5, rightKey, rightValue)));
+                                                             ArrayNodeUtils.promote(shift + 5, rightKey, rightValue)));
             else
                 return new BitmapIndexedNode(null,
                                              leftBitmap | bit,

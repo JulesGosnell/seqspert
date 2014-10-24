@@ -27,7 +27,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
             if (rightBitCount == 16)
                 return new ArrayNode(null,
                                      17,
-                                     NodeUtils.promoteAndSet(shift,
+                                     ArrayNodeUtils.promoteAndSet(shift,
                                                              rightBitmap,
                                                              rightArray,
                                                              // TODO: already called bitpos - repetition ?

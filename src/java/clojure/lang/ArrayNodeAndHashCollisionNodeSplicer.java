@@ -34,7 +34,7 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
 
         return leftDifferences == 0 ?
             leftNode :
-            new ArrayNode(null, newCount, NodeUtils.cloneAndSetNode(leftArray, index, newSubNode));
+            new ArrayNode(null, newCount, ArrayNodeUtils.cloneAndSetNode(leftArray, index, newSubNode));
     }
 
 }
