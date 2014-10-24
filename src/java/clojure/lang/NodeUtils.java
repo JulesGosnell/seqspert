@@ -15,15 +15,9 @@ public class NodeUtils {
 
     // TODO: rationalise the way cloneAndSet and cloneAndInsert work...
 
-	// for ArrayNodes...
+    // for ArrayNodes...
 	
     public static INode[] cloneAndSetNode(INode[] oldArray, int index, INode node) {
-        final INode[] newArray = oldArray.clone();
-        newArray[index] = node;
-        return newArray;
-    }
-
-    public static INode[] cloneAndSet(INode[] oldArray, int index, INode node) {
         final INode[] newArray = oldArray.clone();
         newArray[index] = node;
         return newArray;
