@@ -84,7 +84,7 @@ public class NodeUtils {
     }
 
     //------------------------------------------------------------------------------
-    // TODO: where are we using these ?
+    // TODO: should we move these to BIN Utils ?
 
     public static int hash(Object key) {
         return PersistentHashMap.hash(key);
