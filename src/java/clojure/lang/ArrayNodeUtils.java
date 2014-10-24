@@ -32,5 +32,9 @@ public class ArrayNodeUtils {
 	    return new ArrayNode(null, count, nodes);
 	}
 
+	public static int mask(int hash, int shift) {
+	    return PersistentHashMap.mask(hash, shift);
+	}
+
 
 }

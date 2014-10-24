@@ -95,10 +95,6 @@ public class NodeUtils {
         return node.assoc(shift, hash, key, value, addedLeaf);
     }
     
-    public static int mask(int hash, int shift) {
-        return PersistentHashMap.mask(hash, shift);
-    }
-
     public static PersistentHashMap makeHashMap(int count, INode root) {
         return new PersistentHashMap(count, root, false, null);
     }
