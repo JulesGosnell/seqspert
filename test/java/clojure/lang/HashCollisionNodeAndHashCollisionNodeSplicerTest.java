@@ -12,6 +12,10 @@ import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
+// we can't build an HCN directly via INode.assoc, which is what we
+// want to do, but we can indirectly, i.e. build a BIN-HCN
+// graph. Splicing a similar graph into this will have the desired
+// consequences.
 public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
@@ -21,7 +25,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
                      boolean sameLeft, boolean sameRight) {
 
         final INode leftNode = TestUtils.create(shift, key0, value0, key1, value1);
-        final INode rightNode =  TestUtils.create(shift, key2, value2, key3, value3, key4, value4);
+        final INode rightNode = TestUtils.create(shift, key2, value2, key3, value3, key4, value4);
 
         final Counts expectedCounts = new Counts();
         final INode expectedNode =
@@ -70,6 +74,16 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
         // differing keys all have same hashcode but values are different...
         test(key0, value0, key1, value1, key2, value2, key3, value3, null, null, false, false);
         test(key0, value0, key1, value1, key3, value3, key2, value2, null, null, false, false);
+
+        final int leftHashCode = (hashCode << 10) | (hashCode << 5) | hashCode;
+        final int rightHashCode = (hashCode << 15) | (hashCode << 10) | (hashCode << 5) | hashCode;
+
+        test(new HashCodeKey("key0", leftHashCode), value0,
+             new HashCodeKey("key1", leftHashCode), value1,
+             new HashCodeKey("key3", rightHashCode), value3,
+             new HashCodeKey("key2", rightHashCode), value2,
+             null, null,
+             false, false);
     }
 
     @Override
