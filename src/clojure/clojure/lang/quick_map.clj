@@ -10,7 +10,10 @@
     PersistentHashMap$ArrayNode
     PersistentHashMap$INode
 
-    NodeUtils])
+    ArrayNodeUtils
+    BitmapIndexedNodeUtils
+    Seqspert
+    ])
   ;;(:require  [clojure.core [reducers :as r]])
   ;;(:require [clojure [pprint :as p]])
   (:use [seqspert vector])
@@ -22,25 +25,25 @@
 
 ;; (def empty-node PersistentHashMap$BitmapIndexedNode/EMPTY)
 
-(def empty-node NodeUtils/EMPTY)
+(def empty-node BitmapIndexedNodeUtils/EMPTY)
 
 ;; (defn mask [hash shift]
 ;;   (PersistentHashMap/mask hash shift))
 
 (defn mask [hash shift]
-  (NodeUtils/mask hash shift))
+  (ArrayNodeUtils/mask hash shift))
 
 ;;;(defn node-assoc [^PersistentHashMap$INode node shift hash ^Object key ^Object value ^Box box]
 ;;;  (.assoc node ^int shift ^int hash key value box))
 
 (defn node-assoc [^PersistentHashMap$INode node shift hash ^Object key ^Object value ^Box box]
-  (NodeUtils/assoc node ^int shift ^int hash key value box))
+  (Seqspert/assoc node ^int shift ^int hash key value box))
 
 (defn make-array-node [nodes]
-  (NodeUtils/makeArrayNode 32 (into-array PersistentHashMap$INode nodes)))
+  (ArrayNodeUtils/makeArrayNode 32 (into-array PersistentHashMap$INode nodes)))
 
 (defn make-hash-map [count nodes]
-  (NodeUtils/makeHashMap count (make-array-node nodes)))
+  (Seqspert/makeHashMap count (make-array-node nodes)))
 
 ;;------------------------------------------------------------------------------
 
