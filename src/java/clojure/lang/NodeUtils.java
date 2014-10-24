@@ -1,10 +1,7 @@
 package clojure.lang;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class NodeUtils {

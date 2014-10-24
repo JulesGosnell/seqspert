@@ -1,12 +1,13 @@
 package clojure.lang;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import clojure.lang.PersistentHashMap.INode;
+
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.INode;
 
 public class NodeUtilsTest  {
 

@@ -1,9 +1,10 @@
 package clojure.lang;
 
-import clojure.lang.PersistentHashMap.INode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
-import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import java.util.concurrent.atomic.AtomicReference;
+
+import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.HashCollisionNode;
+import clojure.lang.PersistentHashMap.INode;
 
 class KeyValuePairAndKeyValuePairSplicer implements Splicer {
 

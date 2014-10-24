@@ -1,7 +1,6 @@
 package clojure.lang;
 
 import static clojure.lang.NodeUtils.cloneAndInsert;
-
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;

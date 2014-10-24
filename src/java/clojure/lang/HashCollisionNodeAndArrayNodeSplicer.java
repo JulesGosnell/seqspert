@@ -1,6 +1,5 @@
 package clojure.lang;
 
-import static clojure.lang.NodeUtils.cloneAndSet;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;

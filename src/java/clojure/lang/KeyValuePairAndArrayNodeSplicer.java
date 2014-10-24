@@ -1,6 +1,5 @@
 package clojure.lang;
 
-import static clojure.lang.NodeUtils.cloneAndSet;
 import static clojure.lang.NodeUtils.create;
 import static clojure.lang.NodeUtils.hash;
 import clojure.lang.PersistentHashMap.ArrayNode;
