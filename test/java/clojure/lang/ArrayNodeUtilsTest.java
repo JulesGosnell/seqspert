@@ -1,6 +1,5 @@
 package clojure.lang;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -9,12 +8,7 @@ import org.junit.Test;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
-public class NodeUtilsTest  {
-
-    @Test
-    public void testCtor() {
-        assertNotNull(new NodeUtils());
-    }
+public class ArrayNodeUtilsTest  {
 
     @Test
     public void testPromoteKeyValuePair() {

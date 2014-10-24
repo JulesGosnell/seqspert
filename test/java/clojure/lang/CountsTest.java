@@ -14,14 +14,14 @@ public class CountsTest  {
 
         assertEquals(counts, counts);
         assertEquals(counts, new Counts());
-        assertEquals(counts, new Counts(NodeUtils.resolveLeft, 0, 0));
-        assertNotEquals(counts, new Counts(NodeUtils.resolveLeft, 1, 0));
-        assertNotEquals(counts, new Counts(NodeUtils.resolveLeft, 1, 1));
-        assertNotEquals(counts, new Counts(NodeUtils.resolveLeft, 0, 1));
-        assertNotEquals(counts, new Counts(NodeUtils.resolveRight, 0, 0));
-        assertNotEquals(counts, new Counts(NodeUtils.resolveRight, 1, 0));
-        assertNotEquals(counts, new Counts(NodeUtils.resolveRight, 1, 1));
-        assertNotEquals(counts, new Counts(NodeUtils.resolveRight, 0, 1));
+        assertEquals(counts, new Counts(Counts.resolveLeft, 0, 0));
+        assertNotEquals(counts, new Counts(Counts.resolveLeft, 1, 0));
+        assertNotEquals(counts, new Counts(Counts.resolveLeft, 1, 1));
+        assertNotEquals(counts, new Counts(Counts.resolveLeft, 0, 1));
+        assertNotEquals(counts, new Counts(Counts.resolveRight, 0, 0));
+        assertNotEquals(counts, new Counts(Counts.resolveRight, 1, 0));
+        assertNotEquals(counts, new Counts(Counts.resolveRight, 1, 1));
+        assertNotEquals(counts, new Counts(Counts.resolveRight, 0, 1));
         assertNotEquals(counts, "not a Counts instance");
         
         assertNotNull(counts.toString());

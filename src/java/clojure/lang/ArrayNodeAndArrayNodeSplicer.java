@@ -28,7 +28,7 @@ class ArrayNodeAndArrayNodeSplicer implements Splicer {
             final boolean hasRight = rightSubNode != null;
             if (hasLeft) {
                 if (hasRight) {
-                    final INode newSubNode = NodeUtils.splice(shift + 5, counts, null, leftSubNode, null, rightSubNode);
+                    final INode newSubNode = Seqspert.splice(shift + 5, counts, null, leftSubNode, null, rightSubNode);
                     if (leftSubNode != newSubNode) leftDifferences++;
                     if (rightSubNode != newSubNode) rightDifferences++;
                     newArray[i] = newSubNode;

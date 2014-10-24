@@ -23,11 +23,11 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
         int leftDifferences = 0;
         if (leftSubNode == null) {
             newCount = leftNode.count + 1;
-            newSubNode = BitmapIndexedNodeUtils.create(PersistentHashMap.mask(rightHash, shift + 5), null, rightNode);
+            newSubNode = BitmapIndexedNodeUtils.create2(PersistentHashMap.mask(rightHash, shift + 5), null, rightNode);
             leftDifferences++;
         } else {
             newCount = leftNode.count;
-            newSubNode = NodeUtils.splice(shift + 5, counts, null, leftSubNode, null, rightNode);
+            newSubNode = Seqspert.splice(shift + 5, counts, null, leftSubNode, null, rightNode);
             if (leftSubNode != newSubNode) leftDifferences++;
             
         }

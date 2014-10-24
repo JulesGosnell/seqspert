@@ -19,11 +19,11 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
         final INode leftNode = new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 
-        final Counts expectedCounts = new Counts(NodeUtils.resolveRight, 0, 0);
+        final Counts expectedCounts = new Counts(Counts.resolveRight, 0, 0);
         final INode expectedNode = 
             TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
 
-        final Counts actualCounts = new Counts(NodeUtils.resolveRight, 0, 0); // TODO:  resolveLeft ?
+        final Counts actualCounts = new Counts(Counts.resolveRight, 0, 0); // TODO:  resolveLeft ?
         final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, rightKey, rightValue);
 
         assertEquals(expectedCounts, actualCounts);

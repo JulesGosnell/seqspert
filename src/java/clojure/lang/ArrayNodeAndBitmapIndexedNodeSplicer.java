@@ -32,7 +32,7 @@ class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 final Object rightSubValue = rightArray[rightIndex++];
                 if (haveLeft) {
                     // both sides present - splice them...
-                    final INode newSubNode = NodeUtils.splice(shift + 5, counts, null, leftSubNode, rightSubKey, rightSubValue);
+                    final INode newSubNode = Seqspert.splice(shift + 5, counts, null, leftSubNode, rightSubKey, rightSubValue);
                     newArray[i] = newSubNode;
                     if (leftSubNode != newSubNode) leftDifferences++;
                 } else {

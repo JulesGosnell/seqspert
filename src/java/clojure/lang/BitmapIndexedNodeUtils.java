@@ -9,7 +9,7 @@ public class BitmapIndexedNodeUtils {
         return 1 << PersistentHashMap.mask(hash, shift);
     }
         
-    public static  BitmapIndexedNode create(int index, Object key, Object value) {
+    public static  BitmapIndexedNode create2(int index, Object key, Object value) {
         return new BitmapIndexedNode(null, 1 << index, new Object[]{key, value});
     }
     
@@ -68,6 +68,20 @@ public class BitmapIndexedNodeUtils {
 	public static int hash(Object key) {
 	    return PersistentHashMap.hash(key);
 	}
+
+	public static INode create(int shift, Object key, Object value) {
+	    return new BitmapIndexedNode(null,
+	                                 bitpos(hash(key), shift),
+	                                 new Object[]{key, value});
+	}
+
+	public static INode create(int shift, int hash, Object key, Object value) {
+	    return new BitmapIndexedNode(null,
+	                                 bitpos(hash, shift) ,
+	                                 new Object[]{key, value});
+	}
+
+	public static INode EMPTY = BitmapIndexedNode.EMPTY;
     
 }
 

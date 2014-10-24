@@ -1,5 +1,7 @@
 package clojure.lang;
 
+import clojure.lang.PersistentHashMap.ArrayNode;
+import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
 /**
@@ -32,8 +34,8 @@ public class Seqspert {
         else if (rRoot == null)
             return lMap;
 
-        final Counts counts = new Counts(NodeUtils.resolveLeft, 0, 0); // TODO: pass through correct resolveFn here
-        final PersistentHashMap.INode root = NodeUtils.splice(0, counts, null, lRoot, null, rRoot);
+        final Counts counts = new Counts(Counts.resolveLeft, 0, 0); // TODO: pass through correct resolveFn here
+        final PersistentHashMap.INode root = Seqspert.splice(0, counts, null, lRoot, null, rRoot);
         final int count = lMap.count + rMap.count - counts.sameKey;
         return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);
     }
@@ -45,5 +47,50 @@ public class Seqspert {
         final IPersistentMap impl = spliceHashMaps((PersistentHashMap)lSet.impl, (PersistentHashMap)rSet.impl);
         return new PersistentHashSet(meta, impl);
     }
+
+	public static PersistentHashMap makeHashMap(int count, INode root) {
+	    return new PersistentHashMap(count, root, false, null);
+	}
+
+	public static INode assoc(INode node, int shift, int hash, Object key, Object value, Box addedLeaf) {
+	    return node.assoc(shift, hash, key, value, addedLeaf);
+	}
+
+	static Splicer[] splicers = new Splicer[] {
+	    new KeyValuePairAndKeyValuePairSplicer(),
+	    new KeyValuePairAndBitmapIndexedNodeSplicer(),
+	    new KeyValuePairAndHashCollisionNodeSplicer(),
+	    new KeyValuePairAndArrayNodeSplicer(),
+	    new BitmapIndexedNodeAndKeyValuePairSplicer(),
+	    new BitmapIndexedNodeAndBitmapIndexedNodeSplicer(),
+	    new BitmapIndexedNodeAndHashCollisionNodeSplicer(),
+	    new BitmapIndexedNodeAndArrayNodeSplicer(),
+	    new HashCollisionNodeAndKeyValuePairSplicer(),
+	    new HashCollisionNodeAndBitmapIndexedNodeSplicer(),
+	    new HashCollisionNodeAndHashCollisionNodeSplicer(),
+	    new HashCollisionNodeAndArrayNodeSplicer(),
+	    new ArrayNodeAndKeyValuePairSplicer(),
+	    new ArrayNodeAndBitmapIndexedNodeSplicer(),
+	    new ArrayNodeAndHashCollisionNodeSplicer(),
+	    new ArrayNodeAndArrayNodeSplicer(),
+	    null
+	};
+
+	static int typeInt(Object key, Object value) {
+	    return (key != null) ?
+	        0 :
+	        (value instanceof BitmapIndexedNode) ?
+	        1 :
+	        (value instanceof ArrayNode) ?
+	        3 :
+	        2;
+	}
+
+	static INode splice(int shift, Counts counts,
+	                    Object leftKey, Object leftValue,
+	                    Object rightKey, Object rightValue) {
+	    return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
+	        splice(shift, counts, leftKey, leftValue, rightKey, rightValue);
+	}
 
 }

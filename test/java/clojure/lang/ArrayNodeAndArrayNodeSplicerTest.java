@@ -23,7 +23,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         final INode rightNode = TestUtils.create(shift, rightStart, rightEnd);
         assertTrue(rightNode instanceof ArrayNode);
 
-        final IFn resolveFunction = rightSame ? NodeUtils.resolveRight: NodeUtils.resolveLeft;
+        final IFn resolveFunction = rightSame ? Counts.resolveRight: Counts.resolveLeft;
         
         final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);

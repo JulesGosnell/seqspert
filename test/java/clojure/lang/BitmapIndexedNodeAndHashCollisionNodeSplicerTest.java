@@ -18,7 +18,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
                      Object rightKey0, Object rightValue0, Object rightKey1, Object rightValue1,
                      boolean sameLeft, boolean sameRight) {
 
-        final INode leftNode = NodeUtils.create(shift, leftKey, leftValue);
+        final INode leftNode = BitmapIndexedNodeUtils.create(shift, leftKey, leftValue);
         final INode rightNode = HashCollisionNodeUtils.create(rightHash,
                                                               rightKey0, rightValue0,
                                                               rightKey1, rightValue1);

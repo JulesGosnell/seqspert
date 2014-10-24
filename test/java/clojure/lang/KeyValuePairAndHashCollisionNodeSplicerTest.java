@@ -17,16 +17,16 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
 
     public void test(Object leftKey, Object leftValue, boolean sameRight) {
 
-        final INode leftNode = NodeUtils.create(shift, leftKey, leftValue);
+        final INode leftNode = BitmapIndexedNodeUtils.create(shift, leftKey, leftValue);
 
         final INode rightNode =
             new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 
-        final Counts expectedCounts = new Counts(NodeUtils.resolveRight, 0, 0);
+        final Counts expectedCounts = new Counts(Counts.resolveRight, 0, 0);
         final INode expectedNode =
             TestUtils.assoc(shift, leftNode, key0, value0, key1, value1, expectedCounts);
                 
-        final Counts actualCounts = new Counts(NodeUtils.resolveRight, 0, 0); // TODO: resolveLeft ?
+        final Counts actualCounts = new Counts(Counts.resolveRight, 0, 0); // TODO: resolveLeft ?
         final INode actualNode =  splicer.splice(shift, actualCounts, leftKey, leftValue, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);

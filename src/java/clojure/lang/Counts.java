@@ -5,9 +5,17 @@ public class Counts {
     public final IFn resolveFunction;
     public int sameKey;
     public int sameKeyAndValue;
+	public static IFn resolveLeft  = new AFn() {
+	@Override public Object invoke(Object key, Object leftValue, Object rightValue) {
+	    return (Util.equiv(leftValue, rightValue)) ? leftValue : rightValue;
+	}};
+	public static IFn resolveRight = new AFn() {
+	@Override public Object invoke(Object key, Object leftValue, Object rightValue) {
+	    return rightValue; 
+	}};
 
     public Counts() {
-        this.resolveFunction = NodeUtils.resolveLeft;
+        this.resolveFunction = Counts.resolveLeft;
         this.sameKey = 0;
         this.sameKeyAndValue = 0;
     }

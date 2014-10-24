@@ -12,7 +12,7 @@ public class ArrayNodeUtils {
 	}
 
 	public  static INode promote(int shift, Object key, Object value) {
-	    return (key == null) ? (INode) value : NodeUtils.create(shift, key, value);
+	    return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create(shift, key, value);
 	}
 
 	public static INode[] promoteAndSet(int shift, int bitmap, Object[] bitIndexedArray, int index, INode newNode) {

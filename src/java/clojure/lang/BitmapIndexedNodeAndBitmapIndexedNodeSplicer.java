@@ -43,7 +43,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 if (hasRight) {
                     final Object rightSubKey = rightArray[rightIndex++];
                     final Object rightSubValue = rightArray[rightIndex++];
-                    final INode newSubNode = NodeUtils.splice(shift + 5, counts, leftSubKey, leftSubValue, rightSubKey, rightSubValue);
+                    final INode newSubNode = Seqspert.splice(shift + 5, counts, leftSubKey, leftSubValue, rightSubKey, rightSubValue);
                     if (newSubNode == null) {
                         // we must have spliced two leaves giving a result of another leaf / KVP...
                         // the key must be unchanged
@@ -54,7 +54,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                         if (newSubValue != rightSubValue) rightDifferences++;
 
                         if (promoted) {
-                            newAnArray[i] = NodeUtils.create(shift + 5, newSubKey, newSubValue);
+                            newAnArray[i] = BitmapIndexedNodeUtils.create(shift + 5, newSubKey, newSubValue);
                         } else {
                             newBinArray[newBinIndex++] = newSubKey;
                             newBinArray[newBinIndex++] = newSubValue;

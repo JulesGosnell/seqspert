@@ -19,7 +19,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         final INode leftNode = TestUtils.create(shift, leftKey0, leftValue0, leftKey1, leftValue1);
         final INode rightNode = TestUtils.create(shift, rightStart, rightEnd);
                 
-        final IFn resolveFunction = leftSame ? NodeUtils.resolveLeft : NodeUtils.resolveRight;
+        final IFn resolveFunction = leftSame ? Counts.resolveLeft : Counts.resolveRight;
 
         final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);

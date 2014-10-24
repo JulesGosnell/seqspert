@@ -23,7 +23,7 @@ class HashCollisionNodeAndArrayNodeSplicer implements Splicer {
         	newSubNode = leftNode;
         } else {
         	newCount = rightNode.count;
-        	newSubNode = NodeUtils.splice(shift + 5, counts, null, leftNode, null, rightSubNode);
+        	newSubNode = Seqspert.splice(shift + 5, counts, null, leftNode, null, rightSubNode);
         }
 
         return new ArrayNode(null, newCount, ArrayNodeUtils.cloneAndSetNode(rightArray, index, newSubNode));

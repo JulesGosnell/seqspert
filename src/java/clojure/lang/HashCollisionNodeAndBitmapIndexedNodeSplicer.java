@@ -43,7 +43,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
             // same hash partitions
             final Object rightSubKey = rightArray[keyIndex];
             final Object rightSubValue = rightArray[keyIndex + 1];
-            final INode newSubNode = NodeUtils.splice(shift + 5, 
+            final INode newSubNode = Seqspert.splice(shift + 5, 
                                                       counts,
                                                       null,
                                                       leftNode,

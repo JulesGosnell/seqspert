@@ -45,7 +45,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
             // rhs occupied...
             final Object subKey = rightArray[keyIndex];
             final Object subValue = rightArray[keyIndex + 1];
-            final INode spliced = NodeUtils.splice(shift + 5, counts,
+            final INode spliced = Seqspert.splice(shift + 5, counts,
                                                    leftKey, leftValue,
                                                    subKey, subValue);
             if ((~bit & rightBitmap) > 0) {
