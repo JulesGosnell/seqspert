@@ -1,6 +1,9 @@
 package clojure.lang;
 
 import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.PersistentHashMap.HashCollisionNode;
+import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import java.util.concurrent.atomic.AtomicReference;
 
 class KeyValuePairAndKeyValuePairSplicer implements Splicer {
 
@@ -24,7 +27,30 @@ class KeyValuePairAndKeyValuePairSplicer implements Splicer {
             }
         } else{
             // no collision
-            return NodeUtils.create(shift, leftKey, leftValue, rightHash, rightKey, rightValue);
+            return create(shift, leftKey, leftValue, rightHash, rightKey, rightValue);
         }
     }
+
+    // TODO refactor...
+    // N.B. - this does NOT handle duplicate keys !!
+    static INode create(int shift, Object key1, Object val1, int key2hash, Object key2, Object val2) {
+        final AtomicReference<Thread> edit = new AtomicReference<Thread>();
+        int key1hash = NodeUtils.hash(key1);
+        int p1 = PersistentHashMap.mask(key1hash, shift);
+        int p2 = PersistentHashMap.mask(key2hash, shift);
+        int bit1 = 1 << p1;
+        int bit2 = 1 << p2;
+        int bitmap = bit1 | bit2;
+        return new BitmapIndexedNode(edit,
+                                     bitmap,
+                                     (bit1 == bit2) ?
+                                     new Object[]{null,
+                                                  (key1hash == key2hash) ?
+                                                  new HashCollisionNode(null, key1hash, 2, new Object[] {key1, val1, key2, val2}) :
+                                                  create(shift + 5, key1, val1, key2hash, key2, val2), null, null, null, null, null, null} :
+                                     (p1 <= p2) ?
+                                     new Object[]{key1, val1, key2, val2, null, null, null, null} :
+                                     new Object[]{key2, val2, key1, val1, null, null, null, null});
+    }
+        
 }
