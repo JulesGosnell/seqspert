@@ -42,7 +42,6 @@ public class BitmapIndexedNodeUtils {
 	    return newArray;
 	}
 
-	// TODO: move to BIN Utils
 	public static Object[] cloneAndInsert(Object[] oldArray, int oldLength, int keyIndex, INode node) {
 	    final Object[] newArray = new Object[oldLength + 2];
 	    System.arraycopy(oldArray, 0, newArray, 0, keyIndex);
@@ -53,7 +52,6 @@ public class BitmapIndexedNodeUtils {
 	    return newArray;
 	}
 
-	// TODO: move to BIN Utils
 	public static Object[] cloneAndInsert(Object[] oldArray, int oldLength,
 	                                      int keyIndex, Object key, Object value) {
 	    final Object[] newArray = new Object[oldLength + 2];
