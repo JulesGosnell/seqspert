@@ -32,16 +32,16 @@ public class NodeUtils {
         return newArray;
     }
     
-    public static Object[] cloneAndSet(Object[] oldArray, int index, Object value) {
+    public static Object[] cloneAndSetValue(Object[] oldArray, int valueIndex, Object value) {
         final Object[] newArray = oldArray.clone();
-        newArray[index] = value;
+        newArray[valueIndex] = value;
         return newArray;
     }
 
-    public static Object[] cloneAndSet(Object[] oldArray, int index, Object key, Object value) {
+    public static Object[] cloneAndSet(Object[] oldArray, int keyIndex, Object key, Object value) {
         final Object[] newArray = oldArray.clone();
-        newArray[index + 0] = key;
-        newArray[index + 1] = value;
+        newArray[keyIndex + 0] = key;
+        newArray[keyIndex + 1] = value;
         return newArray;
     }
 

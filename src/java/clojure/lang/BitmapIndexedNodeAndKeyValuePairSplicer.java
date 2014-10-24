@@ -42,16 +42,20 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
             // left hand side already occupied...
             final Object subKey = leftArray[keyIndex];
             final Object subVal = leftArray[valueIndex];
-            final INode newSubNode = NodeUtils.splice(shift + 5, counts, subKey, subVal, rightKey, rightValue);
+            final INode newSubNode =
+                NodeUtils.splice(shift + 5, counts, subKey, subVal, rightKey, rightValue);
+
             if (newSubNode == null) {
             	final Object resolved = counts.resolveFunction.invoke(subKey, subVal, rightValue);
-                if (subVal == resolved) {
-                    return leftNode;
-                } else {
-                    return new BitmapIndexedNode(null, leftBitmap, NodeUtils.cloneAndSet(leftArray, valueIndex, resolved));
-                }
+                return (subVal == resolved) ?
+                    leftNode :
+                    new BitmapIndexedNode(null,
+                                          leftBitmap,
+                                          NodeUtils.cloneAndSetValue(leftArray, valueIndex, resolved));
             } else {
-                return new BitmapIndexedNode(null, leftBitmap, NodeUtils.cloneAndSetNode(leftArray, valueIndex, newSubNode));
+                return new BitmapIndexedNode(null,
+                                             leftBitmap,
+                                             NodeUtils.cloneAndSetNode(leftArray, valueIndex, newSubNode));
             }
         }
     }
