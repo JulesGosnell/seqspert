@@ -1,7 +1,5 @@
 package clojure.lang;
 
-import static clojure.lang.NodeUtils.cloneAndInsert;
-import static clojure.lang.NodeUtils.cloneAndSet;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
@@ -37,7 +35,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
             else
                 return new BitmapIndexedNode(null,
                                              rightBitmap | bit,
-                                             cloneAndInsert(rightArray,
+                                             BitmapIndexedNodeUtils.cloneAndInsert(rightArray,
                                                             rightBitCount * 2,
                                                             keyIndex,
                                                             leftNode));
@@ -61,7 +59,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 // BiN had other subNodes, return union of old and new...
                 new BitmapIndexedNode(null,
                                       rightBitmap,
-                                      cloneAndSet(rightArray, keyIndex, null, newSubNode));
+                                      BitmapIndexedNodeUtils.cloneAndSet(rightArray, keyIndex, null, newSubNode));
                 }
     }
 

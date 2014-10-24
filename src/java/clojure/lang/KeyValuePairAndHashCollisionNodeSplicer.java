@@ -11,7 +11,7 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
 
         final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
 
-        final int leftHash = NodeUtils.hash(leftKey);
+        final int leftHash = BitmapIndexedNodeUtils.hash(leftKey);
         final int rightHash = rightNode.hash;
 
         if (leftHash == rightHash) {
@@ -24,7 +24,7 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
                                           rightHash,
                                           rightNode.count + 1,
                                           // since KVP is from LHS, insert at front of HCN
-                                          NodeUtils.cloneAndInsert(rightArray, rightLength,
+                                          BitmapIndexedNodeUtils.cloneAndInsert(rightArray, rightLength,
                                                                    0, leftKey, leftValue));
                 return newNode;
             } else {

@@ -70,7 +70,7 @@ public class TestUtils {
                               Counts counts) {
         if (key != null && value != null) {
             final Box box = new Box(null);
-            node = node.assoc(shift, NodeUtils.hash(key), key, value, box);
+            node = node.assoc(shift, BitmapIndexedNodeUtils.hash(key), key, value, box);
             counts.sameKey += (box.val == box) ? 0 : 1;
         }
 	return node;

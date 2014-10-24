@@ -1,6 +1,5 @@
 package clojure.lang;
 
-import static clojure.lang.NodeUtils.cloneAndInsert;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
@@ -35,7 +34,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
             else
                 return new BitmapIndexedNode(null,
                                              leftBitmap | bit,
-                                             cloneAndInsert(leftArray,
+                                             BitmapIndexedNodeUtils.cloneAndInsert(leftArray,
                                                             leftBitCount * 2,
                                                             keyIndex,
                                                             rightNode));
@@ -48,7 +47,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
             return (subVal == spliced) ?
             	leftNode :
             	new BitmapIndexedNode(null, leftBitmap,
-                                      NodeUtils.cloneAndSetNode(leftArray, valueIndex, spliced));
+                                      BitmapIndexedNodeUtils.cloneAndSetNode(leftArray, valueIndex, spliced));
         }
     }
 

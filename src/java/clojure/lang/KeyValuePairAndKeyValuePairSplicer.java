@@ -13,8 +13,8 @@ class KeyValuePairAndKeyValuePairSplicer implements Splicer {
                         Object rightKey, Object rightValue) {
         
         // TODO: expensive - can we pass this down ?
-        final int leftHash = NodeUtils.hash(leftKey);
-        final int rightHash = NodeUtils.hash(rightKey);
+        final int leftHash = BitmapIndexedNodeUtils.hash(leftKey);
+        final int rightHash = BitmapIndexedNodeUtils.hash(rightKey);
         // TODO: might be more efficient to check for reference equality first...
         if (leftHash == rightHash) {
             if (Util.equiv(leftKey, rightKey)) {
@@ -36,7 +36,7 @@ class KeyValuePairAndKeyValuePairSplicer implements Splicer {
     // N.B. - this does NOT handle duplicate keys !!
     static INode create(int shift, Object key1, Object val1, int key2hash, Object key2, Object val2) {
         final AtomicReference<Thread> edit = new AtomicReference<Thread>();
-        int key1hash = NodeUtils.hash(key1);
+        int key1hash = BitmapIndexedNodeUtils.hash(key1);
         int p1 = PersistentHashMap.mask(key1hash, shift);
         int p2 = PersistentHashMap.mask(key2hash, shift);
         int bit1 = 1 << p1;

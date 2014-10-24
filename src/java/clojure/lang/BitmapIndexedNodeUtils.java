@@ -1,6 +1,7 @@
 package clojure.lang;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeUtils {
         
@@ -19,6 +20,54 @@ public class BitmapIndexedNodeUtils {
                                      new Object[]{key0, value0, key1, value1} :
                                      new Object[]{key1, value1, key0, value0});
     }
+
+	public static Object[] cloneAndSetNode(Object[] oldArray, int index, INode node) {
+	    final Object[] newArray = oldArray.clone();
+	    newArray[index - 1] = null; // yeugh - TODO - change to keyIndex
+	    newArray[index] = node;
+	    return newArray;
+	}
+
+	public static Object[] cloneAndSetValue(Object[] oldArray, int valueIndex, Object value) {
+	    final Object[] newArray = oldArray.clone();
+	    newArray[valueIndex] = value;
+	    return newArray;
+	}
+
+	// TODO: rename
+	public static Object[] cloneAndSet(Object[] oldArray, int keyIndex, Object key, Object value) {
+	    final Object[] newArray = oldArray.clone();
+	    newArray[keyIndex + 0] = key;
+	    newArray[keyIndex + 1] = value;
+	    return newArray;
+	}
+
+	// TODO: move to BIN Utils
+	public static Object[] cloneAndInsert(Object[] oldArray, int oldLength, int keyIndex, INode node) {
+	    final Object[] newArray = new Object[oldLength + 2];
+	    System.arraycopy(oldArray, 0, newArray, 0, keyIndex);
+	    int newKeyIndex = keyIndex;
+	    newArray[newKeyIndex++] = null;
+	    newArray[newKeyIndex++] = node;
+	    System.arraycopy(oldArray, keyIndex, newArray, newKeyIndex, oldLength - keyIndex);
+	    return newArray;
+	}
+
+	// TODO: move to BIN Utils
+	public static Object[] cloneAndInsert(Object[] oldArray, int oldLength,
+	                                      int keyIndex, Object key, Object value) {
+	    final Object[] newArray = new Object[oldLength + 2];
+	    System.arraycopy(oldArray, 0, newArray, 0, keyIndex);
+	    int newKeyIndex = keyIndex;
+	    newArray[newKeyIndex++] = key;
+	    newArray[newKeyIndex++] = value;
+	    System.arraycopy(oldArray, keyIndex, newArray, newKeyIndex, oldLength - keyIndex);
+	    return newArray;
+	}
+
+	public static int hash(Object key) {
+	    return PersistentHashMap.hash(key);
+	}
     
 }
 

@@ -1,7 +1,6 @@
 package clojure.lang;
 
 import static clojure.lang.NodeUtils.create;
-import static clojure.lang.NodeUtils.hash;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.INode;
 
@@ -12,7 +11,7 @@ class KeyValuePairAndArrayNodeSplicer implements Splicer {
                         Object rightKey, Object rightValue) {
 
         final ArrayNode rightNode = (ArrayNode) rightValue;
-        final int leftHash = hash(leftKey);
+        final int leftHash = BitmapIndexedNodeUtils.hash(leftKey);
         final int index = PersistentHashMap.mask(leftHash, shift);
         
         final INode subNode = rightNode.array[index];

@@ -1,6 +1,5 @@
 package clojure.lang;
 
-import static clojure.lang.NodeUtils.hash;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
@@ -15,7 +14,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
         final Object[] rightArray = rightNode.array;
         final int rightBitmap = rightNode.bitmap;
-        final int leftHash = hash(leftKey);
+        final int leftHash = BitmapIndexedNodeUtils.hash(leftKey);
         final int bit = BitmapIndexedNodeUtils.bitpos(leftHash, shift);
         final int index = rightNode.index(bit);
         final int keyIndex = index * 2;
@@ -28,7 +27,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                                      ArrayNodeUtils.promoteAndSet(shift,
                                                              rightNode.bitmap,
                                                              rightNode.array,
-                                                             PersistentHashMap.mask(NodeUtils.hash(leftKey), shift),
+                                                             PersistentHashMap.mask(BitmapIndexedNodeUtils.hash(leftKey), shift),
                                                              ArrayNodeUtils.promote(shift + 5, leftKey, leftValue)));
             else
                 // lets assume that we could not have received an empty
@@ -37,7 +36,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                 // branch...
                 return new BitmapIndexedNode(null,
                                              rightBitmap | bit,
-                                             NodeUtils.cloneAndInsert(rightArray,
+                                             BitmapIndexedNodeUtils.cloneAndInsert(rightArray,
                                                                       rightBitCount * 2,
                                                                       keyIndex,
                                                                       leftKey,
@@ -66,7 +65,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                     // since we are replacing a subNode we do not have to worry about promotion to an AN.
                     return new BitmapIndexedNode(null,
                                                  rightBitmap,
-                                                 NodeUtils.cloneAndSet(rightArray,
+                                                 BitmapIndexedNodeUtils.cloneAndSet(rightArray,
                                                                        keyIndex,
                                                                        null,
                                                                        spliced));
