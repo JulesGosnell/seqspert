@@ -15,10 +15,10 @@
            (millis 100 #(merge m1 m2)) "ms" "vs"
            (millis 100 #(splice-hash-maps m1 m2)) "ms")
 
-  ;; (is (=
-  ;;      (merge m1 m2)
-  ;;      (splice-hash-maps m1 m2)))
-
+  (is (=
+       (merge m1 m2)
+       (splice-hash-maps m1 m2)))
+  
   (println)
   (println "a vector of 100000 pairs to be read into a hash map")
   

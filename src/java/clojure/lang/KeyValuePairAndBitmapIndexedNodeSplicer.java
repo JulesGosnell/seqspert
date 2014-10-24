@@ -56,6 +56,9 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                     // if the value were different it would replace the one on the LHS
                     // if the value were the same, then we do not need to change the one in the RHS
                     // since the BIN contains more than this entry we must return it...
+
+		    // TODO: we should call resolver here...
+		    
                     return rightNode;
                 } else {
                     // we have successfully merged the LHS and RHS entry
@@ -73,7 +76,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                 if (spliced == null) {
                     // we must only return a single KVP which we cannot do, so we return null
                                                                                 
-                    System.out.println("WARN: I think we are returning wrong value...");
+                    // System.out.println("WARN: I think we are returning wrong value...");
                     // return spliced;
                                                                 
                     // TODO: I think that we should return spliced
