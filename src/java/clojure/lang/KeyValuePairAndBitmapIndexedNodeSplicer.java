@@ -63,11 +63,10 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                     // since we are replacing a subNode we do not have to worry about promotion to an AN.
                     return new BitmapIndexedNode(null,
                                                  rightBitmap,
-                                                 NodeUtils.cloneAndInsert(rightArray,
-                                                                          rightBitCount * 2,
-                                                                          keyIndex,
-                                                                          null,
-                                                                          spliced));
+                                                 NodeUtils.cloneAndSet(rightArray,
+                                                                       keyIndex,
+                                                                       null,
+                                                                       spliced));
                 }
             } else {
                 // the BIN only contains this entry
