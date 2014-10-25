@@ -29,15 +29,16 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
 
             if (hasLeft) {
                 final Object leftSubKey = leftArray[leftIndex++];
+                final int leftSubHash = BitmapIndexedNodeUtils.hash(leftSubKey);
                 final Object leftSubValue = leftArray[leftIndex++];
 
                 if (hasRight) {
                     // both sides present - merge them...
-                    final INode newSubNode = Seqspert.splice(shift + 5, counts, false, 0, leftSubKey, leftSubValue, false, 0, null, rightSubNode);
+                    final INode newSubNode = Seqspert.splice(shift + 5, counts, true, leftSubHash, leftSubKey, leftSubValue, false, 0, null, rightSubNode);
                     newArray[i] = newSubNode;
                     rightDifferences += (newSubNode == rightSubNode) ? 0 : 1;
                 } else {
-                    newArray[i] = ArrayNodeUtils.promote(shift + 5, leftSubKey, leftSubValue);
+                    newArray[i] = ArrayNodeUtils.promote3(ArrayNodeUtils.mask(leftSubHash, shift + 5), leftSubKey, leftSubValue);
                     rightDifferences++;
                 }
             } else { // not lb

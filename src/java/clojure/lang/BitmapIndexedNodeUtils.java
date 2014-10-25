@@ -74,12 +74,18 @@ public class BitmapIndexedNodeUtils {
 	                                 new Object[]{key, value});
 	}
 
+    @Deprecated
 	public static INode create(int shift, int hash, Object key, Object value) {
 	    return new BitmapIndexedNode(null,
 	                                 bitpos(hash, shift) ,
 	                                 new Object[]{key, value});
 	}
 
+
+	public static INode create3(int partition, Object key, Object value) {
+	    return new BitmapIndexedNode(null, 1 << partition, new Object[]{key, value});
+	}
+	
 	public static INode EMPTY = BitmapIndexedNode.EMPTY;
     
 }

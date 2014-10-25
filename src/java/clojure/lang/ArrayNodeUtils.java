@@ -11,8 +11,18 @@ public class ArrayNodeUtils {
 	    return newArray;
 	}
 
+	@Deprecated
 	public  static INode promote(int shift, Object key, Object value) {
 	    return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create(shift, key, value);
+	}
+	
+	public  static INode promote3(int partition, Object key, Object value) {
+	    return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create3(partition, key, value);
+	}
+	
+	@Deprecated
+	public  static INode promote(int shift, int hash, Object key, Object value) {
+	    return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create(shift, hash, key, value);
 	}
 
 	public static INode[] promoteAndSet(int shift, int bitmap, Object[] bitIndexedArray, int index, INode newNode) {

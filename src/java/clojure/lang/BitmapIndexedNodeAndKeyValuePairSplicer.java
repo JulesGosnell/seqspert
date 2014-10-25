@@ -28,7 +28,7 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
                                                              leftBitmap,
                                                              leftArray,
                                                              PersistentHashMap.mask(rightHash, shift),
-                                                             ArrayNodeUtils.promote(shift + 5, rightKey, rightValue)));
+                                                             ArrayNodeUtils.promote3(ArrayNodeUtils.mask(rightHash, shift + 5), rightKey, rightValue)));
             else
                 return new BitmapIndexedNode(null,
                                              leftBitmap | bit,
