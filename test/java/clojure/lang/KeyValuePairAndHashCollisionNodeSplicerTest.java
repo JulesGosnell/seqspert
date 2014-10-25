@@ -23,8 +23,7 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
             new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
 
         final Counts expectedCounts = new Counts(Counts.resolveRight, 0, 0);
-        final INode expectedNode =
-            TestUtils.assoc(shift, leftNode, key0, value0, key1, value1, expectedCounts);
+        final INode expectedNode = TestUtils.assoc(shift, leftNode, key0, value0, key1, value1, expectedCounts);
                 
         final Counts actualCounts = new Counts(Counts.resolveRight, 0, 0); // TODO: resolveLeft ?
         final INode actualNode =  splicer.splice(shift, actualCounts, false, 0, leftKey, leftValue, false, 0, null, rightNode);
