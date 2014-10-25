@@ -28,8 +28,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                      ArrayNodeUtils.promoteAndSet(shift,
                                                              rightBitmap,
                                                              rightArray,
-                                                             // TODO: already called bitpos - repetition ?
-							     PersistentHashMap.mask(leftNode.hash, shift),
+                                                             PersistentHashMap.mask(leftNode.hash, shift),
                                                              leftNode
                                                              ));
             else
