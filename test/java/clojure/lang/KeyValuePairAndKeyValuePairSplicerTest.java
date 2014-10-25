@@ -28,12 +28,21 @@ public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterf
         final Counts actualCounts = new Counts();
         final INode actualNode =
             splicer.splice(shift, actualCounts, false, 0, leftKey, leftValue, false, 0, rightKey, rightValue);
+
+        final Counts actualCounts2 = new Counts();
+        final int leftHash = BitmapIndexedNodeUtils.hash(leftKey);
+        final int rightHash = BitmapIndexedNodeUtils.hash(rightKey);
+        final INode actualNode2 =
+            splicer.splice(shift, actualCounts2, true, leftHash, leftKey, leftValue, true, rightHash, rightKey, rightValue);
         
         assertEquals(expectedCounts, actualCounts);
+        assertEquals(expectedCounts, actualCounts2);
         if (same) {
         	assertNull(actualNode);
+        	assertNull(actualNode2);
         } else {
             assertNodeEquals(expectedNode, actualNode);
+            assertNodeEquals(expectedNode, actualNode2);
         }
     }
     
