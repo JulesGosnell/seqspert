@@ -32,12 +32,17 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
         final INode actualNode2 = splicer.splice(shift, actualCounts2, true, leftHash, leftKey, leftValue, false, 0, null, rightNode);
         
         assertEquals(expectedCounts, actualCounts);
+        assertEquals(expectedCounts, actualCounts2);
         //final BitmapIndexedNode bin = (BitmapIndexedNode) rightNode;
         // if (Integer.bitCount(bin.bitmap) == 1 && Util.equiv(leftKey, bin.array[0]))
         //     assertNull(actualNode);
         // else
         assertNodeEquals(expectedNode, actualNode);
-        if (sameRight) assertSame(rightNode, actualNode);
+        assertNodeEquals(expectedNode, actualNode2);
+        if (sameRight) {
+        	assertSame(rightNode, actualNode);
+        	assertSame(rightNode, actualNode2);
+        }
     }
     
     @Test
