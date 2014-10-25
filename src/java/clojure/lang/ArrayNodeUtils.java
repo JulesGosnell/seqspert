@@ -5,11 +5,6 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeUtils {
 
-	@Deprecated
-	public  static INode promote(int shift, Object key, Object value) {
-	    return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create(shift, key, value);
-	}
-
 	public static INode[] promoteAndSet(int shift, int bitmap, int hash, Object[] bitIndexedArray, int index, INode newNode) {
 	    final INode[] newArray = new INode[32];
 	    final int newShift = shift + 5;

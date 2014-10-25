@@ -162,4 +162,8 @@ public class TestUtils {
                                int start, int end) {
         return assocN(shift, BitmapIndexedNode.EMPTY, start, end, new Counts());
     }
+
+	public  static INode promote(int shift, Object key, Object value) {
+	    return (key == null) ? (INode) value : TestUtils.create(shift, key, value);
+	}
 }
