@@ -24,7 +24,7 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
                                           rightHash,
                                           rightNode.count + 1,
                                           // since KVP is from LHS, insert at front of HCN
-                                          BitmapIndexedNodeUtils.cloneAndInsert(rightArray, rightLength,
+                                          BitmapIndexedNodeUtils.cloneAndInsertKeyValuePair(rightArray, rightLength,
                                                                    0, leftKey, leftValue));
                 return newNode;
             } else {

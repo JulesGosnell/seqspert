@@ -12,7 +12,7 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
         final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
 
         final int rightHash = rightHaveHash ? rightHashCode : BitmapIndexedNodeUtils.hash(rightKey);
-        final int bit = BitmapIndexedNodeUtils.bitpos(rightHash, shift);
+        final int bit = BitmapIndexedNodeUtils.index(rightHash, shift);
         final int index = leftNode.index(bit);
         final int keyIndex = index * 2;
         final int valueIndex = keyIndex + 1;
@@ -29,11 +29,11 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
                                                              rightHash,
                                                              leftArray,
                                                              PersistentHashMap.mask(rightHash, shift),
-                                                             ArrayNodeUtils.promote3(ArrayNodeUtils.mask(rightHash, shift + 5), rightKey, rightValue)));
+                                                             ArrayNodeUtils.promote3(ArrayNodeUtils.partition(rightHash, shift + 5), rightKey, rightValue)));
             else
                 return new BitmapIndexedNode(null,
                                              leftBitmap | bit,
-                                             BitmapIndexedNodeUtils.cloneAndInsert(leftArray,
+                                             BitmapIndexedNodeUtils.cloneAndInsertKeyValuePair(leftArray,
                                                                       leftBitCount * 2,
                                                                       keyIndex,
                                                                       rightKey,

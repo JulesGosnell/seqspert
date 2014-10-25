@@ -5,18 +5,9 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeUtils {
         
-    static int bitpos(int hash, int shift){
-        return 1 << PersistentHashMap.mask(hash, shift);
-    }
-        
 	public static INode create(int partition, Object key, Object value) {
 	    return new BitmapIndexedNode(null, 1 << partition, new Object[]{key, value});
 	}
-
-	@Deprecated
-    public static  BitmapIndexedNode create2(int index, Object key, Object value) {
-        return new BitmapIndexedNode(null, 1 << index, new Object[]{key, value});
-    }
     
     public static  BitmapIndexedNode create(int index0, Object key0, Object value0, int index1, Object key1, Object value1) {
         return new BitmapIndexedNode(null,
@@ -39,15 +30,14 @@ public class BitmapIndexedNodeUtils {
 	    return newArray;
 	}
 
-	// TODO: rename
-	public static Object[] cloneAndSet(Object[] oldArray, int keyIndex, Object key, Object value) {
+	public static Object[] cloneAndSetKeyValuePair(Object[] oldArray, int keyIndex, Object key, Object value) {
 	    final Object[] newArray = oldArray.clone();
 	    newArray[keyIndex + 0] = key;
 	    newArray[keyIndex + 1] = value;
 	    return newArray;
 	}
 
-	public static Object[] cloneAndInsert(Object[] oldArray, int oldLength, int keyIndex, INode node) {
+	public static Object[] cloneAndInsertNode(Object[] oldArray, int oldLength, int keyIndex, INode node) {
 	    final Object[] newArray = new Object[oldLength + 2];
 	    System.arraycopy(oldArray, 0, newArray, 0, keyIndex);
 	    int newKeyIndex = keyIndex;
@@ -57,7 +47,7 @@ public class BitmapIndexedNodeUtils {
 	    return newArray;
 	}
 
-	public static Object[] cloneAndInsert(Object[] oldArray, int oldLength,
+	public static Object[] cloneAndInsertKeyValuePair(Object[] oldArray, int oldLength,
 	                                      int keyIndex, Object key, Object value) {
 	    final Object[] newArray = new Object[oldLength + 2];
 	    System.arraycopy(oldArray, 0, newArray, 0, keyIndex);
@@ -72,6 +62,10 @@ public class BitmapIndexedNodeUtils {
 	    return PersistentHashMap.hash(key);
 	}
 
+    static int index(int hash, int shift){
+        return 1 << ArrayNodeUtils.partition(hash, shift);
+    }
+        
 	public static INode EMPTY = BitmapIndexedNode.EMPTY;
     
 }

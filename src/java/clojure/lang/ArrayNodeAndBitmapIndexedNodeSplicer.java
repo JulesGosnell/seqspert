@@ -38,7 +38,7 @@ class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
                     if (leftSubNode != newSubNode) leftDifferences++;
                 } else {
                     // only rhs present
-                    newArray[i] = ArrayNodeUtils.promote3(ArrayNodeUtils.mask(rightSubHash, shift + 5), rightSubKey, rightSubValue);
+                    newArray[i] = ArrayNodeUtils.promote3(ArrayNodeUtils.partition(rightSubHash, shift + 5), rightSubKey, rightSubValue);
                     leftDifferences++;
                 }
             } else { // not haveRight

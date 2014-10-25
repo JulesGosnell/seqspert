@@ -15,7 +15,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
 
         final int leftHash = leftNode.hash;
-		final int bit = BitmapIndexedNodeUtils.bitpos(leftHash, shift);
+		final int bit = BitmapIndexedNodeUtils.index(leftHash, shift);
         final int index = rightNode.index(bit);
         final int keyIndex = index * 2;
         final int rightBitmap = rightNode.bitmap;
@@ -36,7 +36,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
             else
                 return new BitmapIndexedNode(null,
                                              rightBitmap | bit,
-                                             BitmapIndexedNodeUtils.cloneAndInsert(rightArray,
+                                             BitmapIndexedNodeUtils.cloneAndInsertNode(rightArray,
                                                             rightBitCount * 2,
                                                             keyIndex,
                                                             leftNode));
@@ -60,7 +60,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 // BiN had other subNodes, return union of old and new...
                 new BitmapIndexedNode(null,
                                       rightBitmap,
-                                      BitmapIndexedNodeUtils.cloneAndSet(rightArray, keyIndex, null, newSubNode));
+                                      BitmapIndexedNodeUtils.cloneAndSetKeyValuePair(rightArray, keyIndex, null, newSubNode));
                 }
     }
 

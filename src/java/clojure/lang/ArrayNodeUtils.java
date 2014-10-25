@@ -11,7 +11,7 @@ public class ArrayNodeUtils {
 	    int j = 0;
 	    for (int i = 0; i < 32 ; i++) {
 	        if ((bitmap & (1 << i)) != 0) {
-	            newArray[i] = promote3(ArrayNodeUtils.mask(hash, newShift), bitIndexedArray[j++], bitIndexedArray[j++]);
+	            newArray[i] = promote3(ArrayNodeUtils.partition(hash, newShift), bitIndexedArray[j++], bitIndexedArray[j++]);
 	        }
 	    }
 	    newArray[index] = newNode;
@@ -32,7 +32,7 @@ public class ArrayNodeUtils {
 	    return new ArrayNode(null, count, nodes);
 	}
 
-	public static int mask(int hash, int shift) {
+	public static int partition(int hash, int shift) {
 	    return PersistentHashMap.mask(hash, shift);
 	}
 

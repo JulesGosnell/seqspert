@@ -15,7 +15,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
         final Object[] rightArray = rightNode.array;
         final int rightBitmap = rightNode.bitmap;
         final int leftHash = leftHaveHash ? leftHashCode : BitmapIndexedNodeUtils.hash(leftKey);
-        final int bit = BitmapIndexedNodeUtils.bitpos(leftHash, shift);
+        final int bit = BitmapIndexedNodeUtils.index(leftHash, shift);
         final int index = rightNode.index(bit);
         final int keyIndex = index * 2;
         final int rightBitCount = Integer.bitCount(rightBitmap);
@@ -29,7 +29,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                                                              leftHash,
                                                              rightNode.array,
                                                              PersistentHashMap.mask(leftHash, shift),
-                                                             ArrayNodeUtils.promote3(ArrayNodeUtils.mask(leftHash, shift + 5), leftKey, leftValue)));
+                                                             ArrayNodeUtils.promote3(ArrayNodeUtils.partition(leftHash, shift + 5), leftKey, leftValue)));
 	    }
             else
                 // lets assume that we could not have received an empty
@@ -38,7 +38,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                 // branch...
                 return new BitmapIndexedNode(null,
                                              rightBitmap | bit,
-                                             BitmapIndexedNodeUtils.cloneAndInsert(rightArray,
+                                             BitmapIndexedNodeUtils.cloneAndInsertKeyValuePair(rightArray,
                                                                       rightBitCount * 2,
                                                                       keyIndex,
                                                                       leftKey,
@@ -67,7 +67,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                     // since we are replacing a subNode we do not have to worry about promotion to an AN.
                     return new BitmapIndexedNode(null,
                                                  rightBitmap,
-                                                 BitmapIndexedNodeUtils.cloneAndSet(rightArray,
+                                                 BitmapIndexedNodeUtils.cloneAndSetKeyValuePair(rightArray,
                                                                        keyIndex,
                                                                        null,
                                                                        spliced));
