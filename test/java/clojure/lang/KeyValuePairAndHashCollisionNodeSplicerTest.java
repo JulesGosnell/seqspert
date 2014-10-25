@@ -17,7 +17,7 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
 
     public void test(Object leftKey, Object leftValue, boolean sameRight) {
 
-        final INode leftNode = BitmapIndexedNodeUtils.create(shift, leftKey, leftValue);
+        final INode leftNode = TestUtils.create(shift, leftKey, leftValue);
 
         final INode rightNode =
             new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
