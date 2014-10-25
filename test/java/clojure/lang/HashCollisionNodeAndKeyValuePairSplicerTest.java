@@ -26,9 +26,18 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
         final Counts actualCounts = new Counts(Counts.resolveRight, 0, 0); // TODO:  resolveLeft ?
         final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, rightKey, rightValue);
 
+        final Counts actualCounts2 = new Counts(Counts.resolveRight, 0, 0); // TODO:  resolveLeft ?
+        final int rightHash = BitmapIndexedNodeUtils.hash(rightKey);
+        final INode actualNode2 = splicer.splice(shift, actualCounts2, false, 0, null, leftNode, true, rightHash, rightKey, rightValue);
+
         assertEquals(expectedCounts, actualCounts);
-        assertNodeEquals(expectedNode, actualNode);
-        if (same) assertSame(expectedNode, actualNode);
+        assertEquals(expectedCounts, actualCounts2);
+        assertNodeEquals(expectedNode, actualNode); 
+        assertNodeEquals(expectedNode, actualNode2);
+        if (same) {
+            assertSame(expectedNode, actualNode);
+            assertSame(expectedNode, actualNode2);
+        }
     }
 
     // TODO: inline and tidy up
