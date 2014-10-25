@@ -7,6 +7,7 @@ import static org.junit.Assert.assertSame;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.BitmapIndexedNodeUtils;
 
 public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface {
         
@@ -20,11 +21,21 @@ public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface
         final INode expectedNode = TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
 
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, rightKey, rightValue);
+        final int rightHash = BitmapIndexedNodeUtils.hash(rightKey);
+        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode,
+                                                false, 0, rightKey, rightValue);
+        final Counts actualCounts2 = new Counts();
+        final INode actualNode2 = splicer.splice(shift, actualCounts2, false, 0, null, leftNode,
+                                                 true, rightHash, rightKey, rightValue);
 
         assertEquals(expectedCounts, actualCounts);
+        assertEquals(expectedCounts, actualCounts2);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) assertSame(leftNode, actualNode); // expected node differs ?
+        assertNodeEquals(expectedNode, actualNode2);
+        if (same) {
+            assertSame(leftNode, actualNode); // expected node differs ?
+            assertSame(leftNode, actualNode2); // expected node differs ?
+        }
     }
 
     @Override
