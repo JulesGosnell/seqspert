@@ -8,13 +8,14 @@ import clojure.lang.PersistentHashMap.INode;
 class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts, 
-			boolean leftHaveHash, int leftHash,
+			boolean leftHaveHash, int leftHashCode,
 			Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
         final HashCollisionNode leftNode = (HashCollisionNode) leftValue;
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
 
-        final int bit = BitmapIndexedNodeUtils.bitpos(leftNode.hash, shift);
+        final int leftHash = leftNode.hash;
+		final int bit = BitmapIndexedNodeUtils.bitpos(leftHash, shift);
         final int index = rightNode.index(bit);
         final int keyIndex = index * 2;
         final int rightBitmap = rightNode.bitmap;
@@ -27,8 +28,9 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                      17,
                                      ArrayNodeUtils.promoteAndSet(shift,
                                                              rightBitmap,
+                                                             leftHash,
                                                              rightArray,
-                                                             PersistentHashMap.mask(leftNode.hash, shift),
+                                                             PersistentHashMap.mask(leftHash, shift),
                                                              leftNode
                                                              ));
             else
