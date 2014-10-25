@@ -27,7 +27,7 @@ public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterf
             
         final Counts actualCounts = new Counts();
         final INode actualNode =
-            splicer.splice(shift, actualCounts, leftKey, leftValue, rightKey, rightValue);
+            splicer.splice(shift, actualCounts, false, 0, leftKey, leftValue, false, 0, rightKey, rightValue);
         
         assertEquals(expectedCounts, actualCounts);
         if (same) {

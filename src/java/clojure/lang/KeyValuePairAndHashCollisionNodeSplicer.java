@@ -6,13 +6,13 @@ import clojure.lang.PersistentHashMap.INode;
 class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
-                        Object leftKey, Object leftValue,
-                        Object rightKey, Object rightValue) {
+                        boolean leftHaveHash, int leftHashCode,
+                        Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
 
         final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
 
-        final int leftHash = BitmapIndexedNodeUtils.hash(leftKey);
-        final int rightHash = rightNode.hash;
+        final int leftHash = leftHaveHash ? leftHashCode : BitmapIndexedNodeUtils.hash(leftKey);
+        final int rightHash = rightHaveHash ? rightHashCode : rightNode.hash;
 
         if (leftHash == rightHash) {
             final Object[] rightArray = rightNode.array;

@@ -9,8 +9,8 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
 
     // TODO: seperate promotion and non-promotion code...
     public INode splice(int shift, Counts counts,
-			Object leftKey, Object leftValue,
-			Object rightKey, Object rightValue) {
+			boolean leftHaveHash, int leftHash,
+			Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
         final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
@@ -43,7 +43,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 if (hasRight) {
                     final Object rightSubKey = rightArray[rightIndex++];
                     final Object rightSubValue = rightArray[rightIndex++];
-                    final INode newSubNode = Seqspert.splice(shift + 5, counts, leftSubKey, leftSubValue, rightSubKey, rightSubValue);
+                    final INode newSubNode = Seqspert.splice(shift + 5, counts, false, 0, leftSubKey, leftSubValue, false, 0, rightSubKey, rightSubValue);
                     if (newSubNode == null) {
                         // we must have spliced two leaves giving a result of another leaf / KVP...
                         // the key must be unchanged

@@ -22,12 +22,12 @@ class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
     }
     
     public INode splice(int shift, Counts counts,
-                        Object leftKey, Object leftValue,
-                        Object rightKey, Object rightValue) {
+                        boolean leftHaveHash, int leftHashCode,
+                        Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
         final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
         final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
-        final int leftHash = leftNode.hash;
-        final int rightHash = rightNode.hash;
+        final int leftHash = leftHaveHash ? leftHashCode : leftNode.hash;
+        final int rightHash = rightHaveHash ? rightHashCode : rightNode.hash;
 
         if (leftHash == rightHash) {
                 

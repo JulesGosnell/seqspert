@@ -22,7 +22,7 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
             TestUtils.assocN(shift, BitmapIndexedNodeUtils.create(shift, leftKey, leftValue), rightStart, rightEnd, expectedCounts);
 
         final Counts actualCounts = new Counts(Counts.resolveRight, 0, 0); // TODO: resolveLeft ?
-        final INode actualNode = splicer.splice(shift, actualCounts, leftKey, leftValue, null, rightNode);
+        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, leftKey, leftValue, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

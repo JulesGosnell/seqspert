@@ -40,7 +40,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
                                                     expectedCounts);
 
         final Counts actualCounts = new Counts(resolver, 0, 0);
-        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
+        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

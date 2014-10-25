@@ -8,8 +8,8 @@ import clojure.lang.PersistentHashMap.INode;
 class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts, 
-			Object leftKey, Object leftValue,
-			Object rightKey, Object rightValue) {
+			boolean leftHaveHash, int leftHash,
+			Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
         final HashCollisionNode leftNode = (HashCollisionNode) leftValue;
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
@@ -45,10 +45,10 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
             final Object rightSubValue = rightArray[keyIndex + 1];
             final INode newSubNode = Seqspert.splice(shift + 5, 
                                                       counts,
+                                                      false,
+                                                      0,
                                                       null,
-                                                      leftNode,
-                                                      rightSubKey,
-                                                      rightSubValue);
+                                                      leftNode, false, 0, rightSubKey, rightSubValue);
             return
             	(~bit & rightBitmap) == 0 ?
                 // BIN only had one subNode, now spliced into newSubNode

@@ -35,7 +35,7 @@ public class Seqspert {
             return lMap;
 
         final Counts counts = new Counts(Counts.resolveLeft, 0, 0); // TODO: pass through correct resolveFn here
-        final PersistentHashMap.INode root = Seqspert.splice(0, counts, null, lRoot, null, rRoot);
+        final PersistentHashMap.INode root = Seqspert.splice(0, counts, false, 0, null, lRoot, false, 0, null, rRoot);
         final int count = lMap.count + rMap.count - counts.sameKey;
         return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);
     }
@@ -87,10 +87,10 @@ public class Seqspert {
 	}
 
 	static INode splice(int shift, Counts counts,
-	                    Object leftKey, Object leftValue,
-	                    Object rightKey, Object rightValue) {
+	                    boolean leftHaveHash, int leftHash,
+	                    Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 	    return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
-	        splice(shift, counts, leftKey, leftValue, rightKey, rightValue);
+	        splice(shift, counts, false, 0, leftKey, leftValue, false, 0, rightKey, rightValue);
 	}
 
 }

@@ -27,7 +27,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
             TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
 
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
+        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
@@ -49,7 +49,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
             TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
 
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
+        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

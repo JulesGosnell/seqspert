@@ -8,13 +8,13 @@ import clojure.lang.PersistentHashMap.INode;
 class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
-                        Object leftKey, Object leftValue,
-                        Object rightKey, Object rightValue) {
+                        boolean leftHaveHash, int leftHashCode,
+                        Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
         final Object[] rightArray = rightNode.array;
         final int rightBitmap = rightNode.bitmap;
-        final int leftHash = BitmapIndexedNodeUtils.hash(leftKey);
+        final int leftHash = leftHaveHash ? leftHashCode : BitmapIndexedNodeUtils.hash(leftKey);
         final int bit = BitmapIndexedNodeUtils.bitpos(leftHash, shift);
         final int index = rightNode.index(bit);
         final int keyIndex = index * 2;
@@ -46,8 +46,8 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
             final Object subKey = rightArray[keyIndex];
             final Object subValue = rightArray[keyIndex + 1];
             final INode spliced = Seqspert.splice(shift + 5, counts,
-                                                   leftKey, leftValue,
-                                                   subKey, subValue);
+                                                   false, 0,
+                                                   leftKey, leftValue, false, 0, subKey, subValue);
             if ((~bit & rightBitmap) > 0) {
                 // the BIN contains more than just this entry
                 if (spliced == null) {

@@ -7,8 +7,8 @@ import clojure.lang.PersistentHashMap.INode;
 class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
-                        Object leftKey, Object leftValue,
-                        Object rightKey, Object rightValue) {
+                        boolean leftHaveHash, int leftHash,
+                        Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
 
         final ArrayNode leftNode = (ArrayNode) leftValue;
         final HashCollisionNode rightNode  = (HashCollisionNode) rightValue;
@@ -27,7 +27,7 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
             leftDifferences++;
         } else {
             newCount = leftNode.count;
-            newSubNode = Seqspert.splice(shift + 5, counts, null, leftSubNode, null, rightNode);
+            newSubNode = Seqspert.splice(shift + 5, counts, false, 0, null, leftSubNode, true, rightHash, null, rightNode);
             if (leftSubNode != newSubNode) leftDifferences++;
             
         }

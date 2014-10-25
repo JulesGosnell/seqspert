@@ -6,12 +6,12 @@ import clojure.lang.PersistentHashMap.INode;
 class ArrayNodeAndKeyValuePairSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
-                        Object leftKey, Object leftValue,
-                        Object rightKey, Object rightValue) {
+                        boolean leftHaveHash, int leftHash,
+                        Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
 
         final ArrayNode leftNode = (ArrayNode) leftValue;
 
-        final int rightHash = BitmapIndexedNodeUtils.hash(rightKey);
+        final int rightHash = rightHaveHash ? rightHashCode : BitmapIndexedNodeUtils.hash(rightKey);
         final int index = PersistentHashMap.mask(rightHash, shift);
 
         final INode[] leftArray = leftNode.array;
@@ -24,7 +24,7 @@ class ArrayNodeAndKeyValuePairSplicer implements Splicer {
                                                            BitmapIndexedNodeUtils.create(shift + 5, rightHash, rightKey, rightValue)));
         } else {
             final INode newNode =
-                Seqspert.splice(shift + 5, counts, null, subNode, rightKey, rightValue);
+                Seqspert.splice(shift + 5, counts, false, 0, null, subNode, false, 0, rightKey, rightValue);
             
             return newNode == subNode ? 
                 leftNode :

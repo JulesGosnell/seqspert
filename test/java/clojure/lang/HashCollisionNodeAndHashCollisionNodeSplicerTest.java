@@ -28,7 +28,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
             TestUtils.assoc(shift, leftNode, key2, value2, key3, value3, key4, value4, expectedCounts);
 
         final Counts actualCounts = new Counts();
-        final INode actualNode = Seqspert.splice(shift, actualCounts, null, leftNode, null, rightNode);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

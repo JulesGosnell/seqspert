@@ -7,8 +7,8 @@ import clojure.lang.PersistentHashMap.INode;
 class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
-                        Object leftKey, Object leftValue,
-                        Object rightKey, Object rightValue) {
+                        boolean leftHaveHash, int leftHash,
+                        Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
         final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
         final ArrayNode rightNode = (ArrayNode) rightValue;
@@ -33,7 +33,7 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
 
                 if (hasRight) {
                     // both sides present - merge them...
-                    final INode newSubNode = Seqspert.splice(shift + 5, counts, leftSubKey, leftSubValue, null, rightSubNode);
+                    final INode newSubNode = Seqspert.splice(shift + 5, counts, false, 0, leftSubKey, leftSubValue, false, 0, null, rightSubNode);
                     newArray[i] = newSubNode;
                     rightDifferences += (newSubNode == rightSubNode) ? 0 : 1;
                 } else {

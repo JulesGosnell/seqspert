@@ -29,7 +29,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
 
         final Counts actualCounts = new Counts(resolveFunction, 0, 0);
-        final INode actualNode = splicer.splice(shift, actualCounts, null, leftNode, null, rightNode);
+        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts.sameKey, actualCounts.sameKey);
         assertNodeEquals(expectedNode, actualNode);

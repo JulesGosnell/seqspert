@@ -22,8 +22,8 @@ class KeyValuePairAndKeyValuePairSplicer implements Splicer {
     }
     
 	public INode splice(int shift, Counts counts,
-			Object leftKey, Object leftValue,
-			Object rightKey, Object rightValue) {
+			boolean leftHaveHash, int leftHashCode,
+			Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
 		if (Util.equiv(leftKey, rightKey)) {
 			// TODO - how does this fit with use of a resolver ?
 			// duplication
@@ -31,8 +31,8 @@ class KeyValuePairAndKeyValuePairSplicer implements Splicer {
 			return null;
 		} else {
 			// TODO: expensive - can we pass this down ?
-			final int leftHash = BitmapIndexedNodeUtils.hash(leftKey);
-			final int rightHash = BitmapIndexedNodeUtils.hash(rightKey);
+			final int leftHash = leftHaveHash ? leftHashCode : BitmapIndexedNodeUtils.hash(leftKey);
+			final int rightHash = rightHaveHash ? rightHashCode : BitmapIndexedNodeUtils.hash(rightKey);
 			if (leftHash == rightHash) {
 				// hash collision
 				return HashCollisionNodeUtils.create(leftHash, leftKey, leftValue, rightKey, rightValue);
