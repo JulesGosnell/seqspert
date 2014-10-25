@@ -26,8 +26,8 @@ class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
                         Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
         final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
         final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
-        final int leftHash = leftHaveHash ? leftHashCode : leftNode.hash;
-        final int rightHash = rightHaveHash ? rightHashCode : rightNode.hash;
+        final int leftHash = leftNode.hash;
+        final int rightHash = rightNode.hash;
 
         if (leftHash == rightHash) {
                 
