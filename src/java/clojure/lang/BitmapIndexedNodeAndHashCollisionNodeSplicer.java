@@ -31,7 +31,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
                                                              rightHash,
                                                              leftArray,
                                                              PersistentHashMap.mask(rightHash, shift),
-                                                             BitmapIndexedNodeUtils.create3(PersistentHashMap.mask(rightHash, shift + 5), null, rightNode)));
+                                                             BitmapIndexedNodeUtils.create(PersistentHashMap.mask(rightHash, shift + 5), null, rightNode)));
             else
                 return new BitmapIndexedNode(null,
                                              leftBitmap | bit,

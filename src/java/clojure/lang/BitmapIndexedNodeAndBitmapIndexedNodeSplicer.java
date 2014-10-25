@@ -56,7 +56,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                         if (newSubValue != rightSubValue) rightDifferences++;
 
                         if (promoted) {
-                            newAnArray[i] = BitmapIndexedNodeUtils.create3(PersistentHashMap.mask(BitmapIndexedNodeUtils.hash(newSubKey), shift + 5), newSubKey, newSubValue);
+                            newAnArray[i] = BitmapIndexedNodeUtils.create(PersistentHashMap.mask(BitmapIndexedNodeUtils.hash(newSubKey), shift + 5), newSubKey, newSubValue);
                         } else {
                             newBinArray[newBinIndex++] = newSubKey;
                             newBinArray[newBinIndex++] = newSubValue;

@@ -25,7 +25,7 @@ public class ArrayNodeUtils {
 	}
 
 	public  static INode promote3(int partition, Object key, Object value) {
-	    return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create3(partition, key, value);
+	    return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create(partition, key, value);
 	}
 	
 	public static INode makeArrayNode(int count, INode[] nodes) {
