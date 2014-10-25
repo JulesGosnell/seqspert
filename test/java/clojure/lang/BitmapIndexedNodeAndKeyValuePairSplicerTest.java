@@ -26,9 +26,18 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
         final Counts actualCounts = new Counts();
         final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, rightKey, rightValue);
 
+        final int rightHash = BitmapIndexedNodeUtils.hash(rightKey);
+        final Counts actualCounts2 = new Counts();
+        final INode actualNode2 = splicer.splice(shift, actualCounts2, false, 0, null, leftNode, true, rightHash, rightKey, rightValue);
+
         assertEquals(expectedCounts, actualCounts);
+        assertEquals(expectedCounts, actualCounts2);
         assertNodeEquals(expectedNode, actualNode);
-        if (same) assertSame(leftNode, actualNode); // expectedNode not as expected !
+        assertNodeEquals(expectedNode, actualNode2);
+        if (same) {
+            assertSame(leftNode, actualNode); // expectedNode not as expected !
+            assertSame(leftNode, actualNode2); // expectedNode not as expected !
+        }
     }
 
     @Override
