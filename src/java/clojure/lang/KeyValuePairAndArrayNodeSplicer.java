@@ -21,7 +21,7 @@ class KeyValuePairAndArrayNodeSplicer implements Splicer {
                                  ArrayNodeUtils.cloneAndSetNode(rightNode.array, index,
                                                            BitmapIndexedNodeUtils.create(shift + 5, leftHash, leftKey, leftValue)));
         } else {
-            final INode newNode = Seqspert.splice(shift + 5, counts, false, 0, leftKey, leftValue, false, 0, null, subNode);
+            final INode newNode = Seqspert.splice(shift + 5, counts, true, leftHash, leftKey, leftValue, false, 0, null, subNode);
             return newNode == subNode ? 
                 rightNode :
                 new ArrayNode(null,

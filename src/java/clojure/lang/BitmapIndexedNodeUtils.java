@@ -67,6 +67,7 @@ public class BitmapIndexedNodeUtils {
 	    return PersistentHashMap.hash(key);
 	}
 
+    @Deprecated // we should know we are calling hash
 	public static INode create(int shift, Object key, Object value) {
 	    return new BitmapIndexedNode(null,
 	                                 bitpos(hash(key), shift),

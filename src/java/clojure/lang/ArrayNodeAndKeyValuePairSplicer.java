@@ -24,7 +24,7 @@ class ArrayNodeAndKeyValuePairSplicer implements Splicer {
                                                            BitmapIndexedNodeUtils.create(shift + 5, rightHash, rightKey, rightValue)));
         } else {
             final INode newNode =
-                Seqspert.splice(shift + 5, counts, false, 0, null, subNode, false, 0, rightKey, rightValue);
+                Seqspert.splice(shift + 5, counts, false, 0, null, subNode, true, rightHash, rightKey, rightValue);
             
             return newNode == subNode ? 
                 leftNode :

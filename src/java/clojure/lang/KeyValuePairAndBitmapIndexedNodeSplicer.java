@@ -21,14 +21,15 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
         final int rightBitCount = Integer.bitCount(rightBitmap);
         if((rightBitmap & bit) == 0) {
             // rhs unoccupied
-            if (rightBitCount == 16)
+            if (rightBitCount == 16) {
                 return new ArrayNode(null,
                                      17,
                                      ArrayNodeUtils.promoteAndSet(shift,
                                                              rightNode.bitmap,
                                                              rightNode.array,
-                                                             PersistentHashMap.mask(BitmapIndexedNodeUtils.hash(leftKey), shift),
+                                                             PersistentHashMap.mask(leftHash, shift),
                                                              ArrayNodeUtils.promote(shift + 5, leftKey, leftValue)));
+	    }
             else
                 // lets assume that we could not have received an empty
                 // BIN, therefore we have at least 2 subNodes, so there is
@@ -46,8 +47,8 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
             final Object subKey = rightArray[keyIndex];
             final Object subValue = rightArray[keyIndex + 1];
             final INode spliced = Seqspert.splice(shift + 5, counts,
-                                                   false, 0,
-                                                   leftKey, leftValue, false, 0, subKey, subValue);
+						  true, leftHash,
+						  leftKey, leftValue, false, 0, subKey, subValue);
             if ((~bit & rightBitmap) > 0) {
                 // the BIN contains more than just this entry
                 if (spliced == null) {

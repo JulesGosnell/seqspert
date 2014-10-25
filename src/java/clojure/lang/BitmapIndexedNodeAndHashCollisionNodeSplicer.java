@@ -43,7 +43,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
             // left hand side already occupied...
             final Object subKey = leftArray[keyIndex];
             final Object subVal = leftArray[valueIndex];
-            final INode spliced = Seqspert.splice(shift + 5, counts, false, 0, subKey, subVal, false, 0, rightKey, rightValue);
+            final INode spliced = Seqspert.splice(shift + 5, counts, false, 0, subKey, subVal, false, 0, null, rightNode);
             return (subVal == spliced) ?
             	leftNode :
             	new BitmapIndexedNode(null, leftBitmap,

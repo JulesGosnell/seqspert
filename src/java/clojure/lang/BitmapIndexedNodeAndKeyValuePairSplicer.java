@@ -43,7 +43,7 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
             final Object subKey = leftArray[keyIndex];
             final Object subVal = leftArray[valueIndex];
             final INode newSubNode =
-                Seqspert.splice(shift + 5, counts, false, 0, subKey, subVal, false, 0, rightKey, rightValue);
+                Seqspert.splice(shift + 5, counts, false, 0, subKey, subVal, true, rightHash, rightKey, rightValue);
 
             if (newSubNode == null) {
             	final Object resolved = counts.resolveFunction.invoke(subKey, subVal, rightValue);
