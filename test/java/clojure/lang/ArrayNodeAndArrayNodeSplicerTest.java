@@ -31,7 +31,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         final Counts actualCounts = new Counts(resolveFunction, 0, 0);
         final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
-        assertEquals(expectedCounts.sameKey, actualCounts.sameKey);
+        assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
         if (leftSame) assertSame(leftNode, actualNode); // expectedNode is not always same !
         if (rightSame) assertSame(rightNode, actualNode);
