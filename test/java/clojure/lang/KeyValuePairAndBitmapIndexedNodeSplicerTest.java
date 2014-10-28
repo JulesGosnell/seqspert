@@ -13,7 +13,7 @@ import clojure.lang.PersistentHashMap.INode;
 public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
-    final Hasher hasher = new Hasher() {public int hash(int i) { return i << 10; }};
+    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     
     public void test(Object leftKey, Object leftValue,
                      Hasher hasher, int rightStart, int rightEnd, boolean sameRight) {
@@ -38,36 +38,29 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
     @Test
     @Override
     public void testDifferent() {
-        test(new HashCodeKey("key1", 1 << 5), "value1", hasher, 2, 3, false);
-
-        // promotion
-        test(new HashCodeKey("key1", 1 << 5), "value1", hasher, 2, 18, false);
+        test(new HashCodeKey("key1", (3 << 10) | (2 << 5) | 1), "value1", hasher, 2, 4, false);
+        test(new HashCodeKey("key1", (3 << 10) | (2 << 5) | 1), "value1", hasher, 2, 18, false);
     }
 
     @Test
     @Override
     public void testSameKeyHashCode() {
-        test(new HashCodeKey("key1",   2 << 5), "value1", hasher, 2, 3, false);
-        test(new HashCodeKey("key1.1", 1 << 5), "value1", hasher, 1, 3, false);
+        test(new HashCodeKey("key1", (4 << 10) | (3 << 5) | 2), "value1", hasher, 2, 4, false);
+        test(new HashCodeKey("key1", (4 << 10) | (3 << 5) | 2), "value1", hasher, 2, 18, false);
     }
 
     @Test
     @Override
     public void testSameKey() {
-        test(new HashCodeKey("key2",   2 << 5), "value1", hasher, 2, 3, false);
-        test(new HashCodeKey("key2.1", 2 << 5), "value2", hasher, 2, 4, false);
+        test(new HashCodeKey("key2", (4 << 10) | (3 << 5) | 2), "value1", hasher, 2, 4, false);
+        test(new HashCodeKey("key2", (4 << 10) | (3 << 5) | 2), "value1", hasher, 2, 18, false);
     }
 
     @Test
     @Override
     public void testSameKeyAndValue() {
-        // TODO:
-        // There are two cases to tested here.
-        // 1. BIN only contains one kvp - identical to lhs - return lhs ?
-        // 2. BIN contains >1 kvp - including lhs - return rhs ?
-        
-        test(new HashCodeKey("key1", 1 << 5), "value1", hasher, 1, 2, true);
-        test(new HashCodeKey("key1", 1 << 5), "value1", hasher, 1, 3, true);
+        test(new HashCodeKey("key2", (4 << 10) | (3 << 5) | 2), "value2", hasher, 2, 4, false);
+        test(new HashCodeKey("key2", (4 << 10) | (3 << 5) | 2), "value2", hasher, 2, 18, false);
     }
 
 }
