@@ -28,7 +28,6 @@ public class SeqspertTest {
     @Ignore
     @Test
     public void testUnknown() {
-        // (mm2 551 552 551 935)
         final int shift = 0;
         final INode leftNode = createN(0, 551, 552);
         final INode rightNode = createN(0, 551, 935);

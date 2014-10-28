@@ -90,12 +90,24 @@ public class TestUtils {
                               Counts counts) {
         return assoc(shift, assoc(shift, node, key0, value0, key1, value1, counts), key2, value2, counts);
     }
+
+
+    public static interface Hasher {public int hash(int i);}
     
     public static INode assocN(int shift, INode node,
                                int start, int end,
                                Counts counts) {
 	for (int i = start; i < end; i++)
 	    node = assoc(shift, node , new HashCodeKey("key" + i, i), ("value"+i), counts);
+	return node;
+    }
+
+    public static INode assocN(int shift, Hasher hasher,
+                               INode node,
+                               int start, int end,
+                               Counts counts) {
+	for (int i = start; i < end; i++)
+	    node = assoc(shift, node , new HashCodeKey("key" + i, hasher.hash(i)), ("value"+i), counts);
 	return node;
     }
 
@@ -163,7 +175,13 @@ public class TestUtils {
         return assocN(shift, BitmapIndexedNode.EMPTY, start, end, new Counts());
     }
 
-	public  static INode promote(int shift, Object key, Object value) {
-	    return (key == null) ? (INode) value : TestUtils.create(shift, key, value);
-	}
+    public static INode create(int shift,
+                               Hasher hasher,
+                               int start, int end) {
+        return assocN(shift, hasher, BitmapIndexedNode.EMPTY, start, end, new Counts());
+    }
+
+    public  static INode promote(int shift, Object key, Object value) {
+        return (key == null) ? (INode) value : TestUtils.create(shift, key, value);
+    }
 }
