@@ -51,7 +51,14 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
             final INode spliced = Seqspert.splice(shift + 5, counts,
 						  true, leftHash, leftKey, leftValue,
                                                   false, 0, subKey, subValue);
-            if (spliced == null || spliced == subValue) {
+            if (spliced == subValue || spliced == null) {
+                // Either:
+
+                // the splice had no effect, so we can just return the
+                // rightNode unchanged.
+                
+                // Or:
+
                 // leftKey matched a key in this BIN.
            
                 // for now we will just assume that the value
@@ -64,28 +71,19 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                 // call a resolver to give the leftValue a chance
                 // to override this assumption...
             } else {
-                if ((~bit & rightBitmap) == 0) {
-                    // the BIN only contains this entry
-                    // we only need to return this single spliced node
-
-                    // return new BitmapIndexedNode(null,
-                    //                       rightBitmap,
-                    //                       BitmapIndexedNodeUtils.cloneAndSetKeyValuePair(rightArray,
-                    //                                                                      keyIndex,
-                    //                                                                      null,
-                    //                                                                      spliced))
-                    return spliced; // TODO: should we ever return spliced ?
-                } else {
+                return ((~bit & rightBitmap) == 0) ?
+                    // TODO: perhaps we can drop an intermediate singleton BIN
+                    // it looks like we can in some cases and cannot in others - how to decide ?
+                    spliced :
                     // we have successfully merged the LHS and RHS entry
                     // we need to copy over the rest of the RHS and return a new BIN...
                     // since we are replacing a subNode we do not have to worry about promotion to an AN.
-                    return new BitmapIndexedNode(null,
-                                                 rightBitmap,
-                                                 BitmapIndexedNodeUtils.cloneAndSetKeyValuePair(rightArray,
-                                                                                                keyIndex,
-                                                                                                null,
-                                                                                                spliced));
-                }
+                    new BitmapIndexedNode(null,
+                                          rightBitmap,
+                                          BitmapIndexedNodeUtils.cloneAndSetKeyValuePair(rightArray,
+                                                                                         keyIndex,
+                                                                                         null,
+                                                                                         spliced));
             }
         }
     }
