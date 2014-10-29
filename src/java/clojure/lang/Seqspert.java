@@ -90,7 +90,7 @@ public class Seqspert {
 	                    boolean leftHaveHash, int leftHash,
 	                    Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 	    return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
-	        splice(shift, counts, false, 0, leftKey, leftValue, false, 0, rightKey, rightValue);
+	        splice(shift, counts, leftHaveHash, leftHash, leftKey, leftValue, rightHaveHash, rightHash, rightKey, rightValue);
 	}
 
 }
