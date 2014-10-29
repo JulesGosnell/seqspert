@@ -51,7 +51,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
             final INode spliced = Seqspert.splice(shift + 5, counts,
 						  true, leftHash,
 						  leftKey, leftValue, false, 0, subKey, subValue);
-            if ((~bit & rightBitmap) > 0) {
+            if ((~bit & rightBitmap) != 0) {
                 // the BIN contains more than just this entry
                 if (spliced == null) {
                     // the LHS key and maybe value are the same as those in the RHS
@@ -86,7 +86,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                     return rightNode;
                 } else {
                     // we only need to return this single spliced node
-                    return spliced;
+                    return spliced == subValue ? rightNode : spliced; // TODO: should we ever return spliced ?
                 }
             }
         }
