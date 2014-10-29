@@ -23,7 +23,7 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
         
         final Counts expectedCounts = new Counts();
         final INode expectedNode =
-            TestUtils.assocN(shift, hasher, leftNode, rightStart, rightEnd, expectedCounts);
+            TestUtils.assocN(shift, leftNode, hasher, rightStart, rightEnd, expectedCounts);
         
         final Counts actualCounts = new Counts();
         final INode actualNode = 

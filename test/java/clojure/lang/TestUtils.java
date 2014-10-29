@@ -102,8 +102,9 @@ public class TestUtils {
 	return node;
     }
 
-    public static INode assocN(int shift, Hasher hasher,
+    public static INode assocN(int shift,
                                INode node,
+                               Hasher hasher,
                                int start, int end,
                                Counts counts) {
 	for (int i = start; i < end; i++)
@@ -178,7 +179,7 @@ public class TestUtils {
     public static INode create(int shift,
                                Hasher hasher,
                                int start, int end) {
-        return assocN(shift, hasher, BitmapIndexedNode.EMPTY, start, end, new Counts());
+        return assocN(shift, BitmapIndexedNode.EMPTY, hasher, start, end, new Counts());
     }
 
     public  static INode promote(int shift, Object key, Object value) {
