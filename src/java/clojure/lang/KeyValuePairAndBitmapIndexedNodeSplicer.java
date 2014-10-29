@@ -26,11 +26,11 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                 return new ArrayNode(null,
                                      17,
                                      ArrayNodeUtils.promoteAndSet(shift,
-                                                             rightNode.bitmap,
-                                                             leftHash,
-                                                             rightNode.array,
-                                                             PersistentHashMap.mask(leftHash, shift),
-                                                             ArrayNodeUtils.promote3(ArrayNodeUtils.partition(leftHash, shift + 5), leftKey, leftValue)));
+                                                                  rightNode.bitmap,
+                                                                  leftHash,
+                                                                  rightNode.array,
+                                                                  PersistentHashMap.mask(leftHash, shift),
+                                                                  ArrayNodeUtils.promote3(ArrayNodeUtils.partition(leftHash, shift + 5), leftKey, leftValue)));
 	    }
             else
                 // lets assume that we could not have received an empty
@@ -40,28 +40,41 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                 return new BitmapIndexedNode(null,
                                              rightBitmap | bit,
                                              BitmapIndexedNodeUtils.cloneAndInsertKeyValuePair(rightArray,
-                                                                      rightBitCount * 2,
-                                                                      keyIndex,
-                                                                      leftKey,
-                                                                      leftValue));
+                                                                                               rightBitCount * 2,
+                                                                                               keyIndex,
+                                                                                               leftKey,
+                                                                                               leftValue));
         } else {
             // rhs occupied...
             final Object subKey = rightArray[keyIndex];
             final Object subValue = rightArray[keyIndex + 1];
             final INode spliced = Seqspert.splice(shift + 5, counts,
-						  true, leftHash,
-						  leftKey, leftValue, false, 0, subKey, subValue);
-            if ((~bit & rightBitmap) != 0) {
-                // the BIN contains more than just this entry
-                if (spliced == null) {
-                    // the LHS key and maybe value are the same as those in the RHS
-                    // if the value were different it would replace the one on the LHS
-                    // if the value were the same, then we do not need to change the one in the RHS
-                    // since the BIN contains more than this entry we must return it...
+						  true, leftHash, leftKey, leftValue,
+                                                  false, 0, subKey, subValue);
+            if (spliced == null || spliced == subValue) {
+                // leftKey matched a key in this BIN.
+           
+                // for now we will just assume that the value
+                // found associated with this key would replace
+                // leftValue - in which case no change needs
+                // applying...
+                return rightNode;
+                                                                
+                // TODO: at some point in the future we should
+                // call a resolver to give the leftValue a chance
+                // to override this assumption...
+            } else {
+                if ((~bit & rightBitmap) == 0) {
+                    // the BIN only contains this entry
+                    // we only need to return this single spliced node
 
-		    // TODO: we should call resolver here...
-		    
-                    return rightNode;
+                    // return new BitmapIndexedNode(null,
+                    //                       rightBitmap,
+                    //                       BitmapIndexedNodeUtils.cloneAndSetKeyValuePair(rightArray,
+                    //                                                                      keyIndex,
+                    //                                                                      null,
+                    //                                                                      spliced))
+                    return spliced; // TODO: should we ever return spliced ?
                 } else {
                     // we have successfully merged the LHS and RHS entry
                     // we need to copy over the rest of the RHS and return a new BIN...
@@ -69,24 +82,9 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                     return new BitmapIndexedNode(null,
                                                  rightBitmap,
                                                  BitmapIndexedNodeUtils.cloneAndSetKeyValuePair(rightArray,
-                                                                       keyIndex,
-                                                                       null,
-                                                                       spliced));
-                }
-            } else {
-                // the BIN only contains this entry
-                if (spliced == null) {
-                    // we must only return a single KVP which we cannot do, so we return null
-                                                                                
-                    // System.out.println("WARN: I think we are returning wrong value...");
-                    // return spliced;
-                                                                
-                    // TODO: I think that we should return spliced
-                    // here - but I have lots of tests expecting rightNode
-                    return rightNode;
-                } else {
-                    // we only need to return this single spliced node
-                    return spliced == subValue ? rightNode : spliced; // TODO: should we ever return spliced ?
+                                                                                                keyIndex,
+                                                                                                null,
+                                                                                                spliced));
                 }
             }
         }
