@@ -2,14 +2,15 @@ package clojure.lang;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 // why is this so complicated ?
 class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts,
-                        boolean leftHaveHash, int leftHashCode,
-                        Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
+                        boolean leftHaveHash, int leftHashCode, Object leftKey, Object leftValue,
+                        boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
         final Object[] rightArray = rightNode.array;
@@ -20,7 +21,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
         final int index = rightNode.index(bit);
         final int keyIndex = index * 2;
         final int rightBitCount = Integer.bitCount(rightBitmap);
-        if((rightBitmap & bit) == 0) {
+        if ((rightBitmap & bit) == 0) {
             // rhs unoccupied
             if (rightBitCount == 16) {
                 return new ArrayNode(null,
@@ -71,9 +72,12 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                 // call a resolver to give the leftValue a chance
                 // to override this assumption...
             } else {
-                return ((~bit & rightBitmap) == 0) ?
-                    // TODO: perhaps we can drop an intermediate singleton BIN
-                    // it looks like we can in some cases and cannot in others - how to decide ?
+                return ((~bit & rightBitmap) == 0 && spliced instanceof HashCollisionNode) ?
+                    // If the BIN on the RHS has only one child and
+                    // the result of splicing the LHS KVP into this is
+                    // an HCN, then return this directly, taking the
+                    // original RHS BIN out of the picture
+                    // i.e. promoting it to an HCN...
                     spliced :
                     // we have successfully merged the LHS and RHS entry
                     // we need to copy over the rest of the RHS and return a new BIN...
