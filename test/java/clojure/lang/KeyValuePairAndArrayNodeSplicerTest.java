@@ -12,7 +12,7 @@ import clojure.lang.PersistentHashMap.INode;
 public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
-    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5); }};
+    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 1) << 10) | (i << 5); }};
 
     public void test(Object leftKey, Object leftValue,
                      Hasher hasher, int rightStart, int rightEnd, boolean sameRight) {
@@ -39,24 +39,24 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
     @Override
     @Test
     public void testDifferent() {
-        test(new HashCodeKey("key1", (3 << 10) | (2 << 5)), "value1", hasher, 2, 31, false);
+        test(new HashCodeKey("key1", (2 << 10) | (1 << 5)), "value1", hasher, 2, 31, false);
     }
 
     @Override
     @Test
     public void testSameKeyHashCode() {
-        test(new HashCodeKey("collision", (3 << 10) | (2 << 5)), "collision1", hasher, 1, 31, false);
+        test(new HashCodeKey("key1.1", (2 << 10) | (1 << 5)), "value1.1", hasher, 1, 31, false);
     }
 
     @Override
     @Test
     public void testSameKey() {
-        test(new HashCodeKey("key1", (3 << 10) | (2 << 5)), "differentValue1", hasher, 1, 31, false);
+        test(new HashCodeKey("key1", (2 << 10) | (1 << 5)), "value1.1", hasher, 1, 31, false);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(new HashCodeKey("key1", (3 << 10) | (2 << 5)), "value1", hasher, 1, 31, true);
+        test(new HashCodeKey("key1", (2 << 10) | (1 << 5)), "value1", hasher, 1, 31, true);
     }
 }
