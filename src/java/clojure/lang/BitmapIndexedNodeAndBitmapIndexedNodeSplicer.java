@@ -39,13 +39,11 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
             // maybe we should make this check in splice() ?
             if (hasLeft) {
                 final Object leftSubKey = leftArray[leftIndex++];
-                final int leftSubHash = BitmapIndexedNodeUtils.hash(leftSubKey);
                 final Object leftSubValue = leftArray[leftIndex++];
                 if (hasRight) {
                     final Object rightSubKey = rightArray[rightIndex++];
-                    final int rightSubHash = BitmapIndexedNodeUtils.hash(rightSubKey);
                     final Object rightSubValue = rightArray[rightIndex++];
-                    final INode newSubNode = Seqspert.splice(shift + 5, counts, true, leftSubHash, leftSubKey, leftSubValue, true, rightSubHash, rightSubKey, rightSubValue);
+                    final INode newSubNode = Seqspert.splice(shift + 5, counts, false, 0, leftSubKey, leftSubValue, false, 0, rightSubKey, rightSubValue);
                     if (newSubNode == null) {
                         // we must have spliced two leaves giving a result of another leaf / KVP...
                         // the key must be unchanged
@@ -75,7 +73,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 } else {
                     // haveLeft and !haveRight
                     if (promoted) {
-                        newAnArray[i] = ArrayNodeUtils.promote3(ArrayNodeUtils.partition(leftSubHash, shift + 5), leftSubKey, leftSubValue);
+                        newAnArray[i] = ArrayNodeUtils.promote3(ArrayNodeUtils.getPartition(shift + 5, leftSubKey, leftSubValue), leftSubKey, leftSubValue);
                     } else {
                         newBinArray[newBinIndex++] = leftSubKey;
                         newBinArray[newBinIndex++] = leftSubValue;
@@ -85,10 +83,9 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
             } else {
                 if (hasRight) { // and !haveLeft
                     final Object rightSubKey = rightArray[rightIndex++];
-                    final int rightSubHash = BitmapIndexedNodeUtils.hash(rightSubKey);
                     final Object rightSubValue = rightArray[rightIndex++];
                     if (promoted) {
-                        newAnArray[i] = ArrayNodeUtils.promote3(ArrayNodeUtils.partition(rightSubHash, shift + 5), rightSubKey, rightSubValue);
+                        newAnArray[i] = ArrayNodeUtils.promote3(ArrayNodeUtils.getPartition(shift + 5, rightSubKey, rightSubValue), rightSubKey, rightSubValue);
                     } else {
                         newBinArray[newBinIndex++] = rightSubKey;
                         newBinArray[newBinIndex++] = rightSubValue;

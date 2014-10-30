@@ -60,6 +60,7 @@ public class BitmapIndexedNodeUtils {
 
 	public static int hash(Object key) {
             // TODO: assert that key is not null...
+            if (key == null) throw new RuntimeException("AAARGH!");
 	    return PersistentHashMap.hash(key);
 	}
 

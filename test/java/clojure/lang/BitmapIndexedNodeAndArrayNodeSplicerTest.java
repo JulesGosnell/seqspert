@@ -36,7 +36,6 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
         test(new HashCodeKey("key" + 1, 1), "value1", new HashCodeKey("key" + 2, 2), "value2", 3, 31, false);
     }
 
-    //@Ignore
     @Override
     @Test
     public void testSameKeyHashCode() {

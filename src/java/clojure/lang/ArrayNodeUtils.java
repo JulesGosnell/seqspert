@@ -28,6 +28,16 @@ public class ArrayNodeUtils {
         return partition(node.hash, shift);
     }
 
+    public static int getPartition(int shift, Object key, Object value) {
+        return key != null ?
+            partition(BitmapIndexedNodeUtils.hash(key), shift) :
+            value instanceof BitmapIndexedNode ?
+            getBitmapIndexedNodePartition(shift, (BitmapIndexedNode) value) :
+            value instanceof ArrayNode ?
+            getArrayNodePartition(shift, (ArrayNode) value) :
+            getHashCollisionNodePartition(shift, (HashCollisionNode) value);
+    }
+	
     public static INode[] promoteAndSet(int shift, int bitmap, int hash, Object[] bitIndexedArray, int index, INode newNode) {
         final INode[] newArray = new INode[32];
         final int newShift = shift + 5;
@@ -43,16 +53,6 @@ public class ArrayNodeUtils {
         return newArray;
     }
 
-    public static int getPartition(int shift, Object key, Object value) {
-        return key != null ?
-            partition(BitmapIndexedNodeUtils.hash(key), shift) :
-            value instanceof BitmapIndexedNode ?
-            getBitmapIndexedNodePartition(shift, (BitmapIndexedNode) value) :
-            value instanceof ArrayNode ?
-            getArrayNodePartition(shift, (ArrayNode) value) :
-            getHashCollisionNodePartition(shift, (HashCollisionNode) value);
-    }
-	
     public static INode[] cloneAndSetNode(INode[] oldArray, int index, INode node) {
         final INode[] newArray = oldArray.clone();
         newArray[index] = node;
