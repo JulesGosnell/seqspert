@@ -1,5 +1,12 @@
 package clojure.lang;
 
+import static clojure.lang.ArrayNodeUtils.promote;
+import static clojure.lang.ArrayNodeUtils.getPartition;
+import static clojure.lang.ArrayNodeUtils.partition;
+
+import static clojure.lang.BitmapIndexedNodeUtils.create;
+import static clojure.lang.BitmapIndexedNodeUtils.hash;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
@@ -7,10 +14,10 @@ import clojure.lang.PersistentHashMap.INode;
 
 class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
 
-    // TODO: seperate promotion and non-promotion code...
+    // TODO: ?maybe? seperate promotion and non-promotion code...
     public INode splice(int shift, Counts counts,
-			boolean leftHaveHash, int leftHash,
-			Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
+			boolean leftHaveHash, int leftHash, Object leftKey, Object leftValue, 
+                        boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
         final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
         final BitmapIndexedNode rightNode = (BitmapIndexedNode) rightValue;
@@ -21,8 +28,8 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
         final Object[] rightArray = rightNode.array;
 
         final int newBitmap = leftBitmap | rightBitmap;
-        final int newBitCount = Integer.bitCount(newBitmap); // nasty - but we need to know...
-        final boolean promoted = (newBitCount > 16); // TODO: handle this more efficiently
+        final int newBitCount = Integer.bitCount(newBitmap); // expensive - but we need to know...
+        final boolean promoted = (newBitCount > 16);
         final Object[] newBinArray = promoted ? null : new Object[newBitCount * 2];
         final INode[] newAnArray = promoted ? new INode[32] : null;
 
@@ -48,13 +55,17 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                         // we must have spliced two leaves giving a result of another leaf / KVP...
                         // the key must be unchanged
                         final Object newSubKey = leftSubKey;
-                        // the value could be either from the left or right - delgate decision to resolveFunction...
-                        final Object newSubValue = counts.resolveFunction.invoke(newSubKey, leftSubValue, rightSubValue);
+                        // the value could be either from the left or right -
+                        // delegate decision to resolveFunction...
+                        final Object newSubValue = counts.resolveFunction.invoke(newSubKey,
+                                                                                 leftSubValue,
+                                                                                 rightSubValue);
                         if (newSubValue != leftSubValue) leftDifferences++;
                         if (newSubValue != rightSubValue) rightDifferences++;
 
                         if (promoted) {
-                            newAnArray[i] = BitmapIndexedNodeUtils.create(PersistentHashMap.mask(BitmapIndexedNodeUtils.hash(newSubKey), shift + 5), newSubKey, newSubValue);
+                            newAnArray[i] = create(partition(hash(newSubKey), shift + 5),
+                                                   newSubKey, newSubValue);
                         } else {
                             newBinArray[newBinIndex++] = newSubKey;
                             newBinArray[newBinIndex++] = newSubValue;
@@ -73,7 +84,8 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 } else {
                     // haveLeft and !haveRight
                     if (promoted) {
-                        newAnArray[i] = ArrayNodeUtils.promote(ArrayNodeUtils.getPartition(shift + 5, leftSubKey, leftSubValue), leftSubKey, leftSubValue);
+                        newAnArray[i] = promote(getPartition(shift + 5, leftSubKey, leftSubValue),
+                                                leftSubKey, leftSubValue);
                     } else {
                         newBinArray[newBinIndex++] = leftSubKey;
                         newBinArray[newBinIndex++] = leftSubValue;
@@ -85,7 +97,8 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                     final Object rightSubKey = rightArray[rightIndex++];
                     final Object rightSubValue = rightArray[rightIndex++];
                     if (promoted) {
-                        newAnArray[i] = ArrayNodeUtils.promote(ArrayNodeUtils.getPartition(shift + 5, rightSubKey, rightSubValue), rightSubKey, rightSubValue);
+                        newAnArray[i] = promote(getPartition(shift + 5, rightSubKey, rightSubValue),
+                                                rightSubKey, rightSubValue);
                     } else {
                         newBinArray[newBinIndex++] = rightSubKey;
                         newBinArray[newBinIndex++] = rightSubValue;
@@ -101,7 +114,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
             leftNode :
             rightDifferences == 0 ?
             rightNode :
-            new PersistentHashMap.BitmapIndexedNode(new AtomicReference<Thread>(), newBitmap, newBinArray);
+            new PersistentHashMap.BitmapIndexedNode(null, newBitmap, newBinArray);
     }
 
 }
