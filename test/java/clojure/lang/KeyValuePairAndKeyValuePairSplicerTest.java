@@ -4,13 +4,11 @@ import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
-@Ignore // TODO: why are these tests all broken ?
 public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
@@ -18,8 +16,8 @@ public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterf
     public void test(Object leftKey, Object leftValue,
                      Object rightKey, Object rightValue, boolean same) {
 
-        final INode leftNode = BitmapIndexedNodeUtils.create(shift, leftKey, leftValue);
-        final INode rightNode = BitmapIndexedNodeUtils.create(shift, rightKey, rightValue);
+        final INode leftNode = TestUtils.create(shift, leftKey, leftValue);
+        final INode rightNode = TestUtils.create(shift, rightKey, rightValue);
 
         final Counts expectedCounts = new Counts();
         final INode expectedNode = TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
