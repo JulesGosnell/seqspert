@@ -46,7 +46,7 @@ public class ArrayNodeUtils {
             if ((bitmap & (1 << i)) != 0) {
                 final Object key = bitIndexedArray[j++];
                 final Object value = bitIndexedArray[j++];                
-                newArray[i] = promote3(getPartition(newShift, key, value), key, value);
+                newArray[i] = promote(getPartition(newShift, key, value), key, value);
             }
         }
         newArray[index] = newNode;
@@ -59,7 +59,7 @@ public class ArrayNodeUtils {
         return newArray;
     }
     
-    public  static INode promote3(int partition, Object key, Object value) {
+    public  static INode promote(int partition, Object key, Object value) {
         return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create(partition, key, value);
     }
 	

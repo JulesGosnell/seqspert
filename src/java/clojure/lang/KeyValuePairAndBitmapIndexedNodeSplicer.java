@@ -31,7 +31,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                                                                   leftHash,
                                                                   rightNode.array,
                                                                   PersistentHashMap.mask(leftHash, shift),
-                                                                  ArrayNodeUtils.promote3(ArrayNodeUtils.partition(leftHash, shift + 5), leftKey, leftValue)));
+                                                                  ArrayNodeUtils.promote(ArrayNodeUtils.partition(leftHash, shift + 5), leftKey, leftValue)));
 	    }
             else
                 // lets assume that we could not have received an empty

@@ -38,7 +38,7 @@ class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
                     newArray[i] = newSubNode;
                     rightDifferences += (newSubNode == rightSubNode) ? 0 : 1;
                 } else {
-                    newArray[i] = ArrayNodeUtils.promote3(ArrayNodeUtils.partition(leftSubHash, shift + 5), leftSubKey, leftSubValue);
+                    newArray[i] = ArrayNodeUtils.promote(ArrayNodeUtils.partition(leftSubHash, shift + 5), leftSubKey, leftSubValue);
                     rightDifferences++;
                 }
             } else { // not lb

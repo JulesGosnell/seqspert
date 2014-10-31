@@ -73,7 +73,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 } else {
                     // haveLeft and !haveRight
                     if (promoted) {
-                        newAnArray[i] = ArrayNodeUtils.promote3(ArrayNodeUtils.getPartition(shift + 5, leftSubKey, leftSubValue), leftSubKey, leftSubValue);
+                        newAnArray[i] = ArrayNodeUtils.promote(ArrayNodeUtils.getPartition(shift + 5, leftSubKey, leftSubValue), leftSubKey, leftSubValue);
                     } else {
                         newBinArray[newBinIndex++] = leftSubKey;
                         newBinArray[newBinIndex++] = leftSubValue;
@@ -85,7 +85,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                     final Object rightSubKey = rightArray[rightIndex++];
                     final Object rightSubValue = rightArray[rightIndex++];
                     if (promoted) {
-                        newAnArray[i] = ArrayNodeUtils.promote3(ArrayNodeUtils.getPartition(shift + 5, rightSubKey, rightSubValue), rightSubKey, rightSubValue);
+                        newAnArray[i] = ArrayNodeUtils.promote(ArrayNodeUtils.getPartition(shift + 5, rightSubKey, rightSubValue), rightSubKey, rightSubValue);
                     } else {
                         newBinArray[newBinIndex++] = rightSubKey;
                         newBinArray[newBinIndex++] = rightSubValue;
