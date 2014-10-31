@@ -7,74 +7,57 @@ import static org.junit.Assert.assertSame;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
-    final Splicer splicer = new KeyValuePairAndHashCollisionNodeSplicer();
     final int shift = 0;
 
-    public void test(Object leftKey, Object leftValue, boolean sameRight) {
+    public void test(Object leftKey, Object leftValue,
+                     Hasher hasher, int rightStart, int rightEnd, boolean sameRight) {
 
         final INode leftNode = TestUtils.create(shift, leftKey, leftValue);
-
-        final INode rightNode =
-            new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
+        final INode rightNode = TestUtils.create(shift, hasher, rightStart, rightEnd);
 
         final Counts expectedCounts = new Counts(Counts.resolveRight, 0, 0);
-        final INode expectedNode = TestUtils.assoc(shift, leftNode, key0, value0, key1, value1, expectedCounts);
+        final INode expectedNode = TestUtils.assocN(shift, leftNode,
+                                                    hasher, rightStart, rightEnd, expectedCounts);
                 
         final Counts actualCounts = new Counts(Counts.resolveRight, 0, 0); // TODO: resolveLeft ?
-        final INode actualNode =  splicer.splice(shift, actualCounts, false, 0, leftKey, leftValue, false, 0, null, rightNode);
-
-        final int leftHash = BitmapIndexedNodeUtils.hash(leftKey);
-        final Counts actualCounts2 = new Counts(Counts.resolveRight, 0, 0); // TODO: resolveLeft ?
-        final INode actualNode2 =  splicer.splice(shift, actualCounts2, true, leftHash, leftKey, leftValue, false, 0, null, rightNode);
+        final INode actualNode =  Seqspert.splice(shift, actualCounts, false, 0, leftKey, leftValue, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
-        assertEquals(expectedCounts, actualCounts2);
         assertNodeEquals(expectedNode, actualNode);
-        assertNodeEquals(expectedNode, actualNode2);
-        if (sameRight) {
-            assertSame(rightNode, actualNode);
-            assertSame(rightNode, actualNode2);
-        }
+        // TODO
+        // if (sameRight) assertSame(rightNode, actualNode);
     }
 
-    // TODO: inline and tidy...
-
-    final int hashCode = 2;
-    final Object key0 = new HashCodeKey("key0", hashCode);
-    final Object key1 = new HashCodeKey("key1", hashCode);
-    final Object value0 = "value0";
-    final Object value1 = "value1";
+    final Hasher hasher = new Hasher() {public int hash(int i) { return (3 << 10) | (2 << 5); }};
 
     @Test
     @Override
     public void testDifferent() {
-        test(new HashCodeKey("key2", 3), "value2", false);
+        test(new HashCodeKey("key1", (2 << 10) | (1 << 5)), "value1", hasher, 2, 4, false);
     }
 
-    @Ignore
     @Test
     @Override
     public void testSameKeyHashCode() {
-        test(new HashCodeKey("key2", hashCode), "value2", false);
+        test(new HashCodeKey("key1.1", (2 << 10) | (1 << 5)), "value1.1", hasher, 1, 3, false);
     }
 
-    @Ignore
     @Test
     @Override
     public void testSameKey() {
-        test(new HashCodeKey("key1", hashCode), "value2", false);
+        test(new HashCodeKey("key1", (2 << 10) | (1 << 5)), "value1.1", hasher, 1, 3, false);
     }
 
     @Test
     @Override
     public void testSameKeyAndValue() {
-        // TODO
-        //test(new HashCodeKey("key0", hashCode), "value0", true);
+        test(new HashCodeKey("key1", (2 << 10) | (1 << 5)), "value1", hasher, 1, 3, false);
     }
 
 }
