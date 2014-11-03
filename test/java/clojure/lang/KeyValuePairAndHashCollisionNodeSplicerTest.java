@@ -39,6 +39,7 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
     @Override
     public void testDifferent() {
         test(new HashCodeKey("key1", (2 << 10) | (1 << 5)), "value1", hasher, 2, 4, false);
+        test(new HashCodeKey("key1", (3 << 10) | (3 << 5)), "value1", hasher, 2, 4, false);
     }
 
     @Test
