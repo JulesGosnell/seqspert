@@ -9,12 +9,12 @@ public class ArrayNodeUtils {
 
     public static int getArrayNodePartition(int shift, ArrayNode node) {
         final Object[] array = node.array;
-        for (int i = 0; i < 32; i++) {
-            final Object subNode = array[i];
+        int i = 0;
+        while (true) {
+            final Object subNode = array[i++];
             if (subNode != null)
                 return getPartition(shift, null, subNode);
         }
-        throw new UnsupportedOperationException("should never get to here!");
     }
 
     public static int getBitmapIndexedNodePartition(int shift, BitmapIndexedNode node) {
