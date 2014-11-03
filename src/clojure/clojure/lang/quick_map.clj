@@ -43,7 +43,7 @@
   (ArrayNodeUtils/makeArrayNode 32 (into-array PersistentHashMap$INode nodes)))
 
 (defn make-hash-map [count nodes]
-  (Seqspert/makeHashMap count (make-array-node nodes)))
+  (Seqspert/createPersistentHashMap count (make-array-node nodes)))
 
 ;;------------------------------------------------------------------------------
 

@@ -10,8 +10,37 @@ import clojure.lang.PersistentHashMap.INode;
 public class SeqspertTest {
 
     @Test
-    public void test() {
-        assertTrue(true);
+    public void testConstructor() {
+        new Seqspert();
+    }
+
+    @Test
+    public void testCreatePersistentVector() {
+        Seqspert.createPersistentVector(0, 0, null, null);
+    }
+
+    @Test
+    public void testCreatePersistentHashMap() {
+        Seqspert.createPersistentHashMap(0, null);
+    }
+
+    @Test
+    public void testAssoc() {
+        Seqspert.assoc(BitmapIndexedNodeUtils.EMPTY, 0, 1, "key", "value", new Box(null));
+    }
+
+    @Test
+    public void testSpliceHashMaps() {
+        Seqspert.spliceHashMaps(PersistentHashMap.EMPTY, PersistentHashMap.EMPTY);
+        Seqspert.spliceHashMaps(PersistentHashMap.create("key", "value"), PersistentHashMap.EMPTY);
+        Seqspert.spliceHashMaps(PersistentHashMap.create("key", "value"), PersistentHashMap.create("key", "value"));
+    }
+
+    @Test
+    public void testSpliceHashSets() {
+        Seqspert.spliceHashSets(PersistentHashSet.EMPTY, PersistentHashSet.EMPTY);
+        Seqspert.spliceHashSets(PersistentHashSet.create("value"), PersistentHashSet.EMPTY);
+        Seqspert.spliceHashSets(PersistentHashSet.create("value"), PersistentHashSet.create("value"));
     }
 
     public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
