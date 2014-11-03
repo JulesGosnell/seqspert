@@ -36,6 +36,8 @@ public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterf
     public void testDifferent() {
         test(new HashCodeKey("key1", 1), "value1", new HashCodeKey("key2", 2), "value2", false);
         test(new HashCodeKey("key1", (1 << 5) | 1), "value1", new HashCodeKey("key2", 1), "value2", false);
+        test(new HashCodeKey("key1", (2 << 10) | (1 << 5) | 1), "value1",
+             new HashCodeKey("key2", (3 << 10) | (1 << 5) | 1), "value2", false);
     }
 
     @Test
