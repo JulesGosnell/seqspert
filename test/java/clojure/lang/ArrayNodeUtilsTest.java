@@ -59,4 +59,10 @@ public class ArrayNodeUtilsTest  {
         final INode node = TestUtils.create(shift, hasher, 0, 3);
         assertEquals(partition, ArrayNodeUtils.getPartition(shift, null, node));
     }
+
+    @Test
+    public void testmakeArrayNode() {
+        ArrayNodeUtils.makeArrayNode(0, null);
+    }
+
 }

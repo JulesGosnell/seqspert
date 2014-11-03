@@ -65,4 +65,8 @@ public class ArrayNodeUtils {
         return PersistentHashMap.mask(hash, shift);
     }
 
+    public static INode makeArrayNode(int count, INode[] nodes) {
+        return new ArrayNode(null, count, nodes);
+    }
+
 }
