@@ -61,10 +61,6 @@ public class ArrayNodeUtils {
         return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create(partition, key, value);
     }
 	
-    public static INode makeArrayNode(int count, INode[] nodes) {
-        return new ArrayNode(null, count, nodes);
-    }
-
     public static int partition(int hash, int shift) {
         return PersistentHashMap.mask(hash, shift);
     }
