@@ -8,13 +8,11 @@ import clojure.lang.PersistentHashMap.INode;
 public class ArrayNodeUtils {
 
     public static int getArrayNodePartition(int shift, ArrayNode node) {
-        final int length = node.count * 2;
         final Object[] array = node.array;
-        for (int i = 0; i < length; i += 2) {
-            final Object key = array[i + 0];
-            final Object value = array[i + 1];
-            if (key != null || value != null)
-                return getPartition(shift, key, value);
+        for (int i = 0; i < 32; i++) {
+            final Object subNode = array[i];
+            if (subNode != null)
+                return getPartition(shift, null, subNode);
         }
         throw new UnsupportedOperationException("should never get to here!");
     }
