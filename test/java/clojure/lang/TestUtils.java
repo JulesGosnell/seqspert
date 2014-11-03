@@ -182,7 +182,4 @@ public class TestUtils {
         return assocN(shift, BitmapIndexedNode.EMPTY, hasher, start, end, new Counts());
     }
 
-    public  static INode promote(int shift, Object key, Object value) {
-        return (key == null) ? (INode) value : TestUtils.create(shift, key, value);
-    }
 }

@@ -22,7 +22,7 @@ public class ArrayNodeUtilsTest  {
         final int shift = 0;
         final Object key = "a";
         final Object value = "1";
-        assertTrue(TestUtils.promote(shift, key, value) instanceof INode);
+        assertTrue(ArrayNodeUtils.promote(shift, key, value) instanceof INode);
     }
 
     @Test
@@ -30,7 +30,7 @@ public class ArrayNodeUtilsTest  {
         final int shift = 0;
         final Object key = null;
         final Object value = BitmapIndexedNode.EMPTY;
-        assertSame(value, TestUtils.promote(shift, key, value));
+        assertSame(value, ArrayNodeUtils.promote(shift, key, value));
     }
 
     @Test
