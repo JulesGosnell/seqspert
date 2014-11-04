@@ -93,7 +93,19 @@ public class TestUtils {
 
 
     public static interface Hasher {public int hash(int i);}
-    
+
+    public static interface Factory {
+        public Object makeKey(int i);
+        public Object makeValue(int i);
+        public int hash(int i);
+    }
+
+    public static class SimpleFactory {
+        public Object key(int i) {return new HashCodeKey("key" + i, hash(i));}
+        public Object value(int i) {return "value" + i;}
+        public int hash(int i) {return ((i + 2) << 10) | ((i + 1) << 5) | i;}
+    } 
+        
     public static INode assocN(int shift, INode node,
                                int start, int end,
                                Counts counts) {

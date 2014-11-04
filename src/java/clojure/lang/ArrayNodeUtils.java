@@ -68,8 +68,10 @@ public class ArrayNodeUtils {
             BitmapIndexedNodeUtils.create(partition(BitmapIndexedNodeUtils.hash(key), shift), key, value);
     }
 	
-    public  static INode promote(int partition, Object key, Object value) {
-        return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create(partition, key, value);
+    public  static INode promote(int shift, int hash, Object key, Object value) {
+        return (key == null) ?
+            (INode) value :
+            BitmapIndexedNodeUtils.create(ArrayNodeUtils.partition(hash, shift), key, value);
     }
 
     public static int partition(int hash, int shift) {

@@ -7,8 +7,8 @@ import clojure.lang.PersistentHashMap.INode;
 class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
 
     public INode splice(int shift, Counts counts, 
-                        boolean leftHaveHash, int leftHash,
-                        Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
+                        boolean leftHaveHash, int leftHash, Object leftKey, Object leftValue,
+                        boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
         final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
 
         final int rightHash = rightHaveHash ? rightHashCode : BitmapIndexedNodeUtils.hash(rightKey);
@@ -25,19 +25,19 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
                 return new ArrayNode(null,
                                      17,
                                      ArrayNodeUtils.promoteAndSet(shift,
-                                                             leftBitmap,
-                                                             rightHash,
-                                                             leftArray,
-                                                             PersistentHashMap.mask(rightHash, shift),
-                                                             ArrayNodeUtils.promote(ArrayNodeUtils.partition(rightHash, shift + 5), rightKey, rightValue)));
+                                                                  leftBitmap,
+                                                                  rightHash,
+                                                                  leftArray,
+                                                                  PersistentHashMap.mask(rightHash, shift),
+                                                                  ArrayNodeUtils.promote(shift + 5, rightHash, rightKey, rightValue)));
             else
                 return new BitmapIndexedNode(null,
                                              leftBitmap | bit,
                                              BitmapIndexedNodeUtils.cloneAndInsertKeyValuePair(leftArray,
-                                                                      leftBitCount * 2,
-                                                                      keyIndex,
-                                                                      rightKey,
-                                                                      rightValue));
+                                                                                               leftBitCount * 2,
+                                                                                               keyIndex,
+                                                                                               rightKey,
+                                                                                               rightValue));
             
         } else {
             // left hand side already occupied...

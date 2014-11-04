@@ -17,21 +17,21 @@ public class ArrayNodeUtilsTest  {
         new ArrayNodeUtils();
     }
 
-    @Test
-    public void testPromoteKeyValuePair() {
-        final int shift = 0;
-        final Object key = "a";
-        final Object value = "1";
-        assertTrue(ArrayNodeUtils.promote(shift, key, value) instanceof INode);
-    }
+    // @Test
+    // public void testPromoteKeyValuePair() {
+    //     final int shift = 0;
+    //     final Object key = "a";
+    //     final Object value = "1";
+    //     assertTrue(ArrayNodeUtils.promote(shift, key, value) instanceof INode);
+    // }
 
-    @Test
-    public void testPromoteNode() {
-        final int shift = 0;
-        final Object key = null;
-        final Object value = BitmapIndexedNode.EMPTY;
-        assertSame(value, ArrayNodeUtils.promote(shift, key, value));
-    }
+    // @Test
+    // public void testPromoteNode() {
+    //     final int shift = 0;
+    //     final Object key = null;
+    //     final Object value = BitmapIndexedNode.EMPTY;
+    //     assertSame(value, ArrayNodeUtils.promote(shift, key, value));
+    // }
 
     @Test
     public void testGetArrayNodePartition() {
