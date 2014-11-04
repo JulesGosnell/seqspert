@@ -7,8 +7,17 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeUtils {
 
-    // TODO: reorder/rename parameters
-    public static INode[] promoteAndSet(int shift, int bitmap, int hash, Object[] bitIndexedArray, int index, INode newNode) {
+    public static INode[] promoteAndSet(int shift, int bitmap, Object[] bitIndexedArray,
+                                        int hash, Object key, Object value) {
+        return promoteAndSet(shift,
+                             bitmap,
+                             bitIndexedArray,
+                             partition(hash, shift),
+                             promote(shift + 5, hash, key, value));
+    }
+
+    public static INode[] promoteAndSet(int shift, int bitmap, Object[] bitIndexedArray,
+                                        int index, INode newNode) {
         final INode[] newArray = new INode[32];
         final int newShift = shift + 5;
         int j = 0;

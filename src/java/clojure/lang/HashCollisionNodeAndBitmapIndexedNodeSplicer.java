@@ -28,11 +28,9 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                      17,
                                      ArrayNodeUtils.promoteAndSet(shift,
                                                                   rightBitmap,
-                                                                  leftHash,
                                                                   rightArray,
                                                                   ArrayNodeUtils.partition(leftHash, shift),
-                                                                  leftNode
-                                                                  ));
+                                                                  leftNode));
             else
                 return new BitmapIndexedNode(null,
                                              rightBitmap | bit,
