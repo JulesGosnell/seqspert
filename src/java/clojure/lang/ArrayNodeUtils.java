@@ -7,38 +7,6 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeUtils {
 
-    public static int getArrayNodePartition(int shift, ArrayNode node) {
-        final Object[] array = node.array;
-        int i = 0;
-        while (true) {
-            final Object subNode = array[i++];
-            if (subNode != null)
-                return getPartition(shift, null, subNode);
-        }
-    }
-
-    public static int getBitmapIndexedNodePartition(int shift, BitmapIndexedNode node) {
-        return getPartition(shift, node.array[0], node.array[1]);
-    }
-
-    public static int getHashCollisionNodePartition(int shift, HashCollisionNode node) {
-        return partition(node.hash, shift);
-    }
-
-    public static int getNodePartition(int shift, INode node) {
-        return node instanceof BitmapIndexedNode ?
-            getBitmapIndexedNodePartition(shift, (BitmapIndexedNode) node) :
-            node instanceof ArrayNode ?
-            getArrayNodePartition(shift, (ArrayNode) node) :
-            getHashCollisionNodePartition(shift, (HashCollisionNode) node);
-    }
-
-    public static int getPartition(int shift, Object key, Object value) {
-        return key != null ?
-            partition(BitmapIndexedNodeUtils.hash(key), shift) :
-            getNodePartition(shift, (INode) value);
-    }
-
     // TODO: reorder/rename parameters
     public static INode[] promoteAndSet(int shift, int bitmap, int hash, Object[] bitIndexedArray, int index, INode newNode) {
         final INode[] newArray = new INode[32];
@@ -48,7 +16,7 @@ public class ArrayNodeUtils {
             if ((bitmap & (1 << i)) != 0) {
                 final Object key = bitIndexedArray[j++];
                 final Object value = bitIndexedArray[j++];                
-                newArray[i] = promote2(newShift, key, value);
+                newArray[i] = promote(newShift, key, value); // TODO: inline
             }
         }
         newArray[index] = newNode;
@@ -61,17 +29,15 @@ public class ArrayNodeUtils {
         return newArray;
     }
     
-    public  static INode promote2(int shift, Object key, Object value) {
-        return (key == null) ?
-            (INode) value :
-            // unfortunately, we have to ask keys for their hashCodes here...
-            BitmapIndexedNodeUtils.create(partition(BitmapIndexedNodeUtils.hash(key), shift), key, value);
+    // promote a KVP for which you know the hash code i.e. return a BIN containing the KVP
+    public static INode promote(int shift, int hash, Object key, Object value) {
+        return BitmapIndexedNodeUtils.create(ArrayNodeUtils.partition(hash, shift), key, value);
     }
-	
-    public  static INode promote(int shift, int hash, Object key, Object value) {
-        return (key == null) ?
-            (INode) value :
-            BitmapIndexedNodeUtils.create(ArrayNodeUtils.partition(hash, shift), key, value);
+    
+    // promote an entry that could be a KVP or a Node - if a Node, just return it, if a KVP,
+    // lok up its hash and promote it
+    public static INode promote(int shift, Object key, Object value) {
+        return (key == null) ? (INode) value : promote(shift, BitmapIndexedNodeUtils.hash(key), key, value);
     }
 
     public static int partition(int hash, int shift) {

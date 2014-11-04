@@ -1,8 +1,7 @@
 package clojure.lang;
 
-import static clojure.lang.ArrayNodeUtils.promote2;
-import static clojure.lang.ArrayNodeUtils.getPartition;
 import static clojure.lang.ArrayNodeUtils.partition;
+import static clojure.lang.ArrayNodeUtils.promote;
 
 import static clojure.lang.BitmapIndexedNodeUtils.create;
 import static clojure.lang.BitmapIndexedNodeUtils.hash;
@@ -85,7 +84,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 } else {
                     // haveLeft and !haveRight
                     if (promoted) {
-                        newAnArray[i] = promote2(newShift, leftSubKey, leftSubValue);
+                        newAnArray[i] = promote(newShift, leftSubKey, leftSubValue);
                     } else {
                         newBinArray[newBinIndex++] = leftSubKey;
                         newBinArray[newBinIndex++] = leftSubValue;
@@ -97,7 +96,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                     final Object rightSubKey = rightArray[rightIndex++];
                     final Object rightSubValue = rightArray[rightIndex++];
                     if (promoted) {
-                        newAnArray[i] = promote2(newShift, rightSubKey, rightSubValue);
+                        newAnArray[i] = promote(newShift, rightSubKey, rightSubValue);
                     } else {
                         newBinArray[newBinIndex++] = rightSubKey;
                         newBinArray[newBinIndex++] = rightSubValue;

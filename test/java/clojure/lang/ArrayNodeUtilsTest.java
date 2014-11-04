@@ -17,47 +17,13 @@ public class ArrayNodeUtilsTest  {
         new ArrayNodeUtils();
     }
 
-    // @Test
-    // public void testPromoteKeyValuePair() {
-    //     final int shift = 0;
-    //     final Object key = "a";
-    //     final Object value = "1";
-    //     assertTrue(ArrayNodeUtils.promote(shift, key, value) instanceof INode);
-    // }
-
-    // @Test
-    // public void testPromoteNode() {
-    //     final int shift = 0;
-    //     final Object key = null;
-    //     final Object value = BitmapIndexedNode.EMPTY;
-    //     assertSame(value, ArrayNodeUtils.promote(shift, key, value));
-    // }
-
+    // TODO: this should be covered by one of the Splicer tests
     @Test
-    public void testGetArrayNodePartition() {
+    public void testPromoteNode() {
         final int shift = 0;
-        final int partition = 16;
-        final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 1) << 5) | partition; }};
-        final INode node = TestUtils.create(shift, hasher, 1, 19);
-        assertEquals(partition, ArrayNodeUtils.getPartition(shift, null, node));
-    }
-
-    @Test
-    public void testGetBitmapIndexedNodePartition() {
-        final int shift = 0;
-        final int partition = 8;
-        final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 1) << 5) | partition; }};
-        final INode node = TestUtils.create(shift, hasher, 0, 16);
-        assertEquals(partition, ArrayNodeUtils.getPartition(shift, null, node));
-    }
-
-    @Test
-    public void testGetHashCollisionNodePartition() {
-        final int shift = 0;
-        final int partition = 8;
-        final Hasher hasher = new Hasher() {public int hash(int i) { return (1 << 5) | partition; }};
-        final INode node = TestUtils.create(shift, hasher, 0, 3);
-        assertEquals(partition, ArrayNodeUtils.getPartition(shift, null, node));
+        final Object key = null;
+        final Object value = BitmapIndexedNode.EMPTY;
+        assertSame(value, ArrayNodeUtils.promote(shift, key, value));
     }
 
     @Test
