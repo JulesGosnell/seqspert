@@ -21,21 +21,25 @@ public class ArrayNodeUtils {
         return getPartition(shift, node.array[0], node.array[1]);
     }
 
-
     public static int getHashCollisionNodePartition(int shift, HashCollisionNode node) {
         return partition(node.hash, shift);
+    }
+
+    public static int getNodePartition(int shift, INode node) {
+        return node instanceof BitmapIndexedNode ?
+            getBitmapIndexedNodePartition(shift, (BitmapIndexedNode) node) :
+            node instanceof ArrayNode ?
+            getArrayNodePartition(shift, (ArrayNode) node) :
+            getHashCollisionNodePartition(shift, (HashCollisionNode) node);
     }
 
     public static int getPartition(int shift, Object key, Object value) {
         return key != null ?
             partition(BitmapIndexedNodeUtils.hash(key), shift) :
-            value instanceof BitmapIndexedNode ?
-            getBitmapIndexedNodePartition(shift, (BitmapIndexedNode) value) :
-            value instanceof ArrayNode ?
-            getArrayNodePartition(shift, (ArrayNode) value) :
-            getHashCollisionNodePartition(shift, (HashCollisionNode) value);
+            getNodePartition(shift, (INode) value);
     }
-	
+
+    // TODO: reorder/rename parameters
     public static INode[] promoteAndSet(int shift, int bitmap, int hash, Object[] bitIndexedArray, int index, INode newNode) {
         final INode[] newArray = new INode[32];
         final int newShift = shift + 5;
@@ -44,7 +48,7 @@ public class ArrayNodeUtils {
             if ((bitmap & (1 << i)) != 0) {
                 final Object key = bitIndexedArray[j++];
                 final Object value = bitIndexedArray[j++];                
-                newArray[i] = promote(getPartition(newShift, key, value), key, value);
+                newArray[i] = promote2(newShift, key, value);
             }
         }
         newArray[index] = newNode;
@@ -57,10 +61,17 @@ public class ArrayNodeUtils {
         return newArray;
     }
     
+    public  static INode promote2(int shift, Object key, Object value) {
+        return (key == null) ?
+            (INode) value :
+            // unfortunately, we have to ask keys for their hashCodes here...
+            BitmapIndexedNodeUtils.create(partition(BitmapIndexedNodeUtils.hash(key), shift), key, value);
+    }
+	
     public  static INode promote(int partition, Object key, Object value) {
         return (key == null) ? (INode) value : BitmapIndexedNodeUtils.create(partition, key, value);
     }
-	
+
     public static int partition(int hash, int shift) {
         return PersistentHashMap.mask(hash, shift);
     }

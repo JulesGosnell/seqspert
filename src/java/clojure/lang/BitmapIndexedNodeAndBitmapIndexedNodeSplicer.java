@@ -1,6 +1,6 @@
 package clojure.lang;
 
-import static clojure.lang.ArrayNodeUtils.promote;
+import static clojure.lang.ArrayNodeUtils.promote2;
 import static clojure.lang.ArrayNodeUtils.getPartition;
 import static clojure.lang.ArrayNodeUtils.partition;
 
@@ -32,6 +32,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
         final boolean promoted = (newBitCount > 16);
         final Object[] newBinArray = promoted ? null : new Object[newBitCount * 2];
         final INode[] newAnArray = promoted ? new INode[32] : null;
+        final int newShift = shift + 5;
 
         int leftIndex = 0;
         int rightIndex = 0;
@@ -50,7 +51,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 if (hasRight) {
                     final Object rightSubKey = rightArray[rightIndex++];
                     final Object rightSubValue = rightArray[rightIndex++];
-                    final INode newSubNode = Seqspert.splice(shift + 5, counts, false, 0, leftSubKey, leftSubValue, false, 0, rightSubKey, rightSubValue);
+                    final INode newSubNode = Seqspert.splice(newShift, counts, false, 0, leftSubKey, leftSubValue, false, 0, rightSubKey, rightSubValue);
                     if (newSubNode == null) {
                         // we must have spliced two leaves giving a result of another leaf / KVP...
                         // the key must be unchanged
@@ -64,7 +65,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                         if (newSubValue != rightSubValue) rightDifferences++;
 
                         if (promoted) {
-                            newAnArray[i] = create(partition(hash(newSubKey), shift + 5),
+                            newAnArray[i] = create(partition(hash(newSubKey), newShift),
                                                    newSubKey, newSubValue);
                         } else {
                             newBinArray[newBinIndex++] = newSubKey;
@@ -84,8 +85,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 } else {
                     // haveLeft and !haveRight
                     if (promoted) {
-                        newAnArray[i] = promote(getPartition(shift + 5, leftSubKey, leftSubValue),
-                                                leftSubKey, leftSubValue);
+                        newAnArray[i] = promote2(newShift, leftSubKey, leftSubValue);
                     } else {
                         newBinArray[newBinIndex++] = leftSubKey;
                         newBinArray[newBinIndex++] = leftSubValue;
@@ -97,8 +97,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                     final Object rightSubKey = rightArray[rightIndex++];
                     final Object rightSubValue = rightArray[rightIndex++];
                     if (promoted) {
-                        newAnArray[i] = promote(getPartition(shift + 5, rightSubKey, rightSubValue),
-                                                rightSubKey, rightSubValue);
+                        newAnArray[i] = promote2(newShift, rightSubKey, rightSubValue);
                     } else {
                         newBinArray[newBinIndex++] = rightSubKey;
                         newBinArray[newBinIndex++] = rightSubValue;

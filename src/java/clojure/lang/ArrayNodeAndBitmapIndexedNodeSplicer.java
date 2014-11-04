@@ -16,6 +16,7 @@ class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
         final INode[] leftArray = leftNode.array;
         final Object[] rightArray = rightNode.array;
         final int rightBitmap = rightNode.bitmap;
+        final int newShift = shift + 5;
 
         final INode[] newArray = new INode[32]; // allocate optimistically...
 
@@ -32,12 +33,12 @@ class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 final Object rightSubValue = rightArray[rightIndex++];
                 if (haveLeft) {
                     // both sides present - splice them...
-                    final INode newSubNode = Seqspert.splice(shift + 5, counts, false, 0, null, leftSubNode, false, 0, rightSubKey, rightSubValue);
+                    final INode newSubNode = Seqspert.splice(newShift, counts, false, 0, null, leftSubNode, false, 0, rightSubKey, rightSubValue);
                     newArray[i] = newSubNode;
                     if (leftSubNode != newSubNode) leftDifferences++;
                 } else {
                     // only rhs present
-                    newArray[i] = ArrayNodeUtils.promote(ArrayNodeUtils.getPartition(shift + 5, rightSubKey, rightSubValue), rightSubKey, rightSubValue);
+                    newArray[i] = ArrayNodeUtils.promote2(newShift, rightSubKey, rightSubValue);
                     leftDifferences++;
                 }
             } else { // not haveRight
