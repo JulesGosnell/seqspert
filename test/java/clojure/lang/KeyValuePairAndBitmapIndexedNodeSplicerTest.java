@@ -39,6 +39,16 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
     public void testDifferent() {
         test(new HashCodeKey("key1", (3 << 10) | (2 << 5)), "value1", hasher, 2, 4, false);
         test(new HashCodeKey("key1", (3 << 10) | (2 << 5)), "value1", hasher, 2, 18, false);
+
+        // Test Node Promotion
+        
+        // provide 3 ranks in which consecutive nodes are collapsed into hash collisions...
+        final Hasher hasher = new Hasher() {
+                public int hash(int i) {return ((i / 2 + 2) << 10) | ((i / 2 + 1) << 5) | (i / 2);}};
+
+        // use the Hasher above to create a 16 node BIN with children BIN, HCN, ..., HCN, BIN
+        // then splice it into a KVP causing the promotion of all children...
+        test(new HashCodeKey("key1", (3 << 10) | (2 << 5) | 1), "value1", hasher, 5, 35, false);
     }
 
     @Test

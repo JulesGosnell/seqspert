@@ -17,18 +17,9 @@ public class ArrayNodeUtilsTest  {
         new ArrayNodeUtils();
     }
 
-    // TODO: this should be covered by one of the Splicer tests
-    @Test
-    public void testPromoteNode() {
-        final int shift = 0;
-        final Object key = null;
-        final Object value = BitmapIndexedNode.EMPTY;
-        assertSame(value, ArrayNodeUtils.promote(shift, key, value));
-    }
-
     @Test
     public void testmakeArrayNode() {
-        ArrayNodeUtils.makeArrayNode(0, null);
+        assertTrue(ArrayNodeUtils.makeArrayNode(0, null) instanceof PersistentHashMap.ArrayNode);
     }
 
 }
