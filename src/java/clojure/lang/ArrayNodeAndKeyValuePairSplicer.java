@@ -12,7 +12,7 @@ class ArrayNodeAndKeyValuePairSplicer implements Splicer {
         final ArrayNode leftNode = (ArrayNode) leftValue;
 
         final int rightHash = BitmapIndexedNodeUtils.hash(rightHaveHash, rightHashCode, rightKey);
-        final int index = PersistentHashMap.mask(rightHash, shift);
+        final int index = ArrayNodeUtils.partition(rightHash, shift);
 
         final INode[] leftArray = leftNode.array;
         final INode subNode = leftArray[index];
@@ -21,7 +21,7 @@ class ArrayNodeAndKeyValuePairSplicer implements Splicer {
             return new ArrayNode(null,
                                  leftNode.count + 1,
                                  ArrayNodeUtils.cloneAndSetNode(leftArray, index,
-                                                           BitmapIndexedNodeUtils.create(PersistentHashMap.mask(rightHash, shift + 5), rightKey, rightValue)));
+                                                           BitmapIndexedNodeUtils.create(ArrayNodeUtils.partition(rightHash, shift + 5), rightKey, rightValue)));
         } else {
             final INode newNode =
                 Seqspert.splice(shift + 5, counts, false, 0, null, subNode, true, rightHash, rightKey, rightValue);

@@ -9,8 +9,8 @@ class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
                          int leftHash, HashCollisionNode leftNode,
                          int rightHash, HashCollisionNode rightNode) {
         
-        final int leftBits = PersistentHashMap.mask(leftHash, shift);
-        final int rightBits = PersistentHashMap.mask(rightHash, shift);
+        final int leftBits = ArrayNodeUtils.partition(leftHash, shift);
+        final int rightBits = ArrayNodeUtils.partition(rightHash, shift);
         return
             (leftBits == rightBits) ?
             // keep recursing down...

@@ -13,7 +13,7 @@ class HashCollisionNodeAndArrayNodeSplicer implements Splicer {
         final ArrayNode rightNode = (ArrayNode) rightValue;
         
         final INode[] rightArray = rightNode.array;
-        final int index = PersistentHashMap.mask(leftNode.hash, shift);
+        final int index = ArrayNodeUtils.partition(leftNode.hash, shift);
         final INode rightSubNode = rightArray[index];
         
         int newCount;

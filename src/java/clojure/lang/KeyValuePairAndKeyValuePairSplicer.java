@@ -8,8 +8,8 @@ class KeyValuePairAndKeyValuePairSplicer implements Splicer {
 	// c.f. recurse method in HCN/HCN Splicer...
 	
     static INode recurse(int shift, int leftHash, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
-    	final int leftPartition = PersistentHashMap.mask(leftHash, shift);
-        final int rightPartition = PersistentHashMap.mask(rightHash, shift);
+    	final int leftPartition = ArrayNodeUtils.partition(leftHash, shift);
+        final int rightPartition = ArrayNodeUtils.partition(rightHash, shift);
         final int leftBit = 1 << leftPartition;
         final int rightBit = 1 << rightPartition;
         return new BitmapIndexedNode(null,

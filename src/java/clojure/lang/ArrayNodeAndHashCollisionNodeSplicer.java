@@ -15,7 +15,7 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
 
         final INode[] leftArray = leftNode.array;
         final int rightHash = rightNode.hash;
-        final int index = PersistentHashMap.mask(rightHash, shift);
+        final int index = ArrayNodeUtils.partition(rightHash, shift);
         final INode leftSubNode = leftArray[index];
 
         int newCount;
@@ -23,7 +23,7 @@ class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
         int leftDifferences = 0;
         if (leftSubNode == null) {
             newCount = leftNode.count + 1;
-            newSubNode = BitmapIndexedNodeUtils.create(PersistentHashMap.mask(rightHash, shift + 5), null, rightNode);
+            newSubNode = BitmapIndexedNodeUtils.create(ArrayNodeUtils.partition(rightHash, shift + 5), null, rightNode);
             leftDifferences++;
         } else {
             newCount = leftNode.count;

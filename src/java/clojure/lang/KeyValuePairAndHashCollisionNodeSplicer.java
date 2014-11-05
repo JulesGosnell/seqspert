@@ -46,8 +46,8 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
             
         } else {
             return BitmapIndexedNodeUtils
-                .create(PersistentHashMap.mask(leftHash, shift), leftKey, leftValue,
-                        PersistentHashMap.mask(rightHash, shift), null, rightNode);
+                .create(ArrayNodeUtils.partition(leftHash, shift), leftKey, leftValue,
+                        ArrayNodeUtils.partition(rightHash, shift), null, rightNode);
         }
 
     }
