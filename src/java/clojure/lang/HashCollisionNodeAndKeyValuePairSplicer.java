@@ -1,13 +1,19 @@
 package clojure.lang;
 
-import static clojure.lang.BitmapIndexedNodeUtils.create;
 import static clojure.lang.HashCollisionNodeUtils.maybeAdd;
-import static clojure.lang.PersistentHashMap.mask;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 class HashCollisionNodeAndKeyValuePairSplicer implements Splicer {
 
+	public static INode recurse(int shift, int leftHash, Object leftKey, Object leftValue, int rightHash, Object rightKey, Object rightValue) {
+		final int leftPartition = ArrayNodeUtils.partition(leftHash, shift);
+		final int rightPartition = ArrayNodeUtils.partition(rightHash, shift);
+		return leftPartition == rightPartition ?
+				BitmapIndexedNodeUtils.create(leftPartition, null, recurse(shift + 5, leftHash, leftKey, leftValue, rightHash, rightKey, rightValue)) :
+					BitmapIndexedNodeUtils.create(leftPartition, leftKey, leftValue, rightPartition, rightKey, rightValue);
+	}
+	
     public INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHashCode,
                         Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
@@ -24,7 +30,7 @@ class HashCollisionNodeAndKeyValuePairSplicer implements Splicer {
             return (leftArray == newArray) ?
                 leftNode : new HashCollisionNode(null, leftHash, leftCount + (added ? 1 : 0), newArray);
         } else {
-            return create(mask(leftHash, shift), null, leftNode, mask(rightHash, shift), rightKey, rightValue);
+            return recurse(shift, leftHash, null, leftNode, rightHash, rightKey, rightValue);
         }
     }
 
