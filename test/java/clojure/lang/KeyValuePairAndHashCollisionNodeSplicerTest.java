@@ -2,13 +2,11 @@ package clojure.lang;
 
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
-import clojure.lang.TestUtils.Hasher;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.TestUtils.Hasher;
 
 public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 

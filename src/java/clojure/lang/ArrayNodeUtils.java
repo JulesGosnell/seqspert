@@ -1,8 +1,6 @@
 package clojure.lang;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
-import clojure.lang.PersistentHashMap.BitmapIndexedNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeUtils {

@@ -2,12 +2,8 @@ package clojure.lang;
 
 import static clojure.lang.ArrayNodeUtils.partition;
 import static clojure.lang.ArrayNodeUtils.promote;
-
 import static clojure.lang.BitmapIndexedNodeUtils.create;
 import static clojure.lang.BitmapIndexedNodeUtils.hash;
-
-import java.util.concurrent.atomic.AtomicReference;
-
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 

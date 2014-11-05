@@ -2,12 +2,11 @@ package clojure.lang;
 
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
-import clojure.lang.TestUtils.Hasher;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.TestUtils.Hasher;
 
 public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
 

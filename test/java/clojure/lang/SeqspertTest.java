@@ -1,10 +1,10 @@
 package clojure.lang;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 import static clojure.lang.TestUtils.assertNodeEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
 import clojure.lang.PersistentHashMap.INode;
 
 public class SeqspertTest {
