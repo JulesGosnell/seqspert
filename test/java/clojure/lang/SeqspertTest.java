@@ -58,7 +58,7 @@ public class SeqspertTest {
         final INode rightNode = createN(shift, rightStart, rightEnd);
         
         final Counts expectedCounts = new Counts();
-        final INode expectedNode = assocN(shift, leftNode, 551, 935, expectedCounts);
+        final INode expectedNode = assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
         
         final Counts actualCounts = new Counts();
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
@@ -70,6 +70,7 @@ public class SeqspertTest {
     @Test
     public void testUnknown() {
         test(0, 551, 552, 551, 935);
-        //test(0, 0, 3, 110000, 130000);
+        test(0, 0, 3, 110000, 130000);
+        //test(0, 998301, 10716539, 11028008, 11073641);
     }
 }
