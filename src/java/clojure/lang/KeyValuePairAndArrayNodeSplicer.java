@@ -10,7 +10,7 @@ class KeyValuePairAndArrayNodeSplicer implements Splicer {
                         boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
         final ArrayNode rightNode = (ArrayNode) rightValue;
-        final int leftHash = leftHaveHash ? leftHashCode : BitmapIndexedNodeUtils.hash(leftKey);
+        final int leftHash = BitmapIndexedNodeUtils.hash(leftHaveHash, leftHashCode, leftKey);
         final int index = PersistentHashMap.mask(leftHash, shift);
         
         final INode subNode = rightNode.array[index];

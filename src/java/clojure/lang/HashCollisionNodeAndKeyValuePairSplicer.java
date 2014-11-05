@@ -13,7 +13,7 @@ class HashCollisionNodeAndKeyValuePairSplicer implements Splicer {
                         Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
         final HashCollisionNode leftNode = (HashCollisionNode) leftValue;
         final int leftHash = leftNode.hash;
-        final int rightHash = rightHaveHash ? rightHashCode : BitmapIndexedNodeUtils.hash(rightKey);
+        final int rightHash = BitmapIndexedNodeUtils.hash(rightHaveHash, rightHashCode, rightKey);
         if (rightHash == leftHash) {
             final int leftCount = leftNode.count;
             final Object[] leftArray = leftNode.array;

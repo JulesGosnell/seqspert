@@ -30,8 +30,8 @@ class KeyValuePairAndKeyValuePairSplicer implements Splicer {
 			counts.sameKey++;
 			return null;
 		} else {
-			final int leftHash = leftHaveHash ? leftHashCode : BitmapIndexedNodeUtils.hash(leftKey);
-			final int rightHash = rightHaveHash ? rightHashCode : BitmapIndexedNodeUtils.hash(rightKey);
+                    final int leftHash = BitmapIndexedNodeUtils.hash(leftHaveHash, leftHashCode, leftKey);
+                    final int rightHash = BitmapIndexedNodeUtils.hash(rightHaveHash, rightHashCode, rightKey);
 			if (leftHash == rightHash) {
 				// hash collision
 				return HashCollisionNodeUtils.create(leftHash, leftKey, leftValue, rightKey, rightValue);

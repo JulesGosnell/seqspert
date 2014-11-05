@@ -65,6 +65,10 @@ public class BitmapIndexedNodeUtils {
         return PersistentHashMap.hash(key);
     }
 
+    public static int hash(boolean haveHash, int hash, Object key) {
+        return haveHash ? hash : hash(key);
+    }
+
     static int index(int hash, int shift){
         return 1 << ArrayNodeUtils.partition(hash, shift);
     }
