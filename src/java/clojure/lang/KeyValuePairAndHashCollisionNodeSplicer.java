@@ -45,6 +45,7 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
             }
             
         } else {
+            // TODO: consider recursing like HCN/KVP - write a test...
             return BitmapIndexedNodeUtils
                 .create(ArrayNodeUtils.partition(leftHash, shift), leftKey, leftValue,
                         ArrayNodeUtils.partition(rightHash, shift), null, rightNode);

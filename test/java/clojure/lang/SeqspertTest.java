@@ -69,6 +69,8 @@ public class SeqspertTest {
     
     @Test
     public void testUnknown() {
+        // TODO: replace these with specific tests...
+        // TODO: investigate other places where BINU:create(kvp1, kvp2) is used...
         test(0, 551, 552, 551, 935);
         test(0, 0, 3, 110000, 130000);
         test(0, 9981301, 10716539, 11028008, 11073641);
