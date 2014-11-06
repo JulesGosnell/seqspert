@@ -8,6 +8,13 @@ import clojure.lang.PersistentHashMap.INode;
 
 public class TestUtils {
 
+    public static void assertHashMapEquals(PersistentHashMap expected, PersistentHashMap actual) {
+        assertEquals(expected.count, actual.count);
+        assertNodeEquals(expected.root, actual.root);
+        assertEquals(expected.hasNull, actual.hasNull);
+        assertEquals(expected.nullValue, actual.nullValue);
+    }
+
     public static void assertNodeEquals(INode expected, INode actual) {
 	if (expected instanceof BitmapIndexedNode) {
 	    assertBitmapIndexedNodeEquals((BitmapIndexedNode) expected, (BitmapIndexedNode) actual);

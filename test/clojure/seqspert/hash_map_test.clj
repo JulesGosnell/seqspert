@@ -1,6 +1,8 @@
 (ns seqspert.hash-map-test
   (:require  [clojure.core [reducers :as r]])
   (:require [clojure [pprint :as p]])
+  (:import [clojure.lang
+            TestUtils])
   (:use
    [clojure set test]
    [seqspert test-utils hash-map]))
@@ -83,3 +85,36 @@
       (is (= actual expected))
       )
     ))
+
+;;; random map test
+
+(def shift 5)
+(def depth 4)
+(def breadth (bit-shift-left 1 shift))
+(def n (int (Math/pow breadth depth)))
+
+(defn rand-hash [breadth depth]
+  (reduce
+   (fn [hash partition] (bit-or (bit-shift-left hash shift) partition))
+   0
+   (repeatedly (inc (rand-int depth)) #(rand-int breadth))))
+
+(defn rand-bool []
+  (= (rand-int 2) 0))
+
+(defn rand-assoc [m hash]
+  (assoc m (MyKey. (str (if (rand-bool) "black-" "white-") hash) hash) (rand-bool)))
+
+(defn rand-map [n breadth depth]
+  (reduce rand-assoc {} (repeatedly n #(rand-hash breadth depth))))
+
+(defn check [n breadth depth]
+  (let [l (rand-map n breadth depth)
+        r (rand-map n breadth depth)]
+    (TestUtils/assertHashMapEquals
+     (merge l r)
+     (splice-hash-maps l r))))
+
+;(check 512 breadth 4)
+
+;(repeatedly #(check 512 32 4))
