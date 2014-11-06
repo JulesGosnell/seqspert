@@ -54,9 +54,17 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
         final Object rightKey = new HashCodeKey("key2", rightHashCode);
         final Object rightValue = "value2";
         test(leftHashCode, leftKey0, leftValue0, leftKey1, leftValue1, rightKey, rightValue, false);
+    }
 
-        // this test should be here... - needs further thought
-        //test(0, 9981301, 10716539, 11028008, 11073641);
+    @Test
+    public void testDifferentRecursive() {
+        final int leftHashCode = (3 << 10) | (2 << 5);
+        final int rightHashCode = (4 << 15) | leftHashCode;
+        test(leftHashCode, 
+             new HashCodeKey("key0", leftHashCode), "value0",
+             new HashCodeKey("key1", leftHashCode), "value1",
+             new HashCodeKey("key2", rightHashCode), "value2",
+             false);             
     }
 
     @Test
