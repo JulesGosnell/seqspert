@@ -38,6 +38,9 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
     public void testDifferent() {
         test(new HashCodeKey("key1", (2 << 10) | (1 << 5)), "value1", hasher, 2, 4, false);
         test(new HashCodeKey("key1", (3 << 10) | (3 << 5)), "value1", hasher, 2, 4, false);
+
+        final int leftHashCode = (4 << 15) | (3 << 10) | (2 << 5); // like rhs but 1 deeper
+        test(new HashCodeKey("key1", leftHashCode), "value1", hasher, 2, 4, false);
     }
 
     @Test
