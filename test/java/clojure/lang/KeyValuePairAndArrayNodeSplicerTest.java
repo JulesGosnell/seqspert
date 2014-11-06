@@ -29,10 +29,7 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        // if (sameRight) {
-        //     assertSame(rightNode, actualNode);
-        //     assertSame(rightNode, actualNode2);
-        // }
+        // if (sameRight) assertSame(rightNode, actualNode);
     }
 
     @Override
