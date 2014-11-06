@@ -5,22 +5,6 @@ import clojure.lang.PersistentHashMap.INode;
 
 class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
     
-    public INode recurse(int shift,
-                         int leftHash, HashCollisionNode leftNode,
-                         int rightHash, HashCollisionNode rightNode) {
-        
-        final int leftBits = ArrayNodeUtils.partition(leftHash, shift);
-        final int rightBits = ArrayNodeUtils.partition(rightHash, shift);
-        return
-            (leftBits == rightBits) ?
-            // keep recursing down...
-            BitmapIndexedNodeUtils.create(leftBits, null,
-                                          recurse(shift + 5, leftHash, leftNode, rightHash, rightNode)) :
-            // end recursion
-            BitmapIndexedNodeUtils.create(leftBits, null,
-                                          leftNode, rightBits, null, rightNode);
-    }
-    
     public INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHashCode,
                         Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
@@ -61,7 +45,8 @@ class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
 
             // since hashes are not =, keys cannot be =, so no need to
             // pass Counts...
-            return recurse(shift, leftHash, leftNode, rightHash, rightNode);
+            return BitmapIndexedNodeUtils.
+                recurse(shift, leftHash, null, leftNode, rightHash, null, rightNode);
         }
     }
         
