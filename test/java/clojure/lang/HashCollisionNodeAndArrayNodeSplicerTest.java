@@ -16,7 +16,8 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
     final int shift = 0;
 
     public void test(int leftHash,
-                     Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1,
+                     Object leftKey0, Object leftValue0,
+                     Object leftKey1, Object leftValue1,
                      int rightStart, int rightEnd,
                      Object rightKey0, Object rightValue0,
                      boolean sameRight) {

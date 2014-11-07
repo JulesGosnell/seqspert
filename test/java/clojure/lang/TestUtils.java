@@ -101,6 +101,8 @@ public class TestUtils {
 
     public static interface Hasher {public int hash(int i);}
 
+    public static final Hasher defaultHasher = new Hasher() {public int hash(int i) { return i; }};
+
     public static interface Factory {
         public Object makeKey(int i);
         public Object makeValue(int i);
@@ -113,18 +115,13 @@ public class TestUtils {
         public int hash(int i) {return ((i + 2) << 10) | ((i + 1) << 5) | i;}
     } 
         
-    public static INode assocN(int shift, INode node,
-                               int start, int end,
-                               Counts counts) {
-	for (int i = start; i < end; i++)
-	    node = assoc(shift, node , new HashCodeKey("key" + i, i), ("value"+i), counts);
-	return node;
+    public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
+        return assocN(shift, node, defaultHasher, start, end, counts);
     }
 
     public static INode assocN(int shift,
                                INode node,
-                               Hasher hasher,
-                               int start, int end,
+                               Hasher hasher, int start, int end,
                                Counts counts) {
 	for (int i = start; i < end; i++)
 	    node = assoc(shift, node , new HashCodeKey("key" + i, hasher.hash(i)), ("value"+i), counts);
@@ -139,10 +136,25 @@ public class TestUtils {
     }
     
     public static INode assocN(int shift, INode node,
+                               Hasher hasher, int start, int end,
+                               Object key0, Object value0,
+                               Counts counts) {
+	return assoc(shift, assocN(shift, node, hasher, start, end, counts), key0, value0, counts); 
+    }
+    
+    public static INode assocN(int shift, INode node,
                                int start, int end,
                                Object key0, Object value0,
                                Counts counts) {
-	return assoc(shift, assocN(shift, node, start, end, counts), key0, value0, counts); 
+	return assocN(shift, node, defaultHasher, start, end, key0, value0, counts); 
+    }
+
+    public static INode assocN(int shift, INode node,
+                               Hasher hasher, int start, int end,
+                               Object key0, Object value0,
+                               Object key1, Object value1,
+                               Counts counts) {
+        return assoc(shift, assocN(shift, node, hasher, start, end, key0, value0, counts), key1, value1, counts);
     }
     
     public static INode assocN(int shift, INode node,
@@ -150,9 +162,9 @@ public class TestUtils {
                                Object key0, Object value0,
                                Object key1, Object value1,
                                Counts counts) {
-        return assoc(shift, assocN(shift, node, start, end, key0, value0, counts), key1, value1, counts);
+        return assocN(shift, node, defaultHasher, start, end, key0, value0, key1, value1, counts);
     }
-    
+
     public static INode create(int shift,
                                Object key, Object value) {
         return assoc(shift, BitmapIndexedNode.EMPTY, key, value, new Counts());
@@ -187,17 +199,24 @@ public class TestUtils {
                                int start, int end,
                                Object key0, Object value0,
                                Object key1, Object value1) {
-        return assocN(shift, BitmapIndexedNode.EMPTY, start, end, key0, value0, key1, value1, new Counts());
-    }
-
-    public static INode create(int shift,
-                               int start, int end) {
-        return assocN(shift, BitmapIndexedNode.EMPTY, start, end, new Counts());
+        return create(shift, defaultHasher, start, end, key0, value0, key1, value1);
     }
 
     public static INode create(int shift,
                                Hasher hasher,
+                               int start, int end,
+                               Object key0, Object value0,
+                               Object key1, Object value1) {
+        return assocN(shift, BitmapIndexedNode.EMPTY, hasher, start, end, key0, value0, key1, value1, new Counts());
+    }
+
+    public static INode create(int shift,
                                int start, int end) {
+        return create(shift, defaultHasher, start, end);
+    }
+
+    public static INode create(int shift,
+                               Hasher hasher, int start, int end) {
         return assocN(shift, BitmapIndexedNode.EMPTY, hasher, start, end, new Counts());
     }
 
