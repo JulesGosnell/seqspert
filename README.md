@@ -95,7 +95,7 @@ user=> (pprint (inspect {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 8 :h 9 :i 10}))
 nil
 user=>
 </pre>
-- splice-hash-maps
+- splice-hash-maps [WIP]
 
 Traditionally the merging of two hash-maps is done via the Sequence
 abstraction, reading every key-value-pair from the right hand side and
@@ -181,7 +181,7 @@ nil
 user=>
 </pre>
 
-- splice-hash-sets
+- splice-hash-sets [WIP]
 
 Since a hash-sets underlying representation is just a hash-map,
 Seqspert can also implement a very efficient splice-hash-sets:
@@ -193,12 +193,12 @@ user=> (def s2 (apply hash-set (range 500000 1500000)))
 #'user/s2
 user=> (use '[clojure.set])
 nil
-user=> (time (def s3 (union s1 s2)))
+user=> (time (def s3 (union s1 s2))) ;; traditional approach
 "Elapsed time: 544.154135 msecs"
 #'user/s3
 user=> (use '[seqspert.hash-set])
 nil
-user=> (time (def s4 (splice-hash-sets s1 s2)))
+user=> (time (def s4 (splice-hash-sets s1 s2))) ;; seqspert replacement
 "Elapsed time: 171.302296 msecs"
 #'user/s4
 user=> (= s3 s4)
@@ -214,63 +214,111 @@ inspect
 
 vector:
 - inspect
-- vector-to-array
-- array-to-vector
-- vmap
-- fjvmap
 
-## Usage
+- vector-to-array / array-to-vector
+
+These two functions use multiple threads and a knowledge of vector
+internal structure to copy to/from Object[] more efficiently than the
+traditional approach.
+
+If you are performing large vector/array/vector copies then I would
+expect these functions to be useful to you.
 
 <pre>
-user=> ;; a vector
-
-user=> (inspect [:a :b :c :d :e :f :g :h])
-#seqspert.vector.Vector{:cnt 8, :shift 5, :root #seqspert.vector.VectorNode{:array [nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil]}, :tail [:a :b :c :d :e :f :g :h]}
-user=> 
-
-user=> (pprint (inspect [:a :b :c :d :e :f :g :h]))
-{:cnt 8,
- :shift 5,
- :root
- {:array
-  [nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil
-   nil]},
- :tail [:a :b :c :d :e :f :g :h]}
+user=> (def v1 (vec (range 5000000)))
+#'user/v1
+user=> (time (def a1 (into-array Object v1))) ;; traditional approach
+"Elapsed time: 603.765253 msecs"
+#'user/a1
+user=> (use '[seqspert.vector])
 nil
-user=> 
-
+user=> (time (def a2 (vector-to-array v1))) ;; seqspert replacement
+"Elapsed time: 48.920468 msecs"
+#'user/a2
+user=> (= (seq a1)(seq a2))
+true
+user=> (time (def v2 (into [] a1))) ;; traditional approach
+"Elapsed time: 83.325507 msecs"
+#'user/v2
+user=> (time (def v3 (array-to-vector a2))) ;; seqspert replacement
+"Elapsed time: 33.902564 msecs"
+#'user/v3
+user=> (= v2 v3)
+true
 user=> 
 </pre>
+
+- vmap
+
+Traditionally a sequence is vmap-ped into a vector by conj-ing the
+result of the application of a function to each element of the
+sequence onto the vector.
+
+vmap both expects and produces a vector. It walks the input vector,
+applying the function to each element and builds up a vector of
+similar dimensions as it goes. If you are performing small
+vector->vector operations, vmap should be faster.
+
+<pre>
+user=> (def v1 (vec (range 1000000)))
+#'user/v1
+user=> (time (def v2 (mapv identity v1))) ;; traditional approach
+"Elapsed time: 100.226994 msecs"
+#'user/v2
+user=> (use '[seqspert.vector])
+nil
+user=> (time (def v3 (vmap identity v1))) ;; seqspert replacement
+"Elapsed time: 40.608011 msecs"
+#'user/v3
+user=> (= v1 v2 v3)
+true
+user=> 
+</pre>
+
+- fjvmap
+
+fjvmap takes advantage of the fact that the underlying representation
+of a vector is a tree.
+
+It works in the same way as vmap, except that each branch of the tree
+is handed off to a forkjoin pool thus the function is applied in
+parallel.
+
+There is no directly comparable traditional clojure function, so I
+will compare it to vmap, which we have just seen.
+
+If you are mapping vector/vector using pure functions, then you might
+want to try fjvmap.
+
+<pre>
+user=> (use '[seqspert.vector])
+nil
+user=> (def v1 (vec (range 1000000)))
+#'user/v1
+user=> (time (def v2 (vmap inc v1))) ;; seqspert sequential
+"Elapsed time: 74.748379 msecs"
+#'user/v2
+user=> (time (def v3 (fjvmap inc v1))) ;; seqspert parallel [on a 4 core box]
+"Elapsed time: 29.287218 msecs"
+#'user/v3
+user=> (= v2 v3)
+true
+user=> 
+</pre>
+
+## Disclaimer
+
+Mileage may vary !
+
+The performance of these functions has been tested on a reasonable
+cross-section of machines/jvms, however it is unlikely that this is
+exactly the same combination of h/w, s/w and data that constitute your
+production platform. ALWAYS test and test again until you are
+satisfied that, in your particular usecase, a seqspert function
+provides you with a significant performance win before adopting it.
+
+Map/Set splicing functions are stilla work in progress - although
+nearly complete.
 
 ## License
 
