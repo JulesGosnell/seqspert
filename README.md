@@ -17,6 +17,14 @@ now growing into a library supporting a number of specific
 high-performance, low-churn alternatives to common Sequence-based
 operations.
 
+Seqspert is currently a work in progress. I hope to get a release out
+in the near future.
+
+Seqspert contains both Java and Clojure code which is tested on every
+build. Results of these tests may be ound here:
+
+http://ouroboros.dyndns-free.com/ci/job/seqspert/
+
 ## Build/Install
 
 - git clone https://github.com/JulesGosnell/seqspert.git
@@ -179,8 +187,6 @@ Since a hash-sets underlying representation is just a hash-map,
 Seqspert can also implement a very efficient splice-hash-sets:
 
 <pre>
-user=> (use '[clojure.set])
-nil
 user=> (def s1 (apply hash-set (range 1000000)))
 #'user/s1
 user=> (def s2 (apply hash-set (range 500000 1500000)))
@@ -199,8 +205,6 @@ user=> (= s3 s4)
 true
 user=>
 </pre>
-
-- into-hash-set
 
 tree-map:
 - inspect
