@@ -43,6 +43,11 @@ nil
 
 array-map:
 - inspect
+<pre>
+user=> (inspect {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 8 :h 9})
+#seqspert.array_map.ArrayMap{:array [:e 5 :g 8 :c 3 :h 9 :b 2 :d 4 :f 6 :a 1]}
+user=> 
+</pre>
 
 hash-map:
 - splice-hash-maps
