@@ -136,7 +136,8 @@ user=>
 
 hash-set:
 
-Clojure hash-sets are implemented as hash-maps with null keys :
+Clojure hash-sets are implemented as hash-maps with each set element
+being both the key and the value in its key-value pair.
 
 - inspect
 
