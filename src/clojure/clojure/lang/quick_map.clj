@@ -27,10 +27,10 @@
 
 (def empty-node BitmapIndexedNodeUtils/EMPTY)
 
-;; (defn partition [hash shift]
+;; (defn hash-partition [hash shift]
 ;;   (PersistentHashMap/mask hash shift))
 
-(defn partition [hash shift]
+(defn hash-partition [hash shift]
   (ArrayNodeUtils/partition hash shift))
 
 ;;;(defn node-assoc [^PersistentHashMap$INode node shift hash ^Object key ^Object value ^Box box]
@@ -61,9 +61,10 @@
   ParallelAssoc
   (passoc [_ ^Object key ^Object value]
     (let [hc (hash key)
-          box (Box. nil)]
-      (swap! (aget atoms (partition hc 0)) node-assoc 0 hc key value box)
-      (if (not (identical? box (.val box))) (.incrementAndGet int-array))
+          box (Box. nil)
+          hp (hash-partition hc 0)]
+      (swap! (aget atoms hp) node-assoc 0 hc key value box)
+      (if (not (identical? box (.val box))) (.incrementAndGet int-array hp))
       nil))
   (persistent [_]
     (make-hash-map
