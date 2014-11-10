@@ -320,7 +320,7 @@ production platform. ALWAYS test and test again until you are
 satisfied that, in your particular usecase, a seqspert function
 provides you with a significant performance win before adopting it.
 
-Map/Set splicing functions are stilla work in progress - although
+Map/Set splicing functions are still a work in progress - although
 nearly complete.
 
 ## License
