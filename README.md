@@ -310,6 +310,9 @@ user=>
 
 Mileage may vary !
 
+All example timings are relative to the box on which this README was
+written (4x 4.0ghz) and are not indicative of anything else.
+
 The performance of these functions has been tested on a reasonable
 cross-section of machines/jvms, however it is unlikely that this is
 exactly the same combination of h/w, s/w and data that constitute your
