@@ -44,12 +44,49 @@ nil
 array-map:
 - inspect
 <pre>
-user=> (inspect {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 8 :h 9})
-#seqspert.array_map.ArrayMap{:array [:e 5 :g 8 :c 3 :h 9 :b 2 :d 4 :f 6 :a 1]}
-user=> 
+user=> (pprint (inspect {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 8 :h 9}))
+{:array [:e 5 :g 8 :c 3 :h 9 :b 2 :d 4 :f 6 :a 1]}
+nil
+user=>
 </pre>
 
 hash-map:
+- inspect
+<pre>
+user=> (pprint (inspect {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 8 :h 9 :i 10}))
+{:count 9,
+ :root
+ {:bitmap "1100001010100100100000000000000",
+  :array
+  [:e
+   5
+   nil
+   {:bitmap "100000000010000000000000",
+    :array [:g 8 :c 3 nil nil nil nil]}
+   :h
+   9
+   :b
+   2
+   nil
+   {:bitmap "10000000000",
+    :array
+    [nil
+     {:bitmap "100000001", :array [:d 4 :f 6 nil nil nil nil]}
+     nil
+     nil
+     nil
+     nil
+     nil
+     nil]}
+   :i
+   10
+   :a
+   1
+   nil
+   nil]}}
+nil
+user=>
+</pre>
 - splice-hash-maps
 - into-hash-map
 
