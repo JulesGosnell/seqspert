@@ -88,6 +88,23 @@ nil
 user=>
 </pre>
 - splice-hash-maps
+<pre>
+user=> (use '[seqspert hash-map])
+nil
+user=> (def m1 (apply hash-map (range 0 2000000)))
+#'user/m1
+user=> (def m2 (apply hash-map (range 1000000 3000000)))
+#'user/m2
+user=> (time (def m3 (merge m1 m2)))
+"Elapsed time: 786.300978 msecs"
+#'user/m3
+user=> (time (def m4 (splice-hash-maps m1 m2)))
+"Elapsed time: 180.571396 msecs"
+#'user/m4
+user=> (= m3 m4)
+true
+user=> 
+</pre>
 - into-hash-map
 
 hash-set:
