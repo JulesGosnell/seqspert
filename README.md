@@ -34,6 +34,13 @@ leading to the writing of tighter code.
 Seqspert also provides a number of high-performace Sequence related
 functions:
 
+<pre>
+user=> (use '[seqspert core all])
+nil
+user=> (use '[clojure.pprint])
+nil
+</pre>
+
 array-map:
 - inspect
 
@@ -61,10 +68,6 @@ vector:
 ## Usage
 
 <pre>
-user=> (use '[seqspert core all])
-nil
-user=> (use '[clojure.pprint])
-nil
 user=> ;; an array-map
 
 user=> (inspect {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 8 :h 9})
