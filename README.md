@@ -174,6 +174,10 @@ user=>
 </pre>
 
 - splice-hash-sets
+
+Since a hash-sets underlying representation is just a hash-map,
+Seqspert can also implement a very efficient splice-hash-sets:
+
 <pre>
 user=> (use '[clojure.set])
 nil
