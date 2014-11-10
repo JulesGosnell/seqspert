@@ -1,4 +1,6 @@
-# Seqspert <i>["seekspert"]</i>
+# Seqspert
+
+<i>["seekspert"]</i>
 
 The Clojure collection library is built upon the abstraction of a
 Sequence.
