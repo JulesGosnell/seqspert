@@ -88,6 +88,21 @@ nil
 user=>
 </pre>
 - splice-hash-maps
+
+Traditionally the merging of two hash-maps is done via the Sequence
+abstraction, reading every key-value-pair from the right hand side and
+assoc-ing each one to the left hand side. Unfortunately, this means
+that all the work done to reduce a set of keys and values into the
+right hand side is thrown away and has to be redone on the left hand
+side.
+
+Seqspert's splice-hash-maps function creates a new hash-trie
+(underlying representation of a Clojure hash-map) directly from the
+overlaying of the right hand side on top of the left hand side in a
+single operation, reusing as much of the structure of both maps as
+possible and avoiding most associated churn and re-calling of hash()
+on keys.
+
 <pre>
 user=> (use '[seqspert hash-map])
 nil
