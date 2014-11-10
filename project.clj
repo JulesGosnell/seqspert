@@ -1,8 +1,8 @@
-(defproject seqspert "1.6.0.0-SNAPSHOT"
+(defproject seqspert "1.7.0-alpha3.1.0-SNAPSHOT"
 
-  :description "Seqspert: Understand the internals of Clojure sequence implementations"
+  :description "Seqspert: specific, faster, smaller Sequence operations "
 
-  :url "http://example.com/FIXME"
+  :url "https://github.com/JulesGosnell/seqspert/"
 
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
@@ -12,15 +12,17 @@
 
   :plugins [[lein-test-out "0.3.1"]
             [lein-junit "1.1.7"]
-            [lein-nodisassemble "0.1.3"]]
+            ;;[lein-nodisassemble "0.1.3"]
+            ]
 
   :warn-on-reflection true
 
   :global-vars {*warn-on-reflection* true
                 *assert* false
-                *unchecked-math* true}
+                ;;*unchecked-math* true
+                }
 
-  :jvm-opts ["-Xms1g" "-Xmx4g" "-server" "-XX:+UsePopCountInstruction"]
+  :jvm-opts ["-Xmx1g" "-server" "-XX:+UsePopCountInstruction"]
 
   :main seqspert.all
   :aot :all
