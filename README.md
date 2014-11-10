@@ -1,17 +1,17 @@
-# seqspert
+# Seqspert <i>["seekspert"]</i>
 
 The Clojure collection library is built upon the abstraction of a
 Sequence.
 
 Whilst abstractions are a good thing in terms of getting useful work
-done in simple terms, when it comes to raw performance they may get in
-the way.
+done in simple terms, when it comes to raw performance, they may get
+in the way.
 
-Seqspert ["seekspert"] started life as a set of utils for examining
-the underlying implementations and contents of various Clojure
-Sequence types and is growing into a llibrary supporting a number of
-specific high-performance, low-churn alternatives to common
-Sequence-based operations.
+Seqspert started life as a set of utils for examining the underlying
+implementations and contents of various Clojure Sequence types but is
+now growing into a library supporting a number of specific
+high-performance, low-churn alternatives to common Sequence-based
+operations.
 
 ## Build/Install
 
