@@ -14,7 +14,11 @@
 (defmethod inspect PersistentHashSet [^PersistentHashSet s]
   (HashSet. (inspect (hash-set-impl s))))
 
-(defn splice-hash-sets [l r] (Seqspert/spliceHashSets l r))
+(defn splice-hash-sets
+  "merge two hash-sets resulting in a third equivalent to the first
+  with ever element from the second conj-ed into it."
+  [l r]
+  (Seqspert/spliceHashSets l r))
 
 (defn into-hash-set
   "parallel fold a sequence into a hash-set"

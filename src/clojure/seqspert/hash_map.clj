@@ -201,7 +201,11 @@
 
 ;;------------------------------------------------------------------------------
 
-(defn splice-hash-maps [l r] (Seqspert/spliceHashMaps l r))
+(defn splice-hash-maps
+  "merge two hash-maps resulting in a third equivalent to the first
+  with ever pair from the second conj-ed into it."
+  [l r]
+  (Seqspert/spliceHashMaps l r))
 
 (defn into-hash-map
   "parallel fold a sequence of pairs into a hash-map"
