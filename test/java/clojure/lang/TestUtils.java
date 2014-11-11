@@ -220,4 +220,15 @@ public class TestUtils {
         return assocN(shift, BitmapIndexedNode.EMPTY, hasher, start, end, new Counts());
     }
 
+    public static void wrapSplicers() {
+        for (int i = 0; i < Seqspert.splicers.length; i++) {
+            Seqspert.splicers[i] = new TestArrayNodeSplicer(Seqspert.splicers[i]);
+        }
+    }    
+
+    public static void unwrapSplicers() {
+        for (int i = 0; i < Seqspert.splicers.length; i++) {
+            Seqspert.splicers[i] = ((TestArrayNodeSplicer)Seqspert.splicers[i]).splicer;
+        }
+    }    
 }
