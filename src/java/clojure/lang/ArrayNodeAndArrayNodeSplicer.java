@@ -1,6 +1,7 @@
 package clojure.lang;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
+import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 // TODO: support rightDifferences...
@@ -29,7 +30,7 @@ class ArrayNodeAndArrayNodeSplicer implements Splicer {
             final boolean hasRight = rightSubNode != null;
             if (hasLeft) {
                 if (hasRight) {
-                    final INode newSubNode = Seqspert.splice(newShift, counts, false, 0, null, leftSubNode, rightHaveHash, rightHash, null, rightSubNode);
+                    final INode newSubNode = ArrayNodeUtils.promoteIfHashCollisionNode(shift, Seqspert.splice(newShift, counts, false, 0, null, leftSubNode, rightHaveHash, rightHash, null, rightSubNode));
                     if (leftSubNode != newSubNode) leftDifferences++;
                     if (rightSubNode != newSubNode) rightDifferences++;
                     newArray[i] = newSubNode;

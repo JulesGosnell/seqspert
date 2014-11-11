@@ -69,7 +69,7 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                     } else {    // haveLeft and haveRight
                         // result was a Node...
                         if (promoted) {
-                            newAnArray[i] = newSubNode;
+                            newAnArray[i] = ArrayNodeUtils.promoteIfHashCollisionNode(shift, newSubNode); // TODO: what about differences ?
                         } else {
                             newBinArray[newBinIndex++] = null;
                             newBinArray[newBinIndex++] = newSubNode;

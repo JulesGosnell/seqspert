@@ -1,6 +1,7 @@
 package clojure.lang;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
+import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeUtils {
@@ -46,13 +47,21 @@ public class ArrayNodeUtils {
     public static INode promote(int shift, Object key, Object value) {
         return (key == null) ? (INode) value : promote(shift, BitmapIndexedNodeUtils.hash(key), key, value);
     }
+    
+    public static INode promoteIfHashCollisionNode(int shift, INode node) {
+    	return node instanceof HashCollisionNode ? promote(shift, null, node) : node;
+    }
 
     public static int partition(int hash, int shift) {
         return PersistentHashMap.mask(hash, shift);
     }
 
-    public static INode makeArrayNode(int count, INode[] nodes) {
+    public static ArrayNode makeArrayNode(int count, INode[] nodes) {
         return new ArrayNode(null, count, nodes);
+    }
+
+    public static Object makeArrayNode2(int count, Object nodes) {
+        return new ArrayNode(null, count, (INode[])nodes);
     }
 
 }
