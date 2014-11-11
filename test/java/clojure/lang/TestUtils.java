@@ -222,13 +222,13 @@ public class TestUtils {
 
     public static void wrapSplicers() {
         for (int i = 0; i < Seqspert.splicers.length; i++) {
-            Seqspert.splicers[i] = new TestArrayNodeSplicer(Seqspert.splicers[i]);
+            Seqspert.splicers[i] = new TestSplicer(Seqspert.splicers[i]);
         }
     }    
 
     public static void unwrapSplicers() {
         for (int i = 0; i < Seqspert.splicers.length; i++) {
-            Seqspert.splicers[i] = ((TestArrayNodeSplicer)Seqspert.splicers[i]).splicer;
+            Seqspert.splicers[i] = ((TestSplicer)Seqspert.splicers[i]).splicer;
         }
     }    
 }

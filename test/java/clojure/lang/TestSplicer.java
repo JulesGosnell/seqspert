@@ -1,19 +1,14 @@
 package clojure.lang;
 
 import static clojure.lang.ArrayNodeUtils.promote;
-
-import clojure.lang.PersistentHashMap.ArrayNode;
-import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import static org.junit.Assert.assertEquals;
 import clojure.lang.PersistentHashMap.INode;
 
-import static org.junit.Assert.assertEquals;
-
-// TODO: rename
-class TestArrayNodeSplicer implements Splicer {
+public class TestSplicer implements Splicer {
 
     public final Splicer splicer;
 
-    public TestArrayNodeSplicer(Splicer splicer) {
+    public TestSplicer(Splicer splicer) {
         this.splicer = splicer;
     }
 
