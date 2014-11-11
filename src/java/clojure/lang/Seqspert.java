@@ -52,6 +52,10 @@ public class Seqspert {
         return new PersistentHashMap(count, root, false, null);
     }
 
+    public static PersistentHashMap makeHashMap2(int count, Object root) {
+        return new PersistentHashMap(count, (INode)root, false, null);
+    }
+
     public static INode assoc(INode node, int shift, int hash, Object key, Object value, Box addedLeaf) {
         return node.assoc(shift, hash, key, value, addedLeaf);
     }
@@ -86,7 +90,7 @@ public class Seqspert {
             2;
     }
 
-    static INode splice(int shift, Counts counts,
+    public static INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHash,
                         Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
         return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
