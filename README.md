@@ -8,8 +8,8 @@ The Clojure collection library is built upon the abstraction of a
 Sequence.
 
 Whilst abstractions are a good thing in terms of getting useful work
-done in simple terms, when it comes to raw performance, they may get
-in the way.
+done in simple terms, when it comes to raw performance, they sometimes
+get in the way.
 
 Seqspert started life as a set of utils for examining the underlying
 implementations and contents of various Clojure Sequence types but is
@@ -21,7 +21,7 @@ Seqspert is currently a work in progress. I hope to get a release out
 in the near future.
 
 Seqspert contains both Java and Clojure code which is tested on every
-build. Results of these tests may be ound here:
+build. Results of these tests may be found here:
 
 http://ouroboros.dyndns-free.com/ci/job/seqspert/
 
@@ -35,11 +35,11 @@ http://ouroboros.dyndns-free.com/ci/job/seqspert/
 
 Seqspert provides an "inspect" method for transforming the underlying
 implementation of a number of Clojure Sequences into a corresponding
-Clojure data structure which may then be printed.This aids
+Clojure data structure which may then be print()-ed. This aids
 comprehension of exactly what is going on under the covers, hopefully
 leading to the writing of tighter code.
 
-Seqspert also provides a number of high-performace Sequence related
+Seqspert also provides a number of high-performance Sequence related
 functions:
 
 <pre>
@@ -211,7 +211,7 @@ tree-map:
 - inspect
 
 tree-set:
-inspect
+- inspect
 
 vector:
 - inspect
@@ -251,9 +251,9 @@ user=>
 
 - vmap
 
-Traditionally a sequence is vmap-ped into a vector by conj-ing the
+Traditionally a sequence is map-ped into a vector by conj-ing the
 result of the application of a function to each element of the
-sequence onto the vector.
+sequence onto an initially empty vector.
 
 vmap both expects and produces a vector. It walks the input vector,
 applying the function to each element and builds up a vector of
