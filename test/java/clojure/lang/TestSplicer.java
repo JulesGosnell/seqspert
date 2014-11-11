@@ -9,11 +9,11 @@ import clojure.lang.PersistentHashMap.INode;
 import static org.junit.Assert.assertEquals;
 
 // TODO: rename
-class TestArrayNodeSplicer implements Splicer {
+class TestSplicer implements Splicer {
 
     public final Splicer splicer;
 
-    public TestArrayNodeSplicer(Splicer splicer) {
+    public TestSplicer(Splicer splicer) {
         this.splicer = splicer;
     }
 
