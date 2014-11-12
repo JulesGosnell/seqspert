@@ -18,7 +18,16 @@ public class TestUtils {
 
     public static void assertNodeEquals(INode expected, INode actual) {
 	if (expected instanceof BitmapIndexedNode) {
-	    assertBitmapIndexedNodeEquals((BitmapIndexedNode) expected, (BitmapIndexedNode) actual);
+		final BitmapIndexedNode node = (BitmapIndexedNode) expected;
+		// we have to allow expected-BIN-HCN to be equivalent to actual-HCN because of an issue
+		// with the way promotion of Nodes and KVP ordering occur...
+		if (actual instanceof HashCollisionNode &&
+			Integer.bitCount(node.bitmap) == 1 &&
+			node.array[1] instanceof HashCollisionNode) {
+			assertHashCollisionNodeEquals((HashCollisionNode)node.array[1], (HashCollisionNode)actual);
+		} else {
+			assertBitmapIndexedNodeEquals((BitmapIndexedNode) expected, (BitmapIndexedNode) actual);
+		}
 	} else if (expected instanceof HashCollisionNode) {
 	    assertHashCollisionNodeEquals((HashCollisionNode) expected, (HashCollisionNode) actual);
 	} else {
@@ -46,10 +55,13 @@ public class TestUtils {
 
     public static void assertArrayNodeEquals(ArrayNode expected, ArrayNode actual) {
     	if (expected != actual) {
-	    assertEquals(expected.count, actual.count);
-	    for (int i = 0; i < expected.count; i++) {
-		assertNodeEquals(expected.array[i], actual.array[i]);
-	    }
+    		assertEquals(expected.count, actual.count);
+    		for (int i = 0; i < 32; i++) {
+    			final INode e = expected.array[i];
+				final INode a = actual.array[i];
+				if (e != null || a != null)
+    				assertNodeEquals(e, a);
+    		}
     	}
     }
 
