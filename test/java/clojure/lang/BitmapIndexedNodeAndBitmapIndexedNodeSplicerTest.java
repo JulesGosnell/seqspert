@@ -36,8 +36,12 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     @Override
     @Test
     public void testDifferent() {
+        // no promotion
     	test(new HashCodeKey("key" + 1, 1), "value1", new HashCodeKey("key" + 2, 2), "value2", 3, 5, false, false);
+        // promotion - HCN on LHS
         test(new HashCodeKey("key" + 1, 1), "value1", new HashCodeKey("key" + 2, 2), "value2", 3, 19, false, false);
+        // promotion - HCN arising from splice
+        test(new HashCodeKey("key" + 1, 1), "value1", new HashCodeKey("key" + 3, 3), "value3", 3, 19, false, false);
     }
 
     @Override

@@ -34,6 +34,7 @@ class KeyValuePairAndKeyValuePairSplicer implements Splicer {
                     final int rightHash = BitmapIndexedNodeUtils.hash(rightHaveHash, rightHashCode, rightKey);
 			if (leftHash == rightHash) {
 				// hash collision
+                            System.out.println("HERE WE ARE !: " + leftKey + " : "  + rightKey);
 				return HashCollisionNodeUtils.create(leftHash, leftKey, leftValue, rightKey, rightValue);
 			} else {
 				// no collision

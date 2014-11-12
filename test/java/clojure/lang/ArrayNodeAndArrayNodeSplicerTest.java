@@ -7,7 +7,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import clojure.lang.PersistentHashMap.ArrayNode;
+import clojure.lang.
+PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {

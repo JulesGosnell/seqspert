@@ -134,6 +134,13 @@ public class TestUtils {
                                Counts counts) {
 	return assocN(shift, assoc(shift, node, key0, value0, counts), start, end, counts); 
     }
+
+    public static INode assocN(int shift, INode node,
+                               Object key0, Object value0,
+                               Hasher hasher, int start, int end,
+                               Counts counts) {
+	return assocN(shift, assoc(shift, node, key0, value0, counts), hasher, start, end, counts); 
+    }
     
     public static INode assocN(int shift, INode node,
                                Hasher hasher, int start, int end,
@@ -181,6 +188,13 @@ public class TestUtils {
                                Object key1, Object value1,
                                Object key2, Object value2) {
         return assoc(shift, BitmapIndexedNode.EMPTY, key0, value0, key1, value1, key2, value2, new Counts());
+    }
+
+    public static INode create(int shift,
+                               Object key, Object value,
+                               Hasher hasher,
+                               int start, int end) {
+        return assocN(shift, BitmapIndexedNode.EMPTY, key, value, hasher, start, end, new Counts());
     }
 
     public static INode create(int shift,
