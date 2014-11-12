@@ -7,27 +7,29 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import clojure.lang.
-PersistentHashMap.ArrayNode;
+import clojure.lang.TestUtils.Hasher;
+import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
+    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final Splicer splicer = new ArrayNodeAndArrayNodeSplicer();
 
-    public void test(Object leftKey, Object leftValue, int leftStart, int leftEnd,
-                     int rightStart, int rightEnd, boolean leftSame, boolean rightSame) {
-        final INode leftNode = TestUtils.create(shift, leftKey, leftValue, leftStart, leftEnd);
+    public void test(Object leftKey, Object leftValue,
+                     Hasher leftHasher, int leftStart, int leftEnd,
+                     Hasher rightHasher, int rightStart, int rightEnd, boolean leftSame, boolean rightSame) {
+        final INode leftNode = TestUtils.create(shift, leftKey, leftValue, leftHasher, leftStart, leftEnd);
         assertTrue(leftNode instanceof ArrayNode);
 
-        final INode rightNode = TestUtils.create(shift, rightStart, rightEnd);
+        final INode rightNode = TestUtils.create(shift, rightHasher, rightStart, rightEnd);
         assertTrue(rightNode instanceof ArrayNode);
 
         final IFn resolveFunction = rightSame ? Counts.resolveRight: Counts.resolveLeft;
         
         final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
-        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
+        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightHasher, rightStart, rightEnd, expectedCounts);
 
         final Counts actualCounts = new Counts(resolveFunction, 0, 0);
         final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
@@ -41,25 +43,29 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
     @Override
     @Test
     public void testDifferent() {
-        test(new HashCodeKey("key0", 0), "value0", 1, 18, 15, 32, false, false);
+        final int hash = hasher.hash(0);
+        test(new HashCodeKey("key0", hash), "value0", hasher, 1, 18, hasher, 15, 32, false, false);
     }
 
     @Override
     @Test
     public void testSameKeyHashCode() {
-        test(new HashCodeKey("key17.1", 17), "value17.1", 0, 18, 15, 32, false, false);
+        final int hash = hasher.hash(17);
+        test(new HashCodeKey("key17.1", hash), "value17.1", hasher, 0, 18, hasher, 15, 32, false, false);
     }
 
     @Override
     @Test
     public void testSameKey() {
-        test(new HashCodeKey("key17", 17), "value17.1", 0, 18, 15, 32, false, false);
+        final int hash = hasher.hash(17);
+        test(new HashCodeKey("key17", hash), "value17.1", hasher, 0, 18, hasher, 15, 32, false, false);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(new HashCodeKey("key0", 0), "value0", 1, 31, 0, 31, true, false);
-        test(new HashCodeKey("key0", 0), "value0", 1, 30, 0, 31, false, true);
+        final int hash = hasher.hash(0);
+        test(new HashCodeKey("key0", hash), "value0", hasher, 1, 31, hasher, 0, 31, true, false);
+        test(new HashCodeKey("key0", hash), "value0", hasher, 1, 30, hasher, 0, 31, false, true);
     }
 }

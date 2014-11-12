@@ -1,6 +1,7 @@
 package clojure.lang;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
@@ -28,11 +29,11 @@ public class TestUtils {
     public static void assertValueEquals(Object expected, Object actual) {
         if (expected != actual) {
 	    if (expected instanceof INode) {
-		assertEquals(expected.getClass(), actual.getClass());
+		assertTrue(actual instanceof INode);
 		assertNodeEquals((INode) expected, (INode) actual);
-	    }
-	    else
+	    } else {
 		assertEquals(expected, actual);
+            }
 	}
     }
 
@@ -139,7 +140,7 @@ public class TestUtils {
                                Object key0, Object value0,
                                Hasher hasher, int start, int end,
                                Counts counts) {
-	return assocN(shift, assoc(shift, node, key0, value0, counts), hasher, start, end, counts); 
+        return assocN(shift, assoc(shift, node, key0, value0, counts), hasher, start, end, counts);
     }
     
     public static INode assocN(int shift, INode node,
@@ -200,13 +201,19 @@ public class TestUtils {
     public static INode create(int shift,
                                Object key, Object value,
                                int start, int end) {
-        return assocN(shift, BitmapIndexedNode.EMPTY, key, value, start, end, new Counts());
+        return create(shift, key, value, defaultHasher, start, end);
     }
 
     public static INode create(int shift,
                                int start, int end,
                                Object key, Object value) {
-        return assocN(shift, BitmapIndexedNode.EMPTY, start, end, key, value, new Counts());
+        return create(shift, defaultHasher, start, end, key, value);
+    }
+
+    public static INode create(int shift,
+                               Hasher hasher, int start, int end,
+                               Object key, Object value) {
+        return assocN(shift, BitmapIndexedNode.EMPTY, hasher, start, end, key, value, new Counts());
     }
 
     public static INode create(int shift,

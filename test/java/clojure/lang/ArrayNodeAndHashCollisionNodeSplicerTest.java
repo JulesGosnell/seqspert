@@ -6,20 +6,22 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
+    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final Splicer splicer = new ArrayNodeAndHashCollisionNodeSplicer();
 
-    public void test(int leftStart, int leftEnd,
+    public void test(Hasher leftHasher, int leftStart, int leftEnd,
                      Object leftKey, Object leftValue,
                      int rightHash,
                      Object rightKey0, Object rightValue0,
                      Object rightKey1, Object rightValue1,
                      boolean same) {
-        final INode leftNode = TestUtils.create(shift, leftStart, leftEnd, leftKey, leftValue);
+        final INode leftNode = TestUtils.create(shift, leftHasher, leftStart, leftEnd, leftKey, leftValue);
 
         final INode rightNode =
             HashCollisionNodeUtils.create(rightHash, rightKey0, rightValue0, rightKey1, rightValue1);
@@ -39,8 +41,8 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testDifferent() {
-        final int rightHash = 1;
-        test(2, 31, null, null,
+        final int rightHash = hasher.hash(1);
+        test(hasher, 2, 31, null, null,
              rightHash, 
              new HashCodeKey("collision0", rightHash), "collision0",
              new HashCodeKey("collision1", rightHash), "collision1",
@@ -51,8 +53,8 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     @Test
     public void testSameKeyHashCode() {
         // HCN is getting buried in one too many BINs   
-        final int rightHash = 1;
-        test(1, 31, null, null,
+        final int rightHash = hasher.hash(1);
+        test(hasher, 1, 31, null, null,
              rightHash, 
              new HashCodeKey("collision0", rightHash), "collision0",
              new HashCodeKey("collision1", rightHash), "collision1",
@@ -62,8 +64,8 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testSameKey() {
-        final int rightHash = 1;
-        test(1, 31, null, null,
+        final int rightHash = hasher.hash(1);
+        test(hasher, 1, 31, null, null,
              rightHash, 
              new HashCodeKey("collision0", rightHash), "collision0",
              new HashCodeKey("key1", rightHash), "collision1",
@@ -73,11 +75,12 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(1, 31,
-             new HashCodeKey("key1.1", 1), "value1.1",
-             1, 
-             new HashCodeKey("key1",   1), "value1",
-             new HashCodeKey("key1.1", 1), "value1.1",
+        final int hash = hasher.hash(1);
+        test(hasher, 1, 31,
+             new HashCodeKey("key1.1", hash), "value1.1",
+             hash,
+             new HashCodeKey("key1",   hash), "value1",
+             new HashCodeKey("key1.1", hash), "value1.1",
              true);
     }
 

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.INode;
 
 // we can't build an HCN directly via INode.assoc, which is what we
@@ -14,6 +15,7 @@ import clojure.lang.PersistentHashMap.INode;
 // consequences.
 public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
+    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final int shift = 0;
 
     public void test(Object key0, Object value0, Object key1, Object value1,
@@ -36,7 +38,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
         if (sameRight) assertSame(rightNode, actualNode);
     }
 
-    final int hashCode = 2;
+    final int hashCode = hasher.hash(2);
     final Object key0 = new HashCodeKey("key0", hashCode);
     final Object key1 = new HashCodeKey("key1", hashCode);
     final Object key2 = new HashCodeKey("key2", hashCode);
@@ -49,7 +51,7 @@ public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements Splicer
     @Override
     @Test
     public void testDifferent() {
-        final int leftHashCode = 1;
+        final int leftHashCode = 1; // TODO - reconsider
         final int rightHashCode = 33;
         final Object key0 = new HashCodeKey("key0", leftHashCode);
         final Object key1 = new HashCodeKey("key1", leftHashCode);

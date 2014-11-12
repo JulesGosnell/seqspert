@@ -7,17 +7,19 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestInterface {
-    
-    final Splicer splicer = new BitmapIndexedNodeAndKeyValuePairSplicer();
+
     final int shift = 0;
+    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    final Splicer splicer = new BitmapIndexedNodeAndKeyValuePairSplicer();
 
-    public void test(int leftStart, int leftEnd, Object rightKey, Object rightValue, boolean same) {
+    public void test(Hasher leftHasher, int leftStart, int leftEnd, Object rightKey, Object rightValue, boolean same) {
 
-        final INode leftNode = TestUtils.create(shift, leftStart, leftEnd);
+        final INode leftNode = TestUtils.create(shift, leftHasher, leftStart, leftEnd);
         assertTrue(leftNode instanceof BitmapIndexedNode);
 
         final Counts expectedCounts = new Counts();
@@ -34,29 +36,29 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
     @Override
     @Test
     public void testDifferent() {
-        test(2, 4, new HashCodeKey("key1", 1), "value1", false);
-        test(2, 18, new HashCodeKey("key1", 1), "value1", false);
+        test(hasher, 2, 4, new HashCodeKey("key1", hasher.hash(1)), "value1", false);
+        test(hasher, 2, 18, new HashCodeKey("key1", hasher.hash(1)), "value1", false);
     }
 
     @Override
     @Test
     public void testSameKeyHashCode() {
-        test(2, 4, new HashCodeKey("key1", 2), "value1", false);
-        test(2, 18, new HashCodeKey("key1", 2), "value1", false);
+        test(hasher, 2, 4, new HashCodeKey("key1", hasher.hash(2)), "value1", false);
+        test(hasher, 2, 18, new HashCodeKey("key1", hasher.hash(2)), "value1", false);
     }
 
     @Override
     @Test
     public void testSameKey() {
-        test(2, 4, new HashCodeKey("key2", 2), "value1", false);
-        test(2, 18, new HashCodeKey("key2", 2), "value1", false);
+        test(hasher, 2, 4, new HashCodeKey("key2", hasher.hash(2)), "value1", false);
+        test(hasher, 2, 18, new HashCodeKey("key2", hasher.hash(2)), "value1", false);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(2, 4, new HashCodeKey("key2", 2), "value2", true);
-        test(2, 18, new HashCodeKey("key2", 2), "value2", true);
+        test(hasher, 2, 4, new HashCodeKey("key2", hasher.hash(2)), "value2", true);
+        test(hasher, 2, 18, new HashCodeKey("key2", hasher.hash(2)), "value2", true);
     }
     
 }

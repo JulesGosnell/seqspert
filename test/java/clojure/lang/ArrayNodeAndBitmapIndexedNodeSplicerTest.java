@@ -6,18 +6,20 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.INode;
 
 public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
         
     final int shift = 0;
+    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final Splicer splicer = new ArrayNodeAndBitmapIndexedNodeSplicer();
     
-    public void test(int leftStart, int leftEnd,
+    public void test(Hasher leftHasher, int leftStart, int leftEnd,
                      Object rightKey0, Object rightValue0,
                      Object rightKey1, Object rightValue1,
                      boolean same) {
-        final INode leftNode = TestUtils.create(shift, leftStart, leftEnd);
+        final INode leftNode = TestUtils.create(shift, leftHasher, leftStart, leftEnd);
         final INode rightNode = TestUtils.create(shift, rightKey0, rightValue0, rightKey1, rightValue1);
         
         final Counts expectedCounts = new Counts();
@@ -35,27 +37,27 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testDifferent() {
-        test(3, 31,
-             new HashCodeKey("key1", 1), "value1",
-             new HashCodeKey("key2", 2), "value2",
+        test(hasher, 3, 31,
+             new HashCodeKey("key1", hasher.hash(1)), "value1",
+             new HashCodeKey("key2", hasher.hash(2)), "value2",
              false);
     }
 
     @Override
     @Test
     public void testSameKeyHashCode() {
-        test(2, 31,
-             new HashCodeKey("key1", 1), "value1",
-             new HashCodeKey("collisionKey2", 2), "collisionValue2",
+        test(hasher, 2, 31,
+             new HashCodeKey("key1", hasher.hash(1)), "value1",
+             new HashCodeKey("collisionKey2", hasher.hash(2)), "collisionValue2",
              false);
     }
         
     @Override
     @Test
     public void testSameKey() {
-        test(2, 31,
-             new HashCodeKey("key1", 1), "value1",
-             new HashCodeKey("key2", 2), "duplicationValue2",
+        test(hasher, 2, 31,
+             new HashCodeKey("key1", hasher.hash(1)), "value1",
+             new HashCodeKey("key2", hasher.hash(2)), "duplicationValue2",
              false);
     }
 
@@ -63,15 +65,15 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     @Test
     public void testSameKeyAndValue() {
         // rhs is two KVPs
-        test(1, 31,
-             new HashCodeKey("key1", 1), "value1",
-             new HashCodeKey("key2", 2), "value2",
+        test(hasher, 1, 31,
+             new HashCodeKey("key1", hasher.hash(1)), "value1",
+             new HashCodeKey("key2", hasher.hash(2)), "value2",
              true);
         // TODO: might work
         // rhs is an HCN
-        // test(1, 31,
-        //      new HashCodeKey("key1", 1), "value1",
-        //      new HashCodeKey("key2", 1), "value2",
+        // test(hasher, 1, 31,
+        //      new HashCodeKey("key1", hasher.hash(1)), "value1",
+        //      new HashCodeKey("key2", hasher.hash(1)), "value2",
         //      true);
     }
 }

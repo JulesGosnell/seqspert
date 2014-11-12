@@ -6,20 +6,22 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
+    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final Splicer splicer = new BitmapIndexedNodeAndArrayNodeSplicer();
         
     public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1, 
-                     int rightStart, int rightEnd, boolean sameRight) {
+                     Hasher rightHasher, int rightStart, int rightEnd, boolean sameRight) {
         final INode leftNode = TestUtils.create(shift, leftKey0, leftValue0, leftKey1, leftValue1);
-        final INode rightNode = TestUtils.create(shift, rightStart, rightEnd);
+        final INode rightNode = TestUtils.create(shift, rightHasher, rightStart, rightEnd);
 
         final Counts expectedCounts = new Counts(Counts.resolveRight, 0, 0);
-        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
+        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightHasher, rightStart, rightEnd, expectedCounts);
                 
         final Counts actualCounts = new Counts(Counts.resolveRight, 0, 0); // TODO - resolveLeft ?
         final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
@@ -32,25 +34,25 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testDifferent() {
-        test(new HashCodeKey("key" + 1, 1), "value1", new HashCodeKey("key" + 2, 2), "value2", 3, 31, false);
+        test(new HashCodeKey("key" + 1, hasher.hash(1)), "value1", new HashCodeKey("key" + 2, hasher.hash(2)), "value2", hasher, 3, 31, false);
     }
 
     @Override
     @Test
     public void testSameKeyHashCode() {
-        test(new HashCodeKey("key" + 1, 3), "value1", new HashCodeKey("key" + 2, 4), "value2", 3, 31, false);
+        test(new HashCodeKey("key" + 1, hasher.hash(3)), "value1", new HashCodeKey("key" + 2, hasher.hash(4)), "value2", hasher, 3, 31, false);
     }
 
     @Override
     @Test
     public void testSameKey() {
-        test(new HashCodeKey("key" + 3, 3), "value1", new HashCodeKey("key" + 4, 4), "value2", 3, 31, false);
+        test(new HashCodeKey("key" + 3, hasher.hash(3)), "value1", new HashCodeKey("key" + 4, hasher.hash(4)), "value2", hasher, 3, 31, false);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(new HashCodeKey("key" + 3, 3), "value3", new HashCodeKey("key" + 4, 4), "value4", 3, 31, true);
+        test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key" + 4, hasher.hash(4)), "value4", hasher, 3, 31, true);
     }
     
 }

@@ -6,12 +6,14 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
-    final Splicer splicer = new BitmapIndexedNodeAndHashCollisionNodeSplicer();
     final int shift = 0;
+    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    final Splicer splicer = new BitmapIndexedNodeAndHashCollisionNodeSplicer();
 
     public void test(Object leftKey, Object leftValue,
                      int rightHash,
@@ -35,12 +37,12 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
         if (sameRight) assertSame(rightNode, actualNode);
     }
 
-    public void test(int leftStart, int leftEnd,
+    public void test(Hasher leftHasher, int leftStart, int leftEnd,
                      int rightHash,
                      Object rightKey0, Object rightValue0, Object rightKey1, Object rightValue1,
                      boolean sameLeft, boolean sameRight) {
 
-        final INode leftNode = TestUtils.create(shift, leftStart, leftEnd);
+        final INode leftNode = TestUtils.create(shift, leftHasher, leftStart, leftEnd);
         final INode rightNode = HashCollisionNodeUtils.create(rightHash,
                                                               rightKey0, rightValue0,
                                                               rightKey1, rightValue1);
@@ -60,15 +62,15 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
     @Override
     @Test
     public void testDifferent() {
-        test(new HashCodeKey("key0", 0), "value0",
-             1,
-             new HashCodeKey("key1.0", 1), "value1.0",
-             new HashCodeKey("key1.1", 1), "value1.1",
+        test(new HashCodeKey("key0", hasher.hash(0)), "value0",
+             hasher.hash(1),
+             new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
+             new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
              false, false);
-         test(3, 19,
-              1,
-              new HashCodeKey("key1.0", 1), "value1.0",
-              new HashCodeKey("key1.1", 1), "value1.1",
+         test(hasher, 3, 19,
+              hasher.hash(1),
+              new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
+              new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
               false, false);
 
     }
@@ -76,30 +78,30 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
     @Override
     @Test
     public void testSameKeyHashCode() {
-        test(new HashCodeKey("key1.0", 1), "value1.0",
-             1,
-             new HashCodeKey("key1.1", 1), "value1.1",
-             new HashCodeKey("key1.2", 1), "value1.2",
+        test(new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
+             hasher.hash(1),
+             new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
+             new HashCodeKey("key1.2", hasher.hash(1)), "value1.2",
              false, false);
-        test(1, 17,
-             1,
-             new HashCodeKey("key1.1", 1), "value1.1",
-             new HashCodeKey("key1.2", 1), "value1.2",
+        test(hasher, 1, 17,
+             hasher.hash(1),
+             new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
+             new HashCodeKey("key1.2", hasher.hash(1)), "value1.2",
              false, false);
     }
         
     @Override
     @Test
     public void testSameKey() {
-        test(new HashCodeKey("key1.0", 1), "value1.0.0",
-             1,
-             new HashCodeKey("key1.0", 1), "value1.0.1",
-             new HashCodeKey("key1.1", 1), "value1.1",
+        test(new HashCodeKey("key1.0", hasher.hash(1)), "value1.0.0",
+             hasher.hash(1),
+             new HashCodeKey("key1.0", hasher.hash(1)), "value1.0.1",
+             new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
              false, false);
-        test(1, 17,
-             1,
-             new HashCodeKey("key1",   1), "value1.0",
-             new HashCodeKey("key1.1", 1), "value1.1",
+        test(hasher, 1, 17,
+             hasher.hash(1),
+             new HashCodeKey("key1",   hasher.hash(1)), "value1.0",
+             new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
              false, false);
     }
 
@@ -108,15 +110,15 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
     @Test
     public void testSameKeyAndValue() {
         // TODO: test left and right sameness
-        test(new HashCodeKey("key1.0", 1), "value1.0",
-             1,
-             new HashCodeKey("key1.0", 1), "value1.0",
-             new HashCodeKey("key1.1", 1), "value1.1",
+        test(new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
+                hasher.hash(1),
+             new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
+             new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
              false, false);
-        test(1, 17,
-             1,
-             new HashCodeKey("key1",   1), "value1",
-             new HashCodeKey("key1.1", 1), "value1.1",
+        test(hasher, 1, 17,
+                hasher.hash(1),
+             new HashCodeKey("key1",   hasher.hash(1)), "value1",
+             new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
              false, false);
     }
     

@@ -6,12 +6,14 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
+import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestInterface {
-    
-    
+
+
+    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final Splicer splicer = new HashCollisionNodeAndKeyValuePairSplicer();
     final int shift = 0;
 
@@ -41,7 +43,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
     // TODO: inline and tidy up
 
-    final int leftHashCode = 2;
+    final int leftHashCode = hasher.hash(2);
     final Object leftKey0 = new HashCodeKey("key0", leftHashCode);
     final Object leftKey1 = new HashCodeKey("key1", leftHashCode);
     final Object leftValue0 = "value0";
@@ -50,7 +52,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
     @Test
     @Override
     public void testDifferent() {
-        final int rightHashCode = 3;
+        final int rightHashCode = hasher.hash(3);
         final Object rightKey = new HashCodeKey("key2", rightHashCode);
         final Object rightValue = "value2";
         test(leftHashCode, leftKey0, leftValue0, leftKey1, leftValue1, rightKey, rightValue, false);

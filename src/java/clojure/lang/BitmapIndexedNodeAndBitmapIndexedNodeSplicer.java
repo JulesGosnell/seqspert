@@ -70,7 +70,6 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                         // result was a Node...
                         if (promoted) {
                             newAnArray[i] = newSubNode;
-                            System.out.println("HERE:" + newSubNode.getClass().getSimpleName());
                         } else {
                             newBinArray[newBinIndex++] = null;
                             newBinArray[newBinIndex++] = newSubNode;

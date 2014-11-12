@@ -115,6 +115,12 @@
      (merge l r)
      (splice-hash-maps l r))))
 
+;(TestUtils/wrapSplicers)
 ;(check 512 breadth 4)
-
+;(.printStackTrace *e)
 ;(repeatedly #(check 512 32 4))
+
+;;(p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/left))
+;;(p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/right))
+;;(p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/expected))
+;;(p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/actual))
