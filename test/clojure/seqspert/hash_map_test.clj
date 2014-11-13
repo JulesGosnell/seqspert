@@ -7,6 +7,11 @@
    [clojure set test]
    [seqspert test-utils hash-map]))
 
+;; override default print-method which produces e.g. #<...> which
+;; breaks xml test output parser in Jenkins...
+(defmethod clojure.core/print-method MyKey [key ^java.io.Writer writer]
+  (.write writer (str key)))
+
 (deftest times
   (def m1 (apply hash-map (mapcat (fn [v] [(keyword (str v)) v]) (range 100000))))
   (def m2 (apply hash-map (mapcat (fn [v] [(keyword (str v)) v]) (range 50000 150000))))
