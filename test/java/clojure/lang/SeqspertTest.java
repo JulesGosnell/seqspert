@@ -136,8 +136,6 @@ public class SeqspertTest {
         
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-
-        System.out.println("HERE: " + expectedNode + " : " + actualNode);
     }
     
     @Test
