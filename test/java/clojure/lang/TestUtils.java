@@ -7,6 +7,8 @@ import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
+import clojure.lang.Seqspert;
+
 public class TestUtils {
 
     public static void assertHashMapEquals(PersistentHashMap expected, PersistentHashMap actual) {
@@ -262,14 +264,40 @@ public class TestUtils {
     }
 
     public static void wrapSplicers() {
-        for (int i = 0; i < Seqspert.splicers.length; i++) {
-            Seqspert.splicers[i] = new TestSplicer(Seqspert.splicers[i]);
-        }
+        Seqspert.keyValuePairAndKeyValuePairSplicer		= new TestSplicer(Seqspert.keyValuePairAndKeyValuePairSplicer);
+        Seqspert.keyValuePairAndBitmapIndexedNodeSplicer	= new TestSplicer(Seqspert.keyValuePairAndBitmapIndexedNodeSplicer);
+        Seqspert.keyValuePairAndArrayNodeSplicer		= new TestSplicer(Seqspert.keyValuePairAndArrayNodeSplicer);
+        Seqspert.keyValuePairAndHashCollisionNodeSplicer	= new TestSplicer(Seqspert.keyValuePairAndHashCollisionNodeSplicer);
+        Seqspert.bitmapIndexedNodeAndKeyValuePairSplicer	= new TestSplicer(Seqspert.bitmapIndexedNodeAndKeyValuePairSplicer);
+        Seqspert.bitmapIndexedNodeAndBitmapIndexedNodeSplicer	= new TestSplicer(Seqspert.bitmapIndexedNodeAndBitmapIndexedNodeSplicer);
+        Seqspert.bitmapIndexedNodeAndArrayNodeSplicer		= new TestSplicer(Seqspert.bitmapIndexedNodeAndArrayNodeSplicer);
+        Seqspert.bitmapIndexedNodeAndHashCollisionNodeSplicer	= new TestSplicer(Seqspert.bitmapIndexedNodeAndHashCollisionNodeSplicer);
+        Seqspert.arrayNodeAndKeyValuePairSplicer		= new TestSplicer(Seqspert.arrayNodeAndKeyValuePairSplicer);
+        Seqspert.arrayNodeAndBitmapIndexedNodeSplicer		= new TestSplicer(Seqspert.arrayNodeAndBitmapIndexedNodeSplicer);
+        Seqspert.arrayNodeAndArrayNodeSplicer			= new TestSplicer(Seqspert.arrayNodeAndArrayNodeSplicer);
+        Seqspert.arrayNodeAndHashCollisionNodeSplicer		= new TestSplicer(Seqspert.arrayNodeAndHashCollisionNodeSplicer);
+        Seqspert.hashCollisionNodeAndKeyValuePairSplicer	= new TestSplicer(Seqspert.hashCollisionNodeAndKeyValuePairSplicer);
+        Seqspert.hashCollisionNodeAndBitmapIndexedNodeSplicer	= new TestSplicer(Seqspert.hashCollisionNodeAndBitmapIndexedNodeSplicer);
+        Seqspert.hashCollisionNodeAndArrayNodeSplicer		= new TestSplicer(Seqspert.hashCollisionNodeAndArrayNodeSplicer);
+        Seqspert.hashCollisionNodeAndHashCollisionNodeSplicer	= new TestSplicer(Seqspert.hashCollisionNodeAndHashCollisionNodeSplicer);
     }    
 
     public static void unwrapSplicers() {
-        for (int i = 0; i < Seqspert.splicers.length; i++) {
-            Seqspert.splicers[i] = ((TestSplicer)Seqspert.splicers[i]).splicer;
-        }
+        Seqspert.keyValuePairAndKeyValuePairSplicer		= ((TestSplicer)Seqspert.keyValuePairAndKeyValuePairSplicer).splicer;
+        Seqspert.keyValuePairAndBitmapIndexedNodeSplicer	= ((TestSplicer)Seqspert.keyValuePairAndBitmapIndexedNodeSplicer).splicer;
+        Seqspert.keyValuePairAndArrayNodeSplicer		= ((TestSplicer)Seqspert.keyValuePairAndArrayNodeSplicer).splicer;
+        Seqspert.keyValuePairAndHashCollisionNodeSplicer	= ((TestSplicer)Seqspert.keyValuePairAndHashCollisionNodeSplicer).splicer;
+        Seqspert.bitmapIndexedNodeAndKeyValuePairSplicer	= ((TestSplicer)Seqspert.bitmapIndexedNodeAndKeyValuePairSplicer).splicer;
+        Seqspert.bitmapIndexedNodeAndBitmapIndexedNodeSplicer	= ((TestSplicer)Seqspert.bitmapIndexedNodeAndBitmapIndexedNodeSplicer).splicer;
+        Seqspert.bitmapIndexedNodeAndArrayNodeSplicer		= ((TestSplicer)Seqspert.bitmapIndexedNodeAndArrayNodeSplicer).splicer;
+        Seqspert.bitmapIndexedNodeAndHashCollisionNodeSplicer	= ((TestSplicer)Seqspert.bitmapIndexedNodeAndHashCollisionNodeSplicer).splicer;
+        Seqspert.arrayNodeAndKeyValuePairSplicer		= ((TestSplicer)Seqspert.arrayNodeAndKeyValuePairSplicer).splicer;
+        Seqspert.arrayNodeAndBitmapIndexedNodeSplicer		= ((TestSplicer)Seqspert.arrayNodeAndBitmapIndexedNodeSplicer).splicer;
+        Seqspert.arrayNodeAndArrayNodeSplicer			= ((TestSplicer)Seqspert.arrayNodeAndArrayNodeSplicer).splicer;
+        Seqspert.arrayNodeAndHashCollisionNodeSplicer		= ((TestSplicer)Seqspert.arrayNodeAndHashCollisionNodeSplicer).splicer;
+        Seqspert.hashCollisionNodeAndKeyValuePairSplicer	= ((TestSplicer)Seqspert.hashCollisionNodeAndKeyValuePairSplicer).splicer;
+        Seqspert.hashCollisionNodeAndBitmapIndexedNodeSplicer	= ((TestSplicer)Seqspert.hashCollisionNodeAndBitmapIndexedNodeSplicer).splicer;
+        Seqspert.hashCollisionNodeAndArrayNodeSplicer		= ((TestSplicer)Seqspert.hashCollisionNodeAndArrayNodeSplicer).splicer;
+        Seqspert.hashCollisionNodeAndHashCollisionNodeSplicer	= ((TestSplicer)Seqspert.hashCollisionNodeAndHashCollisionNodeSplicer).splicer;
     }    
 }

@@ -60,42 +60,6 @@ public class Seqspert {
         return node.assoc(shift, hash, key, value, addedLeaf);
     }
 
-    static Splicer[] splicers = new Splicer[] {
-        new KeyValuePairAndKeyValuePairSplicer(),
-        new KeyValuePairAndBitmapIndexedNodeSplicer(),
-        new KeyValuePairAndHashCollisionNodeSplicer(),
-        new KeyValuePairAndArrayNodeSplicer(),
-        new BitmapIndexedNodeAndKeyValuePairSplicer(),
-        new BitmapIndexedNodeAndBitmapIndexedNodeSplicer(),
-        new BitmapIndexedNodeAndHashCollisionNodeSplicer(),
-        new BitmapIndexedNodeAndArrayNodeSplicer(),
-        new HashCollisionNodeAndKeyValuePairSplicer(),
-        new HashCollisionNodeAndBitmapIndexedNodeSplicer(),
-        new HashCollisionNodeAndHashCollisionNodeSplicer(),
-        new HashCollisionNodeAndArrayNodeSplicer(),
-        new ArrayNodeAndKeyValuePairSplicer(),
-        new ArrayNodeAndBitmapIndexedNodeSplicer(),
-        new ArrayNodeAndHashCollisionNodeSplicer(),
-        new ArrayNodeAndArrayNodeSplicer()
-    };
-
-    static int typeInt(Object key, Object value) {
-        return (key != null) ?
-            0 :
-            (value instanceof BitmapIndexedNode) ?
-            1 :
-            (value instanceof ArrayNode) ?
-            3 :
-            2;
-    }
-
-   public static INode splice2(int shift, Counts counts,
-                       boolean leftHaveHash, int leftHash,
-                       Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
-       return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
-           splice(shift, counts, leftHaveHash, leftHash, leftKey, leftValue, rightHaveHash, rightHash, rightKey, rightValue);
-   }
-
     public static Splicer keyValuePairAndKeyValuePairSplicer		= new KeyValuePairAndKeyValuePairSplicer();
     public static Splicer keyValuePairAndBitmapIndexedNodeSplicer	= new KeyValuePairAndBitmapIndexedNodeSplicer();
     public static Splicer keyValuePairAndArrayNodeSplicer		= new KeyValuePairAndArrayNodeSplicer();
