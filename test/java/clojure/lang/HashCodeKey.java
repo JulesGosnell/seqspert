@@ -25,7 +25,7 @@ public class HashCodeKey {
     
     @Override
     public String toString() {
-        return "[" + hashCode + "]:" + key;
+        return "(" + hashCode + "):" + key;
     }
 
 }
