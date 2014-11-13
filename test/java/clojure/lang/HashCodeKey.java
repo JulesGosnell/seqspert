@@ -1,6 +1,6 @@
 package clojure.lang;
 
-class HashCodeKey {
+public class HashCodeKey {
 
     private Object key;
     private int hashCode;

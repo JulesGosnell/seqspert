@@ -139,4 +139,25 @@ public class SeqspertTest {
 
         System.out.println("HERE: " + expectedNode + " : " + actualNode);
     }
+    
+    @Test
+    public void testHashCollisionNodeUniqueness() {
+        // it seems to be possible to get duplicate KVPs in a single HCN !
+        final int shift = 0;
+        final int hash = 1;
+        HashCollisionNode node = new HashCollisionNode(null, hash, 0, new Object[]{});
+        Box box = new Box(null);
+        node = (HashCollisionNode) node.assoc(shift, hash, new HashCodeKey("key1.1", hash), "value1.1", box);
+        assertEquals(box, box.val);
+        assertEquals(1, node.count);
+        box.val = null;
+        node = (HashCollisionNode) node.assoc(shift, hash, new HashCodeKey("key1.2", hash), "value1.1", box);
+        assertEquals(box, box.val);
+        assertEquals(2, node.count);
+        box.val = null;
+        node = (HashCollisionNode) node.assoc(shift, hash, new HashCodeKey("key1.1", hash), "value1.1", box);
+        assertEquals(null, box.val);
+        assertEquals(2, node.count);
+    }
+
 }

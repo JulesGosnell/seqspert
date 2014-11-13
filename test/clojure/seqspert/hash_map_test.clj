@@ -2,7 +2,7 @@
   (:require  [clojure.core [reducers :as r]])
   (:require [clojure [pprint :as p]])
   (:import [clojure.lang
-            TestUtils])
+            TestUtils HashCodeKey])
   (:use
    [clojure set test]
    [seqspert test-utils hash-map]))
@@ -42,21 +42,11 @@
        ))
   )
 
-(deftype MyKey [value hashcode]
-  Object
-  (hashCode [_] hashcode)
-  (toString [_] (str "(" hashcode ":" value ")")))
-
-;; override default print-method which produces e.g. #<...> which
-;; breaks xml test output parser in Jenkins...
-(defmethod clojure.core/print-method MyKey [key ^java.io.Writer writer]
-  (.write writer (str key)))
-
 (deftest collision-test
-  (let [k0 (MyKey. :k0 0) v0 "v0"
-        k1 (MyKey. :k1 0) v1 "v1"
-        k2 (MyKey. :k2 0) v2 "v2"
-        k3 (MyKey. :k3 0) v3 "v3"]
+  (let [k0 (HashCodeKey. :k0 0) v0 "v0"
+        k1 (HashCodeKey. :k1 0) v1 "v1"
+        k2 (HashCodeKey. :k2 0) v2 "v2"
+        k3 (HashCodeKey. :k3 0) v3 "v3"]
     (testing "one : one"
       (is (= (splice-hash-maps (hash-map k0 v0) (hash-map k1 v1))
              (hash-map k0 v0 k1 v1))))
@@ -74,10 +64,10 @@
 
 (deftest collision-test
   (testing "merging of two HCN's with different hashCodes"
-    (let [k0 (MyKey. :k0 1) v0 "v0"
-          k1 (MyKey. :k1 1) v1 "v1"
-          k2 (MyKey. :k2 33) v2 "v2"
-          k3 (MyKey. :k3 33) v3 "v3"
+    (let [k0 (HashCodeKey. :k0 1) v0 "v0"
+          k1 (HashCodeKey. :k1 1) v1 "v1"
+          k2 (HashCodeKey. :k2 33) v2 "v2"
+          k3 (HashCodeKey. :k3 33) v3 "v3"
           expected (hash-map k0 v0 k1 v1 k2 v2 k3 v3)
           actual (splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2 k3 v3))]
       (p/pprint (seqspert.core/inspect expected))
@@ -103,7 +93,7 @@
   (= (rand-int 2) 0))
 
 (defn rand-assoc [m hash]
-  (assoc m (MyKey. (str (if (rand-bool) "black-" "white-") hash) hash) (rand-bool)))
+  (assoc m (HashCodeKey. (str (if (rand-bool) "black-" "white-") hash) hash) (rand-bool)))
 
 (defn rand-map [n breadth depth]
   (reduce rand-assoc {} (repeatedly n #(rand-hash breadth depth))))

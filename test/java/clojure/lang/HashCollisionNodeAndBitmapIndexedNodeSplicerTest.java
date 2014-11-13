@@ -182,5 +182,15 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
                 new HashCodeKey("key3", hasher.hash(1)), "value3",
                 false, true);
     }
-    
+
+    @Test
+    public void testNew() {
+        test(1,
+             new HashCodeKey("key1.1", 1), "value1.1",
+             new HashCodeKey("key1.2", 1), "value1.2",
+             hasher, 2, 3,
+             new HashCodeKey("key1.1", 1), "value1.1",
+             new HashCodeKey("key1.2", 1), "value1.2",
+             false, false);
+    }    
 }
