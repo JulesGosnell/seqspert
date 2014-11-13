@@ -90,7 +90,15 @@
   (println "splicing: " left " : " right))
 
 (def range32 (into [] (range 32)))
-  
+
+;; can I face writing 9 of these for all combs of AN, BIN and HCN or is there a better way ?  
+;; maybe they should be written in java and share code with sequential splicers ?
+;; lets assume that there is no point in parallelising HCN splicing - that leaves 4
+;; the BIN ones need to consider promotion as well - lots of duplicate code :-(
+;; bit and int manipulation would probably be faster in java
+;; but how do we integrate java and clojure's thread pooling - investigate futures / fork-join pool
+;; we could just use a multimethod to pick the top-level parallel splicer and then drop straight into java...
+
 (defmethod splice-nodes [PersistentHashMap$ArrayNode PersistentHashMap$ArrayNode]
   [^PersistentHashMap$ArrayNode left ^PersistentHashMap$ArrayNode right ^Counts counts]
   (let [^"[Lclojure.lang.PersistentHashMap$INode;" left-array (array-node-array left)
