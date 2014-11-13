@@ -9,7 +9,7 @@
 
 ;; override default print-method which produces e.g. #<...> which
 ;; breaks xml test output parser in Jenkins...
-(defmethod clojure.core/print-method MyKey [key ^java.io.Writer writer]
+(defmethod clojure.core/print-method HashCodeKey [key ^java.io.Writer writer]
   (.write writer (str key)))
 
 (deftest times
