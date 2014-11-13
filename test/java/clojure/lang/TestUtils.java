@@ -67,9 +67,15 @@ public class TestUtils {
     	}
     }
 
+    private static String toBinaryString(int bitmap) {
+	final String tmp = Integer.toBinaryString(bitmap);
+	return tmp;
+	//return "0000000000000000".substring(16 - tmp.length()) + tmp;
+    }
+
     public static void assertBitmapIndexedNodeEquals(BitmapIndexedNode expected, BitmapIndexedNode actual) {
 	if (expected != actual) {
-	    assertEquals(expected.bitmap, actual.bitmap);
+	    assertEquals(toBinaryString(expected.bitmap), toBinaryString(actual.bitmap));
 	    assertKeyValuePairArrayEquals(expected.array, actual.array, Integer.bitCount(expected.bitmap) * 2);
 	}
     }
