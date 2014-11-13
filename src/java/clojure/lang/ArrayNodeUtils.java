@@ -55,4 +55,8 @@ public class ArrayNodeUtils {
         return new ArrayNode(null, count, nodes);
     }
 
+    public static INode makeArrayNode2(int count, Object nodes) {
+        return new ArrayNode(null, count, (INode[])nodes);
+    }
+
 }

@@ -9,6 +9,7 @@
            [clojure.lang
             ArrayNodeUtils
             Counts
+            HashCodeKey
             Seqspert]
            )
   (:require [clojure.core [reducers :as r]]
@@ -219,75 +220,76 @@
 
 ;;------------------------------------------------------------------------------
 
-;; (defmulti splice-nodes (fn [l r c] [(type l)(type r)]))
+(defmulti splice-nodes (fn [l r c] [(type l)(type r)]))
 
-;; (defmethod splice-nodes [PersistentHashMap$BitmapIndexedNode PersistentHashMap$BitmapIndexedNode]
-;;   [^PersistentHashMap$BitmapIndexedNode left ^PersistentHashMap$BitmapIndexedNode right count]
-;;   (println "splicing: " left " : " right))
+(defmethod splice-nodes [PersistentHashMap$BitmapIndexedNode PersistentHashMap$BitmapIndexedNode]
+  [^PersistentHashMap$BitmapIndexedNode left ^PersistentHashMap$BitmapIndexedNode right count]
+  (println "splicing: " left " : " right))
 
-;; (def range32 (into [] (range 32)))
+(def range32 (into [] (range 32)))
   
-;; (defmethod splice-nodes [PersistentHashMap$ArrayNode PersistentHashMap$ArrayNode]
-;;   [^PersistentHashMap$ArrayNode left ^PersistentHashMap$ArrayNode right ^Counts counts]
-;;   (let [^"[Lclojure.lang.PersistentHashMap$INode;" left-array (array-node-array left)
-;;         ^"[Lclojure.lang.PersistentHashMap$INode;" right-array (array-node-array right)
-;;         ^"[Lclojure.lang.PersistentHashMap$INode;" new-array (make-array PersistentHashMap$INode 32)
-;;         empty (atom 0)
-;;         same-key
-;;         (reduce
-;;          (fn [sk f] (+ sk (.sameKey ^Counts @f)))
-;;          0
-;;          (reduce
-;;           (fn [out i]
-;;             (let [^PersistentHashMap$INode l (aget left-array i)
-;;                   ^PersistentHashMap$INode r (aget right-array i)]
-;;               (cond
-;;                (and l r)
-;;                (conj
-;;                 out
-;;                 (future
-;;                   (let [^Counts c (Counts.)]
-;;                     (aset
-;;                      new-array
-;;                      i
-;;                      (Seqspert/splice 0 c false 0 nil l false 0 nil r))
-;;                     c)))
-;;                (not (nil? l))
-;;                (do (aset new-array i l) out)
-;;                (not (nil? r))
-;;                (do (aset new-array i r) out)
-;;                :else
-;;                (do
-;;                  (swap! empty inc)
-;;                  out)
-;;                )))
-;;           []
-;;           range32))]
-;;     (set! (.sameKey counts) same-key)
-;;     (ArrayNodeUtils/makeArrayNode2
-;;      (- 32 @empty)
-;;      new-array
-;;      )
-;;     ))
+(defmethod splice-nodes [PersistentHashMap$ArrayNode PersistentHashMap$ArrayNode]
+  [^PersistentHashMap$ArrayNode left ^PersistentHashMap$ArrayNode right ^Counts counts]
+  (let [^"[Lclojure.lang.PersistentHashMap$INode;" left-array (array-node-array left)
+        ^"[Lclojure.lang.PersistentHashMap$INode;" right-array (array-node-array right)
+        ^"[Lclojure.lang.PersistentHashMap$INode;" new-array (make-array PersistentHashMap$INode 32)
+        empty (atom 0)
+        same-key
+        (reduce
+         (fn [sk f] (+ sk (.sameKey ^Counts @f)))
+         0
+         (reduce
+          (fn [out i]
+            (let [^PersistentHashMap$INode l (aget left-array i)
+                  ^PersistentHashMap$INode r (aget right-array i)]
+              (cond
+               (and l r)
+               (conj
+                out
+                (future
+                  (let [^Counts c (Counts.)]
+                    (aset
+                     new-array
+                     i
+                     (Seqspert/splice 0 c false 0 nil l false 0 nil r))
+                    c)))
+               (not (nil? l))
+               (do (aset new-array i l) out)
+               (not (nil? r))
+               (do (aset new-array i r) out)
+               :else
+               (do
+                 (swap! empty inc)
+                 out)
+               )))
+          []
+          range32))]
+    (set! (.sameKey counts) same-key)
+    (ArrayNodeUtils/makeArrayNode2
+     (- 32 @empty)
+     new-array
+     )
+    ))
 
-;; (defmulti splice-maps (fn [l r] [(type l)(type r)]))
+(defmulti splice-maps (fn [l r] [(type l)(type r)]))
 
-;; (defmethod splice-maps [PersistentHashMap PersistentHashMap]
-;;   [^PersistentHashMap left ^PersistentHashMap right]
-;;   (let [left-count (hash-map-count left)
-;;         right-count (hash-map-count right)
-;;         counts (clojure.lang.Counts.)
-;;         new-root (splice-nodes (hash-map-root left)(hash-map-root right) counts)]
-;;     (Seqspert/makeHashMap2 (- (+ left-count right-count) (.sameKey counts)) new-root)))
+(defmethod splice-maps [PersistentHashMap PersistentHashMap]
+  [^PersistentHashMap left ^PersistentHashMap right]
+  (let [left-count (hash-map-count left)
+        right-count (hash-map-count right)
+        counts (clojure.lang.Counts.)
+        new-root (splice-nodes (hash-map-root left)(hash-map-root right) counts)]
+    (Seqspert/makeHashMap2 (- (+ left-count right-count) (.sameKey counts)) new-root)))
 
-;; ;;------------------------------------------------------------------------------
+;;------------------------------------------------------------------------------
 
-;; (comment
-;;   (def m1 (apply hash-map (range 1000000)))
-;;   (def m2 (apply hash-map (range 500000 1500000)))
+(comment
+  (def m1 (apply hash-map (mapcat (fn [i] [(HashCodeKey. (str i) i) i]) (range 10000000))))
+  (def m2 (apply hash-map (mapcat (fn [i] [(HashCodeKey. (str i) i) i]) (range 5000000 15000000))))
   
-;;   (def m3 (time (merge m1 m2)))
-;;   (def m4 (time (splice-maps m1 m2)))
+  (def m3 (time (merge m1 m2)))
+  (def m4 (time (splice-hash-maps m1 m2)))
+  (def m5 (time (splice-maps m1 m2)))
 
-;;   (= m3 m4)
-;; )
+  (= m3 m4 m5)
+)
