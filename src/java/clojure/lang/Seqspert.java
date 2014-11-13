@@ -76,8 +76,7 @@ public class Seqspert {
         new ArrayNodeAndKeyValuePairSplicer(),
         new ArrayNodeAndBitmapIndexedNodeSplicer(),
         new ArrayNodeAndHashCollisionNodeSplicer(),
-        new ArrayNodeAndArrayNodeSplicer(),
-        null
+        new ArrayNodeAndArrayNodeSplicer()
     };
 
     static int typeInt(Object key, Object value) {
@@ -90,11 +89,66 @@ public class Seqspert {
             2;
     }
 
+   public static INode splice2(int shift, Counts counts,
+                       boolean leftHaveHash, int leftHash,
+                       Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
+       return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
+           splice(shift, counts, leftHaveHash, leftHash, leftKey, leftValue, rightHaveHash, rightHash, rightKey, rightValue);
+   }
+
+    public static Splicer keyValuePairAndKeyValuePairSplicer		= new KeyValuePairAndKeyValuePairSplicer();
+    public static Splicer keyValuePairAndBitmapIndexedNodeSplicer	= new KeyValuePairAndBitmapIndexedNodeSplicer();
+    public static Splicer keyValuePairAndArrayNodeSplicer		= new KeyValuePairAndArrayNodeSplicer();
+    public static Splicer keyValuePairAndHashCollisionNodeSplicer	= new KeyValuePairAndHashCollisionNodeSplicer();
+    public static Splicer bitmapIndexedNodeAndKeyValuePairSplicer	= new BitmapIndexedNodeAndKeyValuePairSplicer();
+    public static Splicer bitmapIndexedNodeAndBitmapIndexedNodeSplicer	= new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
+    public static Splicer bitmapIndexedNodeAndArrayNodeSplicer		= new BitmapIndexedNodeAndArrayNodeSplicer();
+    public static Splicer bitmapIndexedNodeAndHashCollisionNodeSplicer	= new BitmapIndexedNodeAndHashCollisionNodeSplicer();
+    public static Splicer arrayNodeAndKeyValuePairSplicer		= new ArrayNodeAndKeyValuePairSplicer();
+    public static Splicer arrayNodeAndBitmapIndexedNodeSplicer		= new ArrayNodeAndBitmapIndexedNodeSplicer();
+    public static Splicer arrayNodeAndArrayNodeSplicer			= new ArrayNodeAndArrayNodeSplicer();
+    public static Splicer arrayNodeAndHashCollisionNodeSplicer		= new ArrayNodeAndHashCollisionNodeSplicer();
+    public static Splicer hashCollisionNodeAndKeyValuePairSplicer	= new HashCollisionNodeAndKeyValuePairSplicer();
+    public static Splicer hashCollisionNodeAndBitmapIndexedNodeSplicer	= new HashCollisionNodeAndBitmapIndexedNodeSplicer();
+    public static Splicer hashCollisionNodeAndArrayNodeSplicer		= new HashCollisionNodeAndArrayNodeSplicer();
+    public static Splicer hashCollisionNodeAndHashCollisionNodeSplicer	= new HashCollisionNodeAndHashCollisionNodeSplicer();
+
     public static INode splice(int shift, Counts counts,
-                        boolean leftHaveHash, int leftHash,
-                        Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
-        return splicers[(4 * typeInt(leftKey, leftValue)) + typeInt(rightKey, rightValue)].
-            splice(shift, counts, leftHaveHash, leftHash, leftKey, leftValue, rightHaveHash, rightHash, rightKey, rightValue);
+                               boolean leftHaveHash, int leftHash,
+                               Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
+        return
+	    (leftKey != null ?
+	     (rightKey != null ?
+	      keyValuePairAndKeyValuePairSplicer :
+	      rightValue instanceof BitmapIndexedNode ?
+	      keyValuePairAndBitmapIndexedNodeSplicer :
+	      rightValue instanceof ArrayNode ?
+	      keyValuePairAndArrayNodeSplicer :
+	      keyValuePairAndHashCollisionNodeSplicer) :
+	     leftValue instanceof BitmapIndexedNode ?
+	     (rightKey != null ?
+	      bitmapIndexedNodeAndKeyValuePairSplicer :
+	      rightValue instanceof BitmapIndexedNode ?
+	      bitmapIndexedNodeAndBitmapIndexedNodeSplicer :
+	      rightValue instanceof ArrayNode ?
+	      bitmapIndexedNodeAndArrayNodeSplicer :
+	      bitmapIndexedNodeAndHashCollisionNodeSplicer) :
+	     leftValue instanceof ArrayNode ?
+	     (rightKey != null ?
+	      arrayNodeAndKeyValuePairSplicer :
+	      rightValue instanceof BitmapIndexedNode ?
+	      arrayNodeAndBitmapIndexedNodeSplicer :
+	      rightValue instanceof ArrayNode ?
+	      arrayNodeAndArrayNodeSplicer :
+	      arrayNodeAndHashCollisionNodeSplicer) :
+	     (rightKey != null ?
+	      hashCollisionNodeAndKeyValuePairSplicer :
+	      rightValue instanceof BitmapIndexedNode ?
+	      hashCollisionNodeAndBitmapIndexedNodeSplicer :
+	      rightValue instanceof ArrayNode ?
+	      hashCollisionNodeAndArrayNodeSplicer :
+	      hashCollisionNodeAndHashCollisionNodeSplicer))
+	    .splice(shift, counts, leftHaveHash, leftHash, leftKey, leftValue, rightHaveHash, rightHash, rightKey, rightValue);
     }
 
 }
