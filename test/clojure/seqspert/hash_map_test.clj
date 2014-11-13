@@ -101,16 +101,48 @@
 (defn check [n breadth depth]
   (let [l (rand-map n breadth depth)
         r (rand-map n breadth depth)]
-    (TestUtils/assertHashMapEquals
+    (= ;;TestUtils/assertHashMapEquals
      (merge l r)
      (splice-hash-maps l r))))
 
-;(TestUtils/wrapSplicers)
-;(check 512 breadth 4)
-;(.printStackTrace *e)
-;(repeatedly #(check 512 32 4))
+;; (do
+;;   (println "STARTING TEST RUN")
+;;   (TestUtils/wrapSplicers)
+;;   (try
+;;     (dotimes [i 10000000]
+;;       (do
+;;         ;;(println "i =" i)
+;;         (check 512 32 4)))
+;;     (catch Throwable t
+;;       (do
+;;         (.flush System/out)
+;;         (.flush System/err)
+;;         (println "AARGH!")
+;;         (flush)
+;;         (.printStackTrace t)
+;;         (.flush System/out)
+;;         (.flush System/err)
+;;         (println "SPLICER:" clojure.lang.TestSplicer/savedSplicer)
+;;         (println "SHIFT  :" clojure.lang.TestSplicer/savedShift)
+;;         (println "\nLEFT:")
+;;         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/left))
+;;         (println "\nRIGHT:")
+;;         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/right))
+;;         (println "\nEXPECTED:")
+;;         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/expected))
+;;         (println "\nACTUAL:")
+;;         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/actual))
+;;         )))
+;;   (println "FINISHED"))
 
-;;(p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/left))
-;;(p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/right))
-;;(p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/expected))
-;;(p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/actual))
+;; 100,000,000 merge - needs 25-40g of heap
+;; (println "1")
+;; (def m1 (apply hash-map (range 1000000000)))
+;; (println "2")
+;; (def m2 (apply hash-map (range 500000000 1500000000)))
+;; (println "3")
+;; (def m3 (merge m1 m2))
+;; (println "4")
+;; (def m4 (splice-hash-maps m1 m2))
+;; (println "5")
+;; (println (= m3 m4))
