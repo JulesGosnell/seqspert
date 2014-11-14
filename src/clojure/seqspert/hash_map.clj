@@ -92,6 +92,7 @@
          bitmap (bitmap-indexed-node-bitmap node)
          kvps (seq (bitmap-indexed-node-array node))]
     (if (= (bit-and bitmap 1) 1)
+      ;;TODO: take and drop in same action
       (recur (conj! result (take 2 kvps)) (dec i) (bit-shift-right bitmap 1) (drop 2 kvps))
       (if (zero? i)
         (persistent! result)
@@ -105,7 +106,7 @@
 
 (defn- into-array-node [kvns]
   (ArrayNodeUtils/makeArrayNode2
-   (- 32 (count (filter nil? kvns)))
+   (- 32 (count (filter nil? kvns)))    ;TODO: intermediate collection
    (into-array PersistentHashMap$INode (map second kvns))))
 
 (defn- into-bitmap-indexed-node [kvns]
@@ -128,7 +129,7 @@
                     (if l
                       (if r
                         (let [^Counts c (Counts.)
-                              spliced (Seqspert/splice 0 c false 0 lk lv false 0 rk rv)
+                              spliced (Seqspert/splice 5 c false 0 lk lv false 0 rk rv)
                               same-key (.sameKey c)] ;does let preserve ordering ?
                           (if spliced
                             [nil spliced same-key]
