@@ -9,6 +9,11 @@ public class BitmapIndexedNodeUtilsTest {
         new BitmapIndexedNodeUtils();
     }
 
+    @Test
+    public void testMakeBitmapIndexedNode() {
+        BitmapIndexedNodeUtils.makeBitmapIndexedNode(0, null);
+    }
+
     @Test(expected=IllegalArgumentException.class)
     public void testHash() {
         BitmapIndexedNodeUtils.hash(null);
