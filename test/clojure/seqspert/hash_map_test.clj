@@ -20,11 +20,11 @@
   (println "two intersecting hash maps of 10000 entries to be merged")  
   (println "merge vs splice :"
            (millis 100 #(merge m1 m2)) "ms" "vs"
-           (millis 100 #(splice-hash-maps m1 m2)) "ms")
+           (millis 100 #(sequential-splice-hash-maps m1 m2)) "ms")
 
   (is (=
        (merge m1 m2)
-       (splice-hash-maps m1 m2)))
+       (sequential-splice-hash-maps m1 m2)))
   
   (println)
   (println "a vector of 100000 pairs to be read into a hash map")
@@ -53,16 +53,16 @@
         k2 (HashCodeKey. :k2 0) v2 "v2"
         k3 (HashCodeKey. :k3 0) v3 "v3"]
     (testing "one : one"
-      (is (= (splice-hash-maps (hash-map k0 v0) (hash-map k1 v1))
+      (is (= (sequential-splice-hash-maps (hash-map k0 v0) (hash-map k1 v1))
              (hash-map k0 v0 k1 v1))))
     (testing "one : two"
-      (is (= (splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2))
+      (is (= (sequential-splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2))
              (hash-map k0 v0 k1 v1 k2 v2))))
     (testing "two : one"
-      (is (= (splice-hash-maps (hash-map k0 v0) (hash-map k1 v1 k2 v2))
+      (is (= (sequential-splice-hash-maps (hash-map k0 v0) (hash-map k1 v1 k2 v2))
              (hash-map k0 v0 k1 v1 k2 v2))))
     (testing "two : two"
-      (is (= (splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2 k3 v3))
+      (is (= (sequential-splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2 k3 v3))
              (hash-map k0 v0 k1 v1 k2 v2 k3 v3))))
     ))
 
@@ -74,7 +74,7 @@
           k2 (HashCodeKey. :k2 33) v2 "v2"
           k3 (HashCodeKey. :k3 33) v3 "v3"
           expected (hash-map k0 v0 k1 v1 k2 v2 k3 v3)
-          actual (splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2 k3 v3))]
+          actual (sequential-splice-hash-maps (hash-map k0 v0 k1 v1) (hash-map k2 v2 k3 v3))]
       (p/pprint (seqspert.core/inspect expected))
       (p/pprint (seqspert.core/inspect actual))
       (is (= actual expected))
@@ -108,49 +108,64 @@
         r (rand-map n breadth depth)]
     (= ;;TestUtils/assertHashMapEquals
      (merge l r)
-     (splice-hash-maps l r))))
+     (sequential-splice-hash-maps l r))))
 
-;; (do
-;;   (println "STARTING TEST RUN")
-;;   (TestUtils/wrapSplicers)
-;;   (try
-;;     (dotimes [i 10000000]
-;;       (do
-;;         ;;(println "i =" i)
-;;         (check 512 32 4)))
-;;     (catch Throwable t
-;;       (do
-;;         (.flush System/out)
-;;         (.flush System/err)
-;;         (println "AARGH!")
-;;         (flush)
-;;         (.printStackTrace t)
-;;         (.flush System/out)
-;;         (.flush System/err)
-;;         (println "SPLICER:" clojure.lang.TestSplicer/savedSplicer)
-;;         (println "SHIFT  :" clojure.lang.TestSplicer/savedShift)
-;;         (println "\nLEFT:")
-;;         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/left))
-;;         (println "\nRIGHT:")
-;;         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/right))
-;;         (println "\nEXPECTED:")
-;;         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/expected))
-;;         (println "\nACTUAL:")
-;;         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/actual))
-;;         )))
-;;   (println "FINISHED"))
+(comment
+  (println "STARTING TEST RUN")
+  (TestUtils/wrapSplicers)
+  (try
+    (dotimes [i 10000000]
+      (do
+        (println "i =" i)
+        (check 512 32 4)))
+    (catch Throwable t
+      (do
+        (.flush System/out)
+        (.flush System/err)
+        (println "AARGH!")
+        (flush)
+        (.printStackTrace t)
+        (.flush System/out)
+        (.flush System/err)
+        (println "SPLICER:" clojure.lang.TestSplicer/savedSplicer)
+        (println "SHIFT  :" clojure.lang.TestSplicer/savedShift)
+        (println "\nLEFT:")
+        (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/left))
+        (println "\nRIGHT:")
+        (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/right))
+        (println "\nEXPECTED:")
+        (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/expected))
+        (println "\nACTUAL:")
+        (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/actual))
+        )))
+  (println "FINISHED"))
 
 ;; 100,000,000 merge - needs 25-40g of heap
-;; (def n (* 100 1000 1000))
-;; (println "1")
-;; (def m1 (apply hash-map (range (* n 2))))
-;; (println "2")
-;; (def m2 (apply hash-map (range n (* n 3))))
-;; (println "3")
-;; (def m3 (time (merge m1 m2)))
-;; (println "4")
-;; (def m4 (time (splice-hash-maps m1 m2)))
-;; (println "5")
-;; (def m5 (time (parallel-splice-maps m1 m2)))
-;; (println "6")
-;; (println (= m3 m4 m5))
+(comment
+  (def n (* 1 1000 1000))
+  (println "Starting:" n)
+  (def m1 (apply hash-map (range (* n 2))))
+  (def m2 (apply hash-map (range n (* n 3))))
+  (println "traditional:")
+  (def m3 (time (merge m1 m2)))
+  (println "sequential splice:")
+  (def m4 (time (sequential-splice-hash-maps m1 m2)))
+  (println "parallel splice:")
+  (def m5 (time (parallel-splice-hash-maps m1 m2)))
+  (println "equals:")
+  (println (= m3 m4))
+  )
+
+(comment
+  (parallel-splice-maps (apply hash-map (range 10)) (apply hash-map (range 10 20)))
+  (parallel-splice-maps (apply hash-map (range 10000)) (apply hash-map (range 10000 20000)))
+
+  (def m1 (apply hash-map (mapcat (fn [i] [(HashCodeKey. (str i) i) i]) (range 10000000))))
+  (def m2 (apply hash-map (mapcat (fn [i] [(HashCodeKey. (str i) i) i]) (range 5000000 15000000))))
+  
+  (def m3 (time (merge m1 m2)))
+  (def m4 (time (sequential-splice-hash-maps m1 m2)))
+  (def m5 (time (parallel-splice-hash-maps m1 m2)))
+
+  (= m3 m4 m5)
+  )

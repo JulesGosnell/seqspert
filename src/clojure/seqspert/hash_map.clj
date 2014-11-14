@@ -8,17 +8,17 @@
             PersistentHashMap$INode]
            [clojure.lang
             ArrayNodeUtils
+            BitmapIndexedNodeUtils
             Counts
-            HashCodeKey
             Seqspert]
            )
   (:require [clojure.core [reducers :as r]]
             [seqspert.core :refer :all]))
 
 ;;--------------------------------------------------------------------------------
-
 ;; hash-map internals
 
+;; TODO - use java static fns defined in a Utils class
 (let [^Field f (unlock-field PersistentHashMap "count")] (defn hash-map-count [v] (.get f v)))
 (let [^Field f (unlock-field PersistentHashMap "root")]  (defn hash-map-root  [v] (.get f v)))
 
@@ -26,10 +26,10 @@
 (defrecord BitmapIndexedNode [bitmap array])
 
 (let [^Field f (unlock-field PersistentHashMap$BitmapIndexedNode "bitmap")]
-  (defn bitmap-indexed-node-bitmap [v] (.get f v)))
+  (defn- bitmap-indexed-node-bitmap [v] (.get f v)))
 
 (let [^Field f (unlock-field PersistentHashMap$BitmapIndexedNode "array")]
-  (defn bitmap-indexed-node-array [v] (.get f v)))
+  (defn- bitmap-indexed-node-array [v] (.get f v)))
 
 (defmethod inspect PersistentHashMap$BitmapIndexedNode [^PersistentHashMap$BitmapIndexedNode n]
   (BitmapIndexedNode. (Integer/toBinaryString (bitmap-indexed-node-bitmap n)) (inspect (bitmap-indexed-node-array n))))
@@ -40,23 +40,21 @@
 (defrecord ArrayNode [count array])
 
 (let [^Field f (unlock-field PersistentHashMap$ArrayNode "count")]
-  (defn array-node-count [v] (.get f v)))
+  (defn- array-node-count [v] (.get f v)))
 
 (let [^Field f (unlock-field PersistentHashMap$ArrayNode "array")]
-  (defn array-node-array [v] (.get f v)))
+  (defn- array-node-array [v] (.get f v)))
 
 (defmethod inspect PersistentHashMap$ArrayNode [^PersistentHashMap$ArrayNode n]
   (ArrayNode. (array-node-count n) (inspect (array-node-array n))))
 
-(inspect (apply hash-map (range 100)))
-
 (defrecord HashCollisionNode [hash count array])
 
 (let [^Field f (unlock-field PersistentHashMap$HashCollisionNode "hash")]
-  (defn hash-collision-node-hash [v] (.get f v)))
+  (defn- hash-collision-node-hash [v] (.get f v)))
 
 (let [^Field f (unlock-field PersistentHashMap$HashCollisionNode "count")]
-  (defn hash-collision-node-count [v] (.get f v)))
+  (defn- hash-collision-node-count [v] (.get f v)))
 
 (let [^Field f (unlock-field PersistentHashMap$HashCollisionNode "array")]
   (defn hash-collision-node-array [v] (.get f v)))
@@ -67,123 +65,102 @@
                       (inspect (hash-collision-node-array n))))
 
 ;;------------------------------------------------------------------------------
+;; sequential splicing
 
-(defn splice-hash-maps
+(defn sequential-splice-hash-maps
   "merge two hash-maps resulting in a third equivalent to the first
-  with ever pair from the second conj-ed into it."
+  with every pair from the second conj-ed into it."
   [l r]
   (Seqspert/spliceHashMaps l r))
 
+;; what do we want to do with this now ?
 (defn into-hash-map
   "parallel fold a sequence of pairs into a hash-map"
   ([values]
-     (r/fold (r/monoid splice-hash-maps hash-map) conj values))
+     (r/fold (r/monoid sequential-splice-hash-maps hash-map) conj values))
   ([parallelism values]
-     (r/fold parallelism (r/monoid splice-hash-maps hash-map) conj values)))
+     (r/fold parallelism (r/monoid sequential-splice-hash-maps hash-map) conj values)))
+
+;;------------------------------------------------------------------------------
+;; parallel splicing
+
+(defmulti ^{:private true} get-children type)
+
+(defmethod get-children PersistentHashMap$BitmapIndexedNode [^PersistentHashMap$BitmapIndexedNode node]
+  (loop [result (transient [])
+         i 32
+         bitmap (bitmap-indexed-node-bitmap node)
+         kvps (seq (bitmap-indexed-node-array node))]
+    (if (= (bit-and bitmap 1) 1)
+      (recur (conj! result (take 2 kvps)) (dec i) (bit-shift-right bitmap 1) (drop 2 kvps))
+      (if (zero? i)
+        (persistent! result)
+        (recur (conj! result nil) (dec i) (bit-shift-right bitmap 1) kvps)))))
+
+(defmethod get-children PersistentHashMap$ArrayNode [^PersistentHashMap$ArrayNode node]
+  (map (fn [n] (if n [nil n])) (array-node-array node)))
+
+(defn- into-bitmap [s]
+  (reduce (fn [result e] (bit-or (bit-shift-left result 1) (if e 1 0))) 0 (reverse s)))
+
+(defn- into-array-node [kvns]
+  (ArrayNodeUtils/makeArrayNode2
+   (- 32 (count (filter nil? kvns)))
+   (into-array PersistentHashMap$INode (map second kvns))))
+
+(defn- into-bitmap-indexed-node [kvns]
+  (BitmapIndexedNodeUtils/makeBitmapIndexedNode
+   (into-bitmap kvns)
+   (into-array Object (mapcat (fn [s] (take 2 s)) (filter some? kvns)))))
+
+(defn- third [s] (nth s 2))
+
+;; TODO - consider use of transducers in this fn - can we save on intermedite reps ?
+(defn- parallel-splice-branch-nodes
+  [^PersistentHashMap$INode left ^PersistentHashMap$INode right ^Counts counts]
+  (let [left-children (get-children left)
+        right-children (get-children right)
+        promote-p (> (count (filter true? (map (fn [l r] (or l r)) left-children right-children))) 16)
+        promote (if promote-p (fn [k v same-key] [nil (ArrayNodeUtils/promote 0 k v) same-key]) (fn [& args] args)) ;assume shift of 0
+        maybe-promote (fn [k v] (if k (promote k v 0) [k v 0]))
+        children (pmap
+                  (fn [[lk lv :as l] [rk rv :as r]]
+                    (if l
+                      (if r
+                        (let [^Counts c (Counts.)
+                              spliced (Seqspert/splice 0 c false 0 lk lv false 0 rk rv)
+                              same-key (.sameKey c)] ;does let preserve ordering ?
+                          (if spliced
+                            [nil spliced same-key]
+                            (promote lk rv same-key)))
+                        (maybe-promote lk lv))
+                      (if r
+                        (maybe-promote rk rv)
+                        nil)))
+                  left-children
+                  right-children)]
+    (set! (.sameKey counts) (reduce + 0 (map third (filter some? children))))
+    ((if promote-p into-array-node into-bitmap-indexed-node) children)))
+
+(defmulti ^{:private true} parallel-splice-nodes (fn [l r c] [(type l)(type r)]))
+
+(defmethod parallel-splice-nodes [PersistentHashMap$ArrayNode PersistentHashMap$ArrayNode]                 [l r c] (parallel-splice-branch-nodes l r c))
+(defmethod parallel-splice-nodes [PersistentHashMap$ArrayNode PersistentHashMap$BitmapIndexedNode]         [l r c] (parallel-splice-branch-nodes l r c))
+(defmethod parallel-splice-nodes [PersistentHashMap$ArrayNode PersistentHashMap$HashCollisionNode]         [l r c] (Seqspert/splice 0 c false 0 nil l false 0 nil r))
+
+(defmethod parallel-splice-nodes [PersistentHashMap$BitmapIndexedNode PersistentHashMap$ArrayNode]         [l r c] (parallel-splice-branch-nodes l r c))
+(defmethod parallel-splice-nodes [PersistentHashMap$BitmapIndexedNode PersistentHashMap$BitmapIndexedNode] [l r c] (parallel-splice-branch-nodes l r c))
+(defmethod parallel-splice-nodes [PersistentHashMap$BitmapIndexedNode PersistentHashMap$HashCollisionNode] [l r c] (Seqspert/splice 0 c false 0 nil l false 0 nil r))
+
+(defmethod parallel-splice-nodes [PersistentHashMap$HashCollisionNode PersistentHashMap$ArrayNode]         [l r c] (Seqspert/splice 0 c false 0 nil l false 0 nil r))
+(defmethod parallel-splice-nodes [PersistentHashMap$HashCollisionNode PersistentHashMap$BitmapIndexedNode] [l r c] (Seqspert/splice 0 c false 0 nil l false 0 nil r))
+(defmethod parallel-splice-nodes [PersistentHashMap$HashCollisionNode PersistentHashMap$HashCollisionNode] [l r c] (Seqspert/splice 0 c false 0 nil l false 0 nil r))
 
 ;;------------------------------------------------------------------------------
 
-(defmulti splice-nodes (fn [l r c] [(type l)(type r)]))
-
-(defmethod splice-nodes [PersistentHashMap$BitmapIndexedNode PersistentHashMap$BitmapIndexedNode]
-  [^PersistentHashMap$BitmapIndexedNode left ^PersistentHashMap$BitmapIndexedNode right count]
-  (println "splicing: " left " : " right))
-
-(def range32 (into [] (range 32)))
-
-;; can I face writing 9 of these for all combs of AN, BIN and HCN or is there a better way ?  
-;; maybe they should be written in java and share code with sequential splicers ?
-;; lets assume that there is no point in parallelising HCN splicing - that leaves 4
-;; the BIN ones need to consider promotion as well - lots of duplicate code :-(
-;; bit and int manipulation would probably be faster in java
-;; but how do we integrate java and clojure's thread pooling - investigate futures / fork-join pool
-;; we could just use a multimethod to pick the top-level parallel splicer and then drop straight into java...
-
-(defmethod splice-nodes [PersistentHashMap$ArrayNode PersistentHashMap$ArrayNode]
-  [^PersistentHashMap$ArrayNode left ^PersistentHashMap$ArrayNode right ^Counts counts]
-  (let [^"[Lclojure.lang.PersistentHashMap$INode;" left-array (array-node-array left)
-        ^"[Lclojure.lang.PersistentHashMap$INode;" right-array (array-node-array right)
-        ^"[Lclojure.lang.PersistentHashMap$INode;" new-array (make-array PersistentHashMap$INode 32)
-        empty (atom 0)
-        same-key
-        (reduce
-         (fn [sk f] (+ sk (.sameKey ^Counts @f)))
-         0
-         (reduce
-          (fn [out i]
-            (let [^PersistentHashMap$INode l (aget left-array i)
-                  ^PersistentHashMap$INode r (aget right-array i)]
-              (cond
-               (and l r)
-               (conj
-                out
-                (future
-                  (let [^Counts c (Counts.)]
-                    (aset
-                     new-array
-                     i
-                     (Seqspert/splice 0 c false 0 nil l false 0 nil r))
-                    c)))
-               (not (nil? l))
-               (do (aset new-array i l) out)
-               (not (nil? r))
-               (do (aset new-array i r) out)
-               :else
-               (do
-                 (swap! empty inc)
-                 out)
-               )))
-          []
-          range32))]
-    (set! (.sameKey counts) same-key)
-    (ArrayNodeUtils/makeArrayNode2 (- 32 @empty) new-array)
-    ))
+(defn parallel-splice-hash-maps [^PersistentHashMap left ^PersistentHashMap right]
+  (let [counts (Counts.)                ;consider left/right resolvers
+        root (parallel-splice-nodes (hash-map-root left)(hash-map-root right) counts)] ;counts changed as side-effect
+    (Seqspert/makeHashMap2 (- (+ (hash-map-count left) (hash-map-count right)) (.sameKey counts)) root)))
 
 ;;------------------------------------------------------------------------------
-
-;; TODO: iterate over bitmap as bits not as a string ?
-(defn unpack
-  "given a BitmapIndexedNode's bitmap and array, unpack them into a seq of key-value-pair-or-nils"
-  [bitmap array]
-  (loop [result [] [h & t] (reverse (Integer/toBinaryString bitmap)) kvps (seq array)]
-    (cond
-     (= h \1)
-     (recur (conj result (take 2 kvps)) t (drop 2 kvps))
-     (= h \0)
-     (recur (conj result nil) t kvps)
-     (nil? h)
-     result)))
-
-;; need pack
-
-(defmethod splice-nodes [PersistentHashMap$BitmapIndexedNode PersistentHashMap$BitmapIndexedNode]
-  [^PersistentHashMap$BitmapIndexedNode left ^PersistentHashMap$BitmapIndexedNode right ^Counts counts]
-  ;; need a vector of tuples of index and child
-  ;; get bitmaps and arrays
-  ;; unpack
-  ;; pmap - can it zip to seqs ? - yes
-  ;; pack up results
-  )
-
-(defmulti splice-maps (fn [l r] [(type l)(type r)]))
-
-(defmethod splice-maps [PersistentHashMap PersistentHashMap]
-  [^PersistentHashMap left ^PersistentHashMap right]
-  (let [left-count (hash-map-count left)
-        right-count (hash-map-count right)
-        counts (clojure.lang.Counts.)
-        new-root (splice-nodes (hash-map-root left)(hash-map-root right) counts)]
-    (Seqspert/makeHashMap2 (- (+ left-count right-count) (.sameKey counts)) new-root)))
-
-;;------------------------------------------------------------------------------
-
-(comment
-  (def m1 (apply hash-map (mapcat (fn [i] [(HashCodeKey. (str i) i) i]) (range 10000000))))
-  (def m2 (apply hash-map (mapcat (fn [i] [(HashCodeKey. (str i) i) i]) (range 5000000 15000000))))
-  
-  (def m3 (time (merge m1 m2)))
-  (def m4 (time (splice-hash-maps m1 m2)))
-  (def m5 (time (splice-maps m1 m2)))
-
-  (= m3 m4 m5)
-)
