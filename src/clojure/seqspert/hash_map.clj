@@ -136,11 +136,34 @@
           []
           range32))]
     (set! (.sameKey counts) same-key)
-    (ArrayNodeUtils/makeArrayNode2
-     (- 32 @empty)
-     new-array
-     )
+    (ArrayNodeUtils/makeArrayNode2 (- 32 @empty) new-array)
     ))
+
+;;------------------------------------------------------------------------------
+
+;; TODO: iterate over bitmap as bits not as a string ?
+(defn unpack
+  "given a BitmapIndexedNode's bitmap and array, unpack them into a seq of key-value-pair-or-nils"
+  [bitmap array]
+  (loop [result [] [h & t] (reverse (Integer/toBinaryString bitmap)) kvps (seq array)]
+    (cond
+     (= h \1)
+     (recur (conj result (take 2 kvps)) t (drop 2 kvps))
+     (= h \0)
+     (recur (conj result nil) t kvps)
+     (nil? h)
+     result)))
+
+;; need pack
+
+(defmethod splice-nodes [PersistentHashMap$BitmapIndexedNode PersistentHashMap$BitmapIndexedNode]
+  [^PersistentHashMap$BitmapIndexedNode left ^PersistentHashMap$BitmapIndexedNode right ^Counts counts]
+  ;; need a vector of tuples of index and child
+  ;; get bitmaps and arrays
+  ;; unpack
+  ;; pmap - can it zip to seqs ? - yes
+  ;; pack up results
+  )
 
 (defmulti splice-maps (fn [l r] [(type l)(type r)]))
 
