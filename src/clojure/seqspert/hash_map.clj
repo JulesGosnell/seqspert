@@ -105,7 +105,7 @@
   (reduce (fn [result e] (bit-or (bit-shift-left result 1) (if e 1 0))) 0 (reverse s)))
 
 (defn- into-array-node [kvns]
-  (ArrayNodeUtils/makeArrayNode2
+  (ArrayNodeUtils/makeArrayNode
    (- 32 (count (filter nil? kvns)))    ;TODO: intermediate collection
    (into-array PersistentHashMap$INode (map second kvns))))
 

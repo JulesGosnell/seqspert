@@ -1,3 +1,6 @@
+;; investigate an idea for tipping large amounts of data into a
+;; clojure hash-map in a short time...
+
 (ns clojure.lang.quick-map
   (:import 
    [java.util.concurrent.atomic
@@ -40,7 +43,7 @@
   (Seqspert/assoc node ^int shift ^int hash key value box))
 
 (defn make-array-node [nodes]
-  (ArrayNodeUtils/makeArrayNode 32 (into-array PersistentHashMap$INode nodes)))
+  (ArrayNodeUtils/makeArrayNode 32 (into-array Object nodes)))
 
 (defn make-hash-map [count nodes]
   (Seqspert/createPersistentHashMap count (make-array-node nodes)))

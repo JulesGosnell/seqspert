@@ -51,11 +51,9 @@ public class ArrayNodeUtils {
         return PersistentHashMap.mask(hash, shift);
     }
 
-    public static INode makeArrayNode(int count, INode[] nodes) {
-        return new ArrayNode(null, count, nodes);
-    }
-
-    public static INode makeArrayNode2(int count, Object nodes) {
+    // we can't reference INodes in clojure from clojure.seqspert- so
+    // pass an Object and cast it here in clojure.lang - yeugh !    
+    public static INode makeArrayNode(int count, Object nodes) {
         return new ArrayNode(null, count, (INode[])nodes);
     }
 
