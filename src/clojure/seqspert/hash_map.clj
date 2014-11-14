@@ -162,6 +162,7 @@
 (defn parallel-splice-hash-maps [^PersistentHashMap left ^PersistentHashMap right]
   (let [counts (Counts.)                ;consider left/right resolvers
         root (parallel-splice-nodes (hash-map-root left)(hash-map-root right) counts)] ;counts changed as side-effect
-    (Seqspert/makeHashMap2 (- (+ (hash-map-count left) (hash-map-count right)) (.sameKey counts)) root)))
+    (Seqspert/createPersistentHashMap
+     (- (+ (hash-map-count left) (hash-map-count right)) (.sameKey counts)) root)))
 
 ;;------------------------------------------------------------------------------

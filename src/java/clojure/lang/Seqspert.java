@@ -48,11 +48,9 @@ public class Seqspert {
         return new PersistentHashSet(meta, impl);
     }
 
-    public static PersistentHashMap createPersistentHashMap(int count, INode root) {
-        return new PersistentHashMap(count, root, false, null);
-    }
-
-    public static PersistentHashMap makeHashMap2(int count, Object root) {
+    // we can't pass an INode in from clojure (wrong package) so pass
+    // an Object and cast it java-side - yeugh !
+    public static PersistentHashMap createPersistentHashMap(int count, Object root) {
         return new PersistentHashMap(count, (INode)root, false, null);
     }
 
