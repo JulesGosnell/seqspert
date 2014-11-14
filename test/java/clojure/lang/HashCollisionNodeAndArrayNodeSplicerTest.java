@@ -14,7 +14,6 @@ import clojure.lang.PersistentHashMap.INode;
 public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
-    final Splicer splicer = new HashCollisionNodeAndArrayNodeSplicer();
     final int shift = 0;
 
     public void test(int leftHash,
@@ -39,7 +38,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
                                                     expectedCounts);
 
         final Counts actualCounts = new Counts(resolver, 0, 0);
-        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

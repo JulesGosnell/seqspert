@@ -15,7 +15,6 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
     final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
-    final Splicer splicer = new ArrayNodeAndArrayNodeSplicer();
 
     public void test(Object leftKey, Object leftValue,
                      Hasher leftHasher, int leftStart, int leftEnd,
@@ -32,7 +31,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightHasher, rightStart, rightEnd, expectedCounts);
 
         final Counts actualCounts = new Counts(resolveFunction, 0, 0);
-        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

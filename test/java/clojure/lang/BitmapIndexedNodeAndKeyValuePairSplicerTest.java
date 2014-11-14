@@ -15,7 +15,6 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
     final int shift = 0;
     final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
-    final Splicer splicer = new BitmapIndexedNodeAndKeyValuePairSplicer();
 
     public void test(Hasher leftHasher, int leftStart, int leftEnd, Object rightKey, Object rightValue, boolean same) {
 
@@ -26,7 +25,7 @@ public class BitmapIndexedNodeAndKeyValuePairSplicerTest implements SplicerTestI
         final INode expectedNode = TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
 
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, rightKey, rightValue);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, rightKey, rightValue);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

@@ -13,7 +13,6 @@ public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface
         
     final int shift = 0;
     final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
-    final Splicer splicer = new ArrayNodeAndKeyValuePairSplicer();
 
     public void test(Hasher leftHasher, int leftStart, int leftEnd, Object rightKey, Object rightValue, boolean same) {
         final INode leftNode = TestUtils.create(shift, leftHasher, leftStart, leftEnd);
@@ -22,7 +21,7 @@ public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface
         final INode expectedNode = TestUtils.assoc(shift, leftNode, rightKey, rightValue, expectedCounts);
 
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode,
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode,
                                                 false, 0, rightKey, rightValue);
 
         assertEquals(expectedCounts, actualCounts);

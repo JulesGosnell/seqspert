@@ -13,8 +13,6 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 
     final int shift = 0;
     final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
-    final Splicer splicer = new BitmapIndexedNodeAndHashCollisionNodeSplicer();
-
     public void test(Object leftKey, Object leftValue,
                      int rightHash,
                      Object rightKey0, Object rightValue0, Object rightKey1, Object rightValue1,
@@ -29,7 +27,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
             TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
 
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
@@ -51,7 +49,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
             TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
 
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

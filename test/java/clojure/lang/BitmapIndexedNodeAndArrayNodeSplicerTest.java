@@ -13,8 +13,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
 
     final int shift = 0;
     final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
-    final Splicer splicer = new BitmapIndexedNodeAndArrayNodeSplicer();
-        
+
     public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1, 
                      Hasher rightHasher, int rightStart, int rightEnd, boolean sameRight) {
         final INode leftNode = TestUtils.create(shift, leftKey0, leftValue0, leftKey1, leftValue1);
@@ -24,7 +23,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
         final INode expectedNode = TestUtils.assocN(shift, leftNode, rightHasher, rightStart, rightEnd, expectedCounts);
                 
         final Counts actualCounts = new Counts(Counts.resolveRight, 0, 0); // TODO - resolveLeft ?
-        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

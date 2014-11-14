@@ -15,7 +15,6 @@ import clojure.lang.TestUtils.Hasher;
 public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
 
     final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
-    final Splicer splicer = new HashCollisionNodeAndBitmapIndexedNodeSplicer();
     final int shift = 0;
 
     public void test(int leftHash,
@@ -43,7 +42,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
                                                     expectedCounts);
 
         final Counts actualCounts = new Counts(resolver, 0, 0);
-        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

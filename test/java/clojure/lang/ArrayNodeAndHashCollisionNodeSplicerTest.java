@@ -13,7 +13,6 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
 
     final int shift = 0;
     final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
-    final Splicer splicer = new ArrayNodeAndHashCollisionNodeSplicer();
 
     public void test(Hasher leftHasher, int leftStart, int leftEnd,
                      Object leftKey, Object leftValue,
@@ -31,7 +30,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
             TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
 
         final Counts actualCounts = new Counts();
-        final INode actualNode = splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
         
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

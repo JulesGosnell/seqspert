@@ -14,7 +14,6 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
 
     final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
-    final Splicer splicer = new HashCollisionNodeAndKeyValuePairSplicer();
     final int shift = 0;
 
     public void test(int leftHashCode,
@@ -34,7 +33,7 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
 
         final Counts actualCounts = new Counts(Counts.resolveRight, 0, 0); // TODO:  resolveLeft ?
         final INode actualNode =
-            splicer.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, rightKey, rightValue);
+            Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, rightKey, rightValue);
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode); 
