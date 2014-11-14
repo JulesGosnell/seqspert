@@ -108,7 +108,7 @@
         r (rand-map n breadth depth)]
     (= ;;TestUtils/assertHashMapEquals
      (merge l r)
-     (sequential-splice-hash-maps l r))))
+     (parallel-splice-hash-maps l r))))
 
 (comment
   (println "STARTING TEST RUN")
@@ -116,7 +116,7 @@
   (try
     (dotimes [i 10000000]
       (do
-        (println "i =" i)
+        (if (zero? (mod i 1000)) (println "i =" i))
         (check 512 32 4)))
     (catch Throwable t
       (do
@@ -137,12 +137,14 @@
         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/expected))
         (println "\nACTUAL:")
         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/actual))
-        )))
+        ))
+    (finally
+      (TestUtils/wrapSplicers)))
   (println "FINISHED"))
 
 ;; 100,000,000 merge - needs 25-40g of heap
 (comment
-  (def n (* 1 1000 1000))
+  (def n (* 10 1000 1000))
   (println "Starting:" n)
   (def m1 (apply hash-map (range (* n 2))))
   (def m2 (apply hash-map (range n (* n 3))))
@@ -153,19 +155,5 @@
   (println "parallel splice:")
   (def m5 (time (parallel-splice-hash-maps m1 m2)))
   (println "equals:")
-  (println (= m3 m4))
-  )
-
-(comment
-  (parallel-splice-maps (apply hash-map (range 10)) (apply hash-map (range 10 20)))
-  (parallel-splice-maps (apply hash-map (range 10000)) (apply hash-map (range 10000 20000)))
-
-  (def m1 (apply hash-map (mapcat (fn [i] [(HashCodeKey. (str i) i) i]) (range 10000000))))
-  (def m2 (apply hash-map (mapcat (fn [i] [(HashCodeKey. (str i) i) i]) (range 5000000 15000000))))
-  
-  (def m3 (time (merge m1 m2)))
-  (def m4 (time (sequential-splice-hash-maps m1 m2)))
-  (def m5 (time (parallel-splice-hash-maps m1 m2)))
-
-  (= m3 m4 m5)
+  (println (= m3 m4 m5))
   )
