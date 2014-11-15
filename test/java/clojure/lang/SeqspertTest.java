@@ -3,6 +3,7 @@ package clojure.lang;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
@@ -27,6 +28,12 @@ public class SeqspertTest {
     @Test
     public void testCreatePersistentHashMap() {
         Seqspert.createPersistentHashMap(0, null);
+    }
+
+    @Test
+    public void testCreatePersistentHashSet() {
+        PersistentHashMap empty = PersistentHashMap.EMPTY;
+        assertSame(empty, Seqspert.hashSetImpl(Seqspert.createPersistentHashSet(empty)));
     }
 
     @Test
