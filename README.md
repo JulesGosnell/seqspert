@@ -17,15 +17,19 @@ now growing into a library supporting a number of specific
 high-performance, low-churn alternatives to common Sequence-based
 operations.
 
-Seqspert is currently a work in progress. I hope to get a release out
-in the near future.
-
-Seqspert contains both Java and Clojure code which is tested on every
-build. Results of these tests may be found here:
+Seqspert contains both Java and Clojure code which is unit tested on
+every build.
 
 http://ouroboros.dyndns-free.com/ci/job/seqspert/
 
-## Build/Install
+I have just put a recent snapshot up on Clojars. Any feedback would be
+most appreciated.
+
+## Either: Lein
+
+[seqspert "1.7.0-alpha3.1.0-SNAPSHOT"]
+
+## Or: Build/Install
 
 - git clone https://github.com/JulesGosnell/seqspert.git
 - cd seqspert
@@ -111,33 +115,62 @@ single operation, reusing as much of the structure of both maps as
 possible and avoiding most associated churn and re-calling of hash()
 on keys.
 
-Future Work: splice-hash-maps is currently performed
-sequentially. Since hash-tries are a form of tree, parallelising it
-should be relatively straightforward and yield further substantial
-speed gains.
+Since hash-tries are a form of tree, splicing can be done in parallel
+- each subtree being handed off to a different thread. This can yield
+substantial performance benefits.
+
+Since much of the structure of the maps involved is reused and
+seqspert bypasses a lot of the code that implements the Sequence
+abstraction, heap churn is also reduced to a large extent.
 
 <pre>
-user=> (use '[seqspert hash-map])
-nil
-user=> (def m1 (apply hash-map (range 0 2000000)))
+user=> (def m1 (apply hash-map (range 0 2000000)))  ;; create a map with 1M entries
 #'user/m1
-user=> (def m2 (apply hash-map (range 1000000 3000000)))
+user=> (def m2 (apply hash-map (range 1000000 3000000))) ;; create an intersecting map
 #'user/m2
-user=> (time (def m3 (merge m1 m2))) ;; traditional approach
-"Elapsed time: 786.300978 msecs"
+user=> (time (def m3 (merge m1 m2))) ;; merge maps using standard approach
+"Elapsed time: 938.151586 msecs"
 #'user/m3
-user=> (time (def m4 (splice-hash-maps m1 m2))) ;; seqspert replacement
-"Elapsed time: 180.571396 msecs"
+user=> (use '[seqspert hash-map]) ;; now let's see what seqspert can do...
+nil
+user=> (time (def m4 (sequential-splice-hash-maps m1 m2))) ;; sequential seqspert splice
+"Elapsed time: 266.333163 msecs"
 #'user/m4
-user=> (= m3 m4)
+user=> (time (def m5 (parallel-splice-hash-maps m1 m2))) ;; parallel seqspert splice
+"Elapsed time: 91.248891 msecs"
+#'user/m5
+user=> (= m3 m4 m5) ;; verify results
 true
-user=> 
 </pre>
 
 hash-set:
 
-Clojure hash-sets are implemented as hash-maps with each set element
-being both the key and the value in its key-value pair.
+Clojure hash-sets are implemented using an underlying hash-map in
+which each set element is both the key and the value in its key-value
+pair. This means that Seqspert can reuse all the work done on splicing
+hash-maps to splice hash-sets as well:
+
+<pre>
+user=> (def s1 (apply hash-set (range 0 1000000)))  ;; create a set with 1M entries
+#'user/s1
+user=> (def s2 (apply hash-set (range 500000 1500000))) ;; create an intersecting set
+#'user/s2
+user=> (use '[clojure set]) ;; pull in set utils
+nil
+user=> (time (def s3 (union s1 s2))) ;; merge maps using standard approach
+"Elapsed time: 662.81211 msecs"
+#'user/s3
+user=> (use '[seqspert hash-set]) ;; now let's see what seqspert can do...
+nil
+user=> (time (def s4 (sequential-splice-hash-sets s1 s2))) ;; sequential seqspert splice
+"Elapsed time: 172.168669 msecs"
+#'user/s4
+user=> (time (def s5 (parallel-splice-hash-sets s1 s2))) ;; parallel seqspert splice
+"Elapsed time: 56.688093 msecs"
+#'user/s5
+user=> (= s3 s4 s5) ;; verify results
+true
+</pre>
 
 - inspect
 
@@ -179,31 +212,6 @@ user=> (pprint (inspect #{:a :b :c :d :e :f :g :h}))
     nil
     nil]}}}
 nil
-user=>
-</pre>
-
-- splice-hash-sets [WIP]
-
-Since a hash-sets underlying representation is just a hash-map,
-Seqspert can also implement a very efficient splice-hash-sets:
-
-<pre>
-user=> (def s1 (apply hash-set (range 1000000)))
-#'user/s1
-user=> (def s2 (apply hash-set (range 500000 1500000)))
-#'user/s2
-user=> (use '[clojure.set])
-nil
-user=> (time (def s3 (union s1 s2))) ;; traditional approach
-"Elapsed time: 544.154135 msecs"
-#'user/s3
-user=> (use '[seqspert.hash-set])
-nil
-user=> (time (def s4 (splice-hash-sets s1 s2))) ;; seqspert replacement
-"Elapsed time: 171.302296 msecs"
-#'user/s4
-user=> (= s3 s4)
-true
 user=>
 </pre>
 
