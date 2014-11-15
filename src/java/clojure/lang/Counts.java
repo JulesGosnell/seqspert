@@ -5,14 +5,14 @@ public class Counts {
     public final IFn resolveFunction;
     public int sameKey;
     public int sameKeyAndValue;
-	public static IFn resolveLeft  = new AFn() {
-	@Override public Object invoke(Object key, Object leftValue, Object rightValue) {
-	    return (Util.equiv(leftValue, rightValue)) ? leftValue : rightValue;
-	}};
-	public static IFn resolveRight = new AFn() {
-	@Override public Object invoke(Object key, Object leftValue, Object rightValue) {
-	    return rightValue; 
-	}};
+    public static IFn resolveLeft  = new AFn() {
+            @Override public Object invoke(Object key, Object leftValue, Object rightValue) {
+                return (Util.equiv(leftValue, rightValue)) ? leftValue : rightValue;
+            }};
+    public static IFn resolveRight = new AFn() {
+            @Override public Object invoke(Object key, Object leftValue, Object rightValue) {
+                return rightValue; 
+            }};
 
     public Counts() {
         this.resolveFunction = Counts.resolveLeft;
@@ -31,12 +31,12 @@ public class Counts {
     }
 
     @Override
-	public boolean equals(Object that) {
+    public boolean equals(Object that) {
         return (that instanceof Counts) && this.equals((Counts) that);
     }
     
     @Override
-	public String toString() {
+    public String toString() {
         return getClass().getSimpleName() + 
             "(resolveFunction=" + resolveFunction + ", sameKey=" + sameKey + ", sameKeyAndValue=" + sameKeyAndValue +")";
     }

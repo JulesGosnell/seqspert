@@ -4,10 +4,10 @@ import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
+public class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
 
     @Override
-	public INode splice(int shift, Counts counts, 
+    public INode splice(int shift, Counts counts, 
                         boolean leftHaveHash, int leftHash, Object leftKey, Object leftValue,
                         boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
         final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
@@ -44,7 +44,7 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
                 Seqspert.splice(shift + 5, counts, false, 0, subKey, subVal, true, rightHash, rightKey, rightValue);
 
             if (newSubNode == null) {
-            	final Object resolved = counts.resolveFunction.invoke(subKey, subVal, rightValue);
+                final Object resolved = counts.resolveFunction.invoke(subKey, subVal, rightValue);
                 return (subVal == resolved) ?
                     leftNode :
                     new BitmapIndexedNode(null,

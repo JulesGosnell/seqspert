@@ -86,6 +86,6 @@ public class BitmapIndexedNodeUtils {
     // N.B. clojure will promote an unsigned 32-bit int to a long, so we accept a long
     // and cast it back to an int - if the top-bit is set, we just get a negative int...
     public static BitmapIndexedNode makeBitmapIndexedNode(long bitmap, Object[] array) {
-	return new BitmapIndexedNode(null, (int)bitmap, array);
+        return new BitmapIndexedNode(null, (int)bitmap, array);
     }
 }

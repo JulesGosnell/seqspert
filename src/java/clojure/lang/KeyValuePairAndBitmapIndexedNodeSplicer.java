@@ -6,10 +6,10 @@ import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 // why is this so complicated ?
-class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
+public class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
 
     @Override
-	public INode splice(int shift, Counts counts,
+    public INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHashCode, Object leftKey, Object leftValue,
                         boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
@@ -29,7 +29,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
                                      17,
                                      ArrayNodeUtils.promoteAndSet(shift, rightNode.bitmap, rightNode.array,
                                                                   leftHash, leftKey, leftValue));
-	    }
+            }
             else
                 // lets assume that we could not have received an empty
                 // BIN, therefore we have at least 2 subNodes, so there is
@@ -47,7 +47,7 @@ class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
             final Object subKey = rightArray[keyIndex];
             final Object subValue = rightArray[keyIndex + 1];
             final INode spliced = Seqspert.splice(shift + 5, counts,
-						  true, leftHash, leftKey, leftValue,
+                                                  true, leftHash, leftKey, leftValue,
                                                   false, 0, subKey, subValue);
             if (spliced == subValue || spliced == null) {
                 // Either:

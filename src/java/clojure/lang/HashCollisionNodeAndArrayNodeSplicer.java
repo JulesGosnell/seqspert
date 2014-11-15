@@ -4,10 +4,10 @@ import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class HashCollisionNodeAndArrayNodeSplicer implements Splicer {
+public class HashCollisionNodeAndArrayNodeSplicer implements Splicer {
 
     @Override
-	public INode splice(int shift, Counts counts,
+    public INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHash,
                         Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
         final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;
@@ -20,11 +20,11 @@ class HashCollisionNodeAndArrayNodeSplicer implements Splicer {
         int newCount;
         INode newSubNode;
         if (rightSubNode == null) {
-        	newCount = rightNode.count + 1;
-        	newSubNode = leftNode;
+            newCount = rightNode.count + 1;
+            newSubNode = leftNode;
         } else {
-        	newCount = rightNode.count;
-        	newSubNode = Seqspert.splice(shift + 5, counts, false, 0, null, leftNode, false, 0, null, rightSubNode);
+            newCount = rightNode.count;
+            newSubNode = Seqspert.splice(shift + 5, counts, false, 0, null, leftNode, false, 0, null, rightSubNode);
         }
 
         return new ArrayNode(null, newCount, ArrayNodeUtils.cloneAndSetNode(rightArray, index, newSubNode));

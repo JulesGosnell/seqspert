@@ -13,7 +13,7 @@ public class ArrayNodeAndHashCollisionNodeSplicerTest implements SplicerTestInte
 
     final int shift = 0;
     final Hasher hasher = new Hasher() {@Override
-	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
 
     public void test(Hasher leftHasher, int leftStart, int leftEnd,
                      Object leftKey, Object leftValue,

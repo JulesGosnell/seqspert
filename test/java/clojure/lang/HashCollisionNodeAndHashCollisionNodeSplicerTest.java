@@ -16,7 +16,7 @@ import clojure.lang.TestUtils.Hasher;
 public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
     final Hasher hasher = new Hasher() {@Override
-	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final int shift = 0;
 
     public void test(Object key0, Object value0, Object key1, Object value1,

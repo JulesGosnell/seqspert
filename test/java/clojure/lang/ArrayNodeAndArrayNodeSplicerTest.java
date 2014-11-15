@@ -15,7 +15,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
     final Hasher hasher = new Hasher() {@Override
-	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
 
     public void test(Object leftKey, Object leftValue,
                      Hasher leftHasher, int leftStart, int leftEnd,

@@ -3,10 +3,10 @@ package clojure.lang;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
+public class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
     
     @Override
-	public INode splice(int shift, Counts counts,
+    public INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHashCode,
                         Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
         final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;

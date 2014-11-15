@@ -32,7 +32,7 @@ public class KeyValuePairAndHashCollisionNodeSplicerTest implements SplicerTestI
     }
 
     final Hasher hasher = new Hasher() {@Override
-	public int hash(int i) { return (3 << 10) | (2 << 5); }};
+    public int hash(int i) { return (3 << 10) | (2 << 5); }};
 
     @Test
     @Override

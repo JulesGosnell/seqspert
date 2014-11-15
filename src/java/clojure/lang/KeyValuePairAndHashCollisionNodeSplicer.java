@@ -3,10 +3,10 @@ package clojure.lang;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
+public class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
 
     @Override
-	public INode splice(int shift, Counts counts,
+    public INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHashCode,
                         Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
 
@@ -26,7 +26,7 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
                                           rightNode.count + 1,
                                           // since KVP is from LHS, insert at front of HCN
                                           BitmapIndexedNodeUtils.cloneAndInsertKeyValuePair(rightArray, rightLength,
-                                                                   0, leftKey, leftValue));
+                                                                                            0, leftKey, leftValue));
                 return newNode;
             } else {
                 counts.sameKey++;
@@ -53,4 +53,3 @@ class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
     }
 
 }
-

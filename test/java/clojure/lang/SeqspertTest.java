@@ -49,9 +49,9 @@ public class SeqspertTest {
     }
 
     public static INode assocN(int shift, INode node, int start, int end, Counts counts) {
-	for (int i = start; i < end; i++)
-	    node = TestUtils.assoc(shift, node , "key" + i, "value" + i, counts);
-	return node;
+        for (int i = start; i < end; i++)
+            node = TestUtils.assoc(shift, node , "key" + i, "value" + i, counts);
+        return node;
     }
     
     public INode createN(int shift, int start, int end) {
@@ -75,23 +75,23 @@ public class SeqspertTest {
     @Test
     public void testHashCollisionNodePromotion() {
         final Hasher hasher = new Hasher() {@Override
-		public int hash(int i) { return ((i + 1) << 5) | i; }};
+        public int hash(int i) { return ((i + 1) << 5) | i; }};
 
         // 1-16 inc singleton BINS
         final INode leftNode = TestUtils.create(0, hasher, 1, 17);
-	assertEquals(Integer.bitCount(((BitmapIndexedNode)leftNode).bitmap), 16);
+        assertEquals(Integer.bitCount(((BitmapIndexedNode)leftNode).bitmap), 16);
 
         // 1 extra KVP to force promotion
         // 2 further KVPs which should cause a BIN-HCN
         // if this had happened before promotion it would just have been an HCN
         final INode rightNode = TestUtils.create(0,
-						 new HashCodeKey("key17", hasher.hash(17)), "value17",
-						 new HashCodeKey("key18.1", hasher.hash(18)), "value18.1",
-						 new HashCodeKey("key18.2", hasher.hash(18)), "value18.2"
-						 );
+                                                 new HashCodeKey("key17", hasher.hash(17)), "value17",
+                                                 new HashCodeKey("key18.1", hasher.hash(18)), "value18.1",
+                                                 new HashCodeKey("key18.2", hasher.hash(18)), "value18.2"
+                                                 );
 
-	assertEquals(Integer.bitCount(((BitmapIndexedNode)rightNode).bitmap), 2);
-	assertTrue(((BitmapIndexedNode)rightNode).array[3] instanceof HashCollisionNode);
+        assertEquals(Integer.bitCount(((BitmapIndexedNode)rightNode).bitmap), 2);
+        assertTrue(((BitmapIndexedNode)rightNode).array[3] instanceof HashCollisionNode);
 
         final int shift = 0;
         final Counts expectedCounts = new Counts();
@@ -99,7 +99,7 @@ public class SeqspertTest {
                                                    new HashCodeKey("key17", hasher.hash(17)), "value17",
                                                    new HashCodeKey("key18.1", hasher.hash(18)), "value18.1",
                                                    new HashCodeKey("key18.2", hasher.hash(18)), "value18.2",
-						   expectedCounts);
+                                                   expectedCounts);
         {
             assertTrue(expectedNode instanceof ArrayNode);
             // 18th child is a BIN whose only child is an HCN

@@ -4,10 +4,10 @@ import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
+public class ArrayNodeAndHashCollisionNodeSplicer implements Splicer {
 
     @Override
-	public INode splice(int shift, Counts counts,
+    public INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHash, Object leftKey, Object leftValue,
                         boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
 

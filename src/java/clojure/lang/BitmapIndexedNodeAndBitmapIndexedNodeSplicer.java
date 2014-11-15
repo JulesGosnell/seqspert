@@ -7,11 +7,11 @@ import static clojure.lang.BitmapIndexedNodeUtils.hash;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
-class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
+public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
 
     @Override
-	public INode splice(int shift, Counts counts,
-			boolean leftHaveHash, int leftHash, Object leftKey, Object leftValue, 
+    public INode splice(int shift, Counts counts,
+                        boolean leftHaveHash, int leftHash, Object leftKey, Object leftValue, 
                         boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
         final BitmapIndexedNode leftNode = (BitmapIndexedNode) leftValue;
@@ -24,115 +24,115 @@ class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
 
         final int newBitmap = leftBitmap | rightBitmap;
         final int newBitCount = Integer.bitCount(newBitmap); // possibly expensive - but we need to know...
-	final int newShift = shift + 5;
+        final int newShift = shift + 5;
 
         int leftIndex = 0;
         int rightIndex = 0;
-	// N.B. these two alternates were a single body with a number of tests - cut-n-paste into two for performance reasons...
-	if (newBitCount > 16) {
-	    final INode[] newAnArray = new INode[32];
+        // N.B. these two alternates were a single body with a number of tests - cut-n-paste into two for performance reasons...
+        if (newBitCount > 16) {
+            final INode[] newAnArray = new INode[32];
 
-	    for (int i = 0; i < 32; i++) {
-		final int mask = 1 << i;
-		final boolean hasLeft = ((leftBitmap & mask) != 0);
-		final boolean hasRight = ((rightBitmap & mask) != 0);
+            for (int i = 0; i < 32; i++) {
+                final int mask = 1 << i;
+                final boolean hasLeft = ((leftBitmap & mask) != 0);
+                final boolean hasRight = ((rightBitmap & mask) != 0);
 
-		// maybe we should make this check in splice() ?
-		if (hasLeft) {
-		    final Object leftSubKey = leftArray[leftIndex++];
-		    final Object leftSubValue = leftArray[leftIndex++];
-		    if (hasRight) {
-			final Object rightSubKey = rightArray[rightIndex++];
-			final Object rightSubValue = rightArray[rightIndex++];
-			final INode newSubNode = Seqspert.splice(newShift, counts, false, 0, leftSubKey, leftSubValue, false, 0, rightSubKey, rightSubValue);
-			if (newSubNode == null) {
-			    // we must have spliced two leaves giving a result of another leaf / KVP...
-			    // the key must be unchanged
-			    // the value could be either from the left or right -
-			    // delegate decision to resolveFunction...
-			    newAnArray[i] = create(partition(hash(leftSubKey), newShift),
-						   leftSubKey,
-						   counts.resolveFunction.invoke(leftSubKey, leftSubValue, rightSubValue));
-			} else {    // haveLeft and haveRight
-			    // result was a Node...
-			    newAnArray[i] = newSubNode;
-			}
-		    } else {
-			// haveLeft and !haveRight
-			newAnArray[i] = promote(newShift, leftSubKey, leftSubValue);
-		    }
-		} else {
-		    if (hasRight) { // and !haveLeft
-			final Object rightSubKey = rightArray[rightIndex++];
-			final Object rightSubValue = rightArray[rightIndex++];
-			newAnArray[i] = promote(newShift, rightSubKey, rightSubValue);
-		    }
-		}
-	    }
+                // maybe we should make this check in splice() ?
+                if (hasLeft) {
+                    final Object leftSubKey = leftArray[leftIndex++];
+                    final Object leftSubValue = leftArray[leftIndex++];
+                    if (hasRight) {
+                        final Object rightSubKey = rightArray[rightIndex++];
+                        final Object rightSubValue = rightArray[rightIndex++];
+                        final INode newSubNode = Seqspert.splice(newShift, counts, false, 0, leftSubKey, leftSubValue, false, 0, rightSubKey, rightSubValue);
+                        if (newSubNode == null) {
+                            // we must have spliced two leaves giving a result of another leaf / KVP...
+                            // the key must be unchanged
+                            // the value could be either from the left or right -
+                            // delegate decision to resolveFunction...
+                            newAnArray[i] = create(partition(hash(leftSubKey), newShift),
+                                                   leftSubKey,
+                                                   counts.resolveFunction.invoke(leftSubKey, leftSubValue, rightSubValue));
+                        } else {    // haveLeft and haveRight
+                            // result was a Node...
+                            newAnArray[i] = newSubNode;
+                        }
+                    } else {
+                        // haveLeft and !haveRight
+                        newAnArray[i] = promote(newShift, leftSubKey, leftSubValue);
+                    }
+                } else {
+                    if (hasRight) { // and !haveLeft
+                        final Object rightSubKey = rightArray[rightIndex++];
+                        final Object rightSubValue = rightArray[rightIndex++];
+                        newAnArray[i] = promote(newShift, rightSubKey, rightSubValue);
+                    }
+                }
+            }
         
-	    return new PersistentHashMap.ArrayNode(null,newBitCount, newAnArray);
-	} else {
-	    final Object[] newBinArray = new Object[newBitCount * 2];
+            return new PersistentHashMap.ArrayNode(null,newBitCount, newAnArray);
+        } else {
+            final Object[] newBinArray = new Object[newBitCount * 2];
 
-	    int newBinIndex = 0;
-	    int leftDifferences = 0;
-	    int rightDifferences = 0;
-	    for (int i = 0; i < 32; i++) {
-		final int mask = 1 << i;
-		final boolean hasLeft = ((leftBitmap & mask) != 0);
-		final boolean hasRight = ((rightBitmap & mask) != 0);
+            int newBinIndex = 0;
+            int leftDifferences = 0;
+            int rightDifferences = 0;
+            for (int i = 0; i < 32; i++) {
+                final int mask = 1 << i;
+                final boolean hasLeft = ((leftBitmap & mask) != 0);
+                final boolean hasRight = ((rightBitmap & mask) != 0);
 
-		// maybe we should make this check in splice() ?
-		if (hasLeft) {
-		    final Object leftSubKey = leftArray[leftIndex++];
-		    final Object leftSubValue = leftArray[leftIndex++];
-		    if (hasRight) {
-			final Object rightSubKey = rightArray[rightIndex++];
-			final Object rightSubValue = rightArray[rightIndex++];
-			final INode newSubNode = Seqspert.splice(newShift, counts, false, 0, leftSubKey, leftSubValue, false, 0, rightSubKey, rightSubValue);
-			if (newSubNode == null) {
-			    // we must have spliced two leaves giving a result of another leaf / KVP...
-			    // the key must be unchanged
-			    // the value could be either from the left or right -
-			    // delegate decision to resolveFunction...
-			    final Object newSubValue = counts.resolveFunction.invoke(leftSubKey,
-										     leftSubValue,
-										     rightSubValue);
-			    if (newSubValue != leftSubValue) leftDifferences++;
-			    if (newSubValue != rightSubValue) rightDifferences++;
-			    newBinArray[newBinIndex++] = leftSubKey;
-			    newBinArray[newBinIndex++] = newSubValue;
-			} else {    // haveLeft and haveRight
-			    // result was a Node...
-			    newBinArray[newBinIndex++] = null;
-			    newBinArray[newBinIndex++] = newSubNode;
-			    if (leftSubValue != newSubNode) leftDifferences++;
-			    if (rightSubValue != newSubNode) rightDifferences++;
-			}
-		    } else {
-			// haveLeft and !haveRight
-			newBinArray[newBinIndex++] = leftSubKey;
-			newBinArray[newBinIndex++] = leftSubValue;
-			rightDifferences++;
-		    }
-		} else {
-		    if (hasRight) { // and !haveLeft
-			final Object rightSubKey = rightArray[rightIndex++];
-			final Object rightSubValue = rightArray[rightIndex++];
-			newBinArray[newBinIndex++] = rightSubKey;
-			newBinArray[newBinIndex++] = rightSubValue;
-			leftDifferences++;
-		    }
-		}
-	    }
+                // maybe we should make this check in splice() ?
+                if (hasLeft) {
+                    final Object leftSubKey = leftArray[leftIndex++];
+                    final Object leftSubValue = leftArray[leftIndex++];
+                    if (hasRight) {
+                        final Object rightSubKey = rightArray[rightIndex++];
+                        final Object rightSubValue = rightArray[rightIndex++];
+                        final INode newSubNode = Seqspert.splice(newShift, counts, false, 0, leftSubKey, leftSubValue, false, 0, rightSubKey, rightSubValue);
+                        if (newSubNode == null) {
+                            // we must have spliced two leaves giving a result of another leaf / KVP...
+                            // the key must be unchanged
+                            // the value could be either from the left or right -
+                            // delegate decision to resolveFunction...
+                            final Object newSubValue = counts.resolveFunction.invoke(leftSubKey,
+                                                                                     leftSubValue,
+                                                                                     rightSubValue);
+                            if (newSubValue != leftSubValue) leftDifferences++;
+                            if (newSubValue != rightSubValue) rightDifferences++;
+                            newBinArray[newBinIndex++] = leftSubKey;
+                            newBinArray[newBinIndex++] = newSubValue;
+                        } else {    // haveLeft and haveRight
+                            // result was a Node...
+                            newBinArray[newBinIndex++] = null;
+                            newBinArray[newBinIndex++] = newSubNode;
+                            if (leftSubValue != newSubNode) leftDifferences++;
+                            if (rightSubValue != newSubNode) rightDifferences++;
+                        }
+                    } else {
+                        // haveLeft and !haveRight
+                        newBinArray[newBinIndex++] = leftSubKey;
+                        newBinArray[newBinIndex++] = leftSubValue;
+                        rightDifferences++;
+                    }
+                } else {
+                    if (hasRight) { // and !haveLeft
+                        final Object rightSubKey = rightArray[rightIndex++];
+                        final Object rightSubValue = rightArray[rightIndex++];
+                        newBinArray[newBinIndex++] = rightSubKey;
+                        newBinArray[newBinIndex++] = rightSubValue;
+                        leftDifferences++;
+                    }
+                }
+            }
         
-	    return 
-		leftDifferences == 0 ?
-		leftNode :
-		rightDifferences == 0 ?
-		rightNode :
-		new PersistentHashMap.BitmapIndexedNode(null, newBitmap, newBinArray);
-	}
+            return 
+                leftDifferences == 0 ?
+                leftNode :
+                rightDifferences == 0 ?
+                rightNode :
+                new PersistentHashMap.BitmapIndexedNode(null, newBitmap, newBinArray);
+        }
     }
 
 }

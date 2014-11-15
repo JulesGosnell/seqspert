@@ -17,7 +17,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 
     int shift = 0;
     final Hasher hasher = new Hasher() {@Override
-	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     Splicer splicer = new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
         
     public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1,
@@ -44,7 +44,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     @Test
     public void testDifferent() {
         // no promotion
-    	test(new HashCodeKey("key" + 1, hasher.hash(1)), "value1", new HashCodeKey("key" + 2, hasher.hash(2)), "value2", hasher, 3, 5, false, false);
+        test(new HashCodeKey("key" + 1, hasher.hash(1)), "value1", new HashCodeKey("key" + 2, hasher.hash(2)), "value2", hasher, 3, 5, false, false);
         // promotion - HCN on LHS
         test(new HashCodeKey("key" + 1, hasher.hash(1)), "value1", new HashCodeKey("key" + 2, hasher.hash(2)), "value2", hasher, 3, 19, false, false);
         // promotion - HCN arising from splice
@@ -53,30 +53,30 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 
     @Test
     public void testAargh() {
-	// need test with initial HCN on right and promotion - no splice..
+        // need test with initial HCN on right and promotion - no splice..
         final INode leftNode = TestUtils.create(0,
-						new HashCodeKey("key1", hasher.hash(1)), "value1",
-						hasher, 2, 17);
+                                                new HashCodeKey("key1", hasher.hash(1)), "value1",
+                                                hasher, 2, 17);
 
-	assertEquals(Integer.bitCount(((BitmapIndexedNode)leftNode).bitmap), 16);
+        assertEquals(Integer.bitCount(((BitmapIndexedNode)leftNode).bitmap), 16);
 
         final INode rightNode = TestUtils.create(0,
-						 new HashCodeKey("key18.1", hasher.hash(18)), "value18",
-						 new HashCodeKey("key18.2", hasher.hash(18)), "value18"
-						 );
+                                                 new HashCodeKey("key18.1", hasher.hash(18)), "value18",
+                                                 new HashCodeKey("key18.2", hasher.hash(18)), "value18"
+                                                 );
 
-	assertEquals(Integer.bitCount(((BitmapIndexedNode)rightNode).bitmap), 1);
-	assertTrue(((BitmapIndexedNode)rightNode).array[1] instanceof HashCollisionNode);
+        assertEquals(Integer.bitCount(((BitmapIndexedNode)rightNode).bitmap), 1);
+        assertTrue(((BitmapIndexedNode)rightNode).array[1] instanceof HashCollisionNode);
 
         final Counts expectedCounts = new Counts();
         final INode expectedNode = TestUtils.assoc(shift, leftNode,
-						   new HashCodeKey("key18.1", hasher.hash(18)), "value18",
-						   new HashCodeKey("key18.2", hasher.hash(18)), "value18",
-						   expectedCounts);
+                                                   new HashCodeKey("key18.1", hasher.hash(18)), "value18",
+                                                   new HashCodeKey("key18.2", hasher.hash(18)), "value18",
+                                                   expectedCounts);
 
-	assertTrue(expectedNode instanceof ArrayNode);
-	assertEquals(((ArrayNode)expectedNode).count, 17);
-	//assertTrue(((ArrayNode)expectedNode).array[19] instanceof HashCollisionNode);
+        assertTrue(expectedNode instanceof ArrayNode);
+        assertEquals(((ArrayNode)expectedNode).count, 17);
+        //assertTrue(((ArrayNode)expectedNode).array[19] instanceof HashCollisionNode);
                 
         final Counts actualCounts = new Counts();
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
@@ -89,49 +89,49 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     @Override
     @Test
     public void testSameKeyHashCode() {
-	// no promotion
+        // no promotion
         test(new HashCodeKey("key" + 1, hasher.hash(3)), "value1", new HashCodeKey("key" + 2, hasher.hash(4)), "value2", hasher, 3, 5, false, false);
-	// promotion
+        // promotion
         test(new HashCodeKey("key" + 1, hasher.hash(3)), "value1", new HashCodeKey("key" + 2, hasher.hash(3)), "value2", hasher, 3, 19, false, false);
-	// promotion
-	TestUtils.wrapSplicers();
-	splicer = new TestSplicer(splicer);
-	shift = 5;
+        // promotion
+        TestUtils.wrapSplicers();
+        splicer = new TestSplicer(splicer);
+        shift = 5;
         test(new HashCodeKey("key" + 1, hasher.hash(1)), "value1", new HashCodeKey("key2.1", hasher.hash(2)), "value2", hasher, 2, 18, false, false);
-	shift = 0;
-	splicer = ((TestSplicer)splicer).splicer;
-	TestUtils.unwrapSplicers();
+        shift = 0;
+        splicer = ((TestSplicer)splicer).splicer;
+        TestUtils.unwrapSplicers();
     }
 
     @Test
     public void testAargh2() {
-	// two BINS each containing an HCN. On splicing HCNs collide and resulting BIN is promoted to an AN...
+        // two BINS each containing an HCN. On splicing HCNs collide and resulting BIN is promoted to an AN...
         final INode leftNode = TestUtils.create(0,
-						new HashCodeKey("key1.1", hasher.hash(1)), "value1",
-						hasher, 1, 17);
+                                                new HashCodeKey("key1.1", hasher.hash(1)), "value1",
+                                                hasher, 1, 17);
 
-	assertEquals(Integer.bitCount(((BitmapIndexedNode)leftNode).bitmap), 16);
-	assertTrue(((BitmapIndexedNode)leftNode).array[1] instanceof HashCollisionNode);
+        assertEquals(Integer.bitCount(((BitmapIndexedNode)leftNode).bitmap), 16);
+        assertTrue(((BitmapIndexedNode)leftNode).array[1] instanceof HashCollisionNode);
 
         final INode rightNode = TestUtils.create(0,
-						 new HashCodeKey("key1.2", hasher.hash(1)), "value1",
-						 new HashCodeKey("key1.3", hasher.hash(1)), "value1",
-						 new HashCodeKey("key17", hasher.hash(17)), "value17"
-						 );
+                                                 new HashCodeKey("key1.2", hasher.hash(1)), "value1",
+                                                 new HashCodeKey("key1.3", hasher.hash(1)), "value1",
+                                                 new HashCodeKey("key17", hasher.hash(17)), "value17"
+                                                 );
 
-	assertEquals(Integer.bitCount(((BitmapIndexedNode)rightNode).bitmap), 2);
-	assertTrue(((BitmapIndexedNode)rightNode).array[1] instanceof HashCollisionNode);
+        assertEquals(Integer.bitCount(((BitmapIndexedNode)rightNode).bitmap), 2);
+        assertTrue(((BitmapIndexedNode)rightNode).array[1] instanceof HashCollisionNode);
 
         final Counts expectedCounts = new Counts();
         final INode expectedNode = TestUtils.assoc(shift, leftNode,
-						   new HashCodeKey("key1.2", hasher.hash(1)), "value1",
-						   new HashCodeKey("key1.3", hasher.hash(1)), "value1",
-						   new HashCodeKey("key17", hasher.hash(17)), "value17",
-						   expectedCounts);
+                                                   new HashCodeKey("key1.2", hasher.hash(1)), "value1",
+                                                   new HashCodeKey("key1.3", hasher.hash(1)), "value1",
+                                                   new HashCodeKey("key17", hasher.hash(17)), "value17",
+                                                   expectedCounts);
 
-	assertTrue(expectedNode instanceof ArrayNode);
-	assertEquals(((ArrayNode)expectedNode).count, 17);
-	assertTrue(((ArrayNode)expectedNode).array[1] instanceof HashCollisionNode);
+        assertTrue(expectedNode instanceof ArrayNode);
+        assertEquals(((ArrayNode)expectedNode).count, 17);
+        assertTrue(((ArrayNode)expectedNode).array[1] instanceof HashCollisionNode);
                 
         final Counts actualCounts = new Counts();
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
@@ -150,11 +150,11 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     @Test
     public void testSameKeyAndValue() {
         // leftSame
-    	test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key" + 4, hasher.hash(4)), "value4", hasher, 3, 5, true, false);
+        test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key" + 4, hasher.hash(4)), "value4", hasher, 3, 5, true, false);
         // rightSame
         test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key" + 4, hasher.hash(4)), "value4", hasher, 3, 6, false, true);
 
-    	test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key" + 4, hasher.hash(4)), "value4", hasher, 4, 20, false, false);
-    	test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key4.1", hasher.hash(4)), "value4", hasher, 4, 20, false, false);
+        test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key" + 4, hasher.hash(4)), "value4", hasher, 4, 20, false, false);
+        test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key4.1", hasher.hash(4)), "value4", hasher, 4, 20, false, false);
     }
 }

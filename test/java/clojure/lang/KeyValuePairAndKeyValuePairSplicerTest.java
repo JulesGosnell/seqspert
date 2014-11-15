@@ -12,7 +12,7 @@ public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterf
 
     final int shift = 0;
     final Hasher hasher = new Hasher() {@Override
-	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
 
     public void test(Object leftKey, Object leftValue,
                      Object rightKey, Object rightValue, boolean same) {
@@ -56,7 +56,7 @@ public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterf
     @Test
     @Override
     public void testSameKeyAndValue() {
-    	test(new HashCodeKey("key1", hasher.hash(1)), "value1", new HashCodeKey("key1", hasher.hash(1)), "value1", true);
+        test(new HashCodeKey("key1", hasher.hash(1)), "value1", new HashCodeKey("key1", hasher.hash(1)), "value1", true);
     }
 
 }

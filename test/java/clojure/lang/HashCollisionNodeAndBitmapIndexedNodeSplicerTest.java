@@ -15,7 +15,7 @@ import clojure.lang.TestUtils.Hasher;
 public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
 
     final Hasher hasher = new Hasher() {@Override
-	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final int shift = 0;
 
     public void test(int leftHash,
@@ -167,20 +167,20 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         
         // leftSame
         test(leftHash,
-                new HashCodeKey("key1", leftHash), "value1",
-                new HashCodeKey("key2", leftHash), "value2",
-                hasher, 1, 2,
-                new HashCodeKey("key2", hasher.hash(1)), "value2",
-                null, null,
-                true, false);
+             new HashCodeKey("key1", leftHash), "value1",
+             new HashCodeKey("key2", leftHash), "value2",
+             hasher, 1, 2,
+             new HashCodeKey("key2", hasher.hash(1)), "value2",
+             null, null,
+             true, false);
         // rightSame
         test(leftHash,
-                new HashCodeKey("key1", leftHash), "value1",
-                new HashCodeKey("key2", leftHash), "value2",
-                hasher, 1, 3,
-                new HashCodeKey("key2", hasher.hash(1)), "value2",
-                new HashCodeKey("key3", hasher.hash(1)), "value3",
-                false, true);
+             new HashCodeKey("key1", leftHash), "value1",
+             new HashCodeKey("key2", leftHash), "value2",
+             hasher, 1, 3,
+             new HashCodeKey("key2", hasher.hash(1)), "value2",
+             new HashCodeKey("key3", hasher.hash(1)), "value3",
+             false, true);
     }
 
     @Test

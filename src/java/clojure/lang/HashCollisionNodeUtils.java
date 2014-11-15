@@ -8,12 +8,7 @@ import clojure.lang.PersistentHashMap.HashCollisionNode;
 public class HashCollisionNodeUtils {
 
     public static HashCollisionNode create(int hashCode, Object key0, Object value0, Object key1, Object value1) {
-        final AtomicReference<Thread> edit = null;
-        final int count = 2;
-        final int hash = hashCode;
-        final Object[] array = new Object[]{key0, value0, key1, value1};
-        final HashCollisionNode node  = new HashCollisionNode(edit, hash, count, array);
-        return node;
+        return new HashCollisionNode(null, hashCode, 2, new Object[]{key0, value0, key1, value1});
     }
         
     /*
@@ -72,42 +67,42 @@ public class HashCollisionNodeUtils {
      * return an array, the set of which's key:value pairs is
      * equivalent to the union of 'leftArray' and 'rightArray'
      */
-     public static Object[] maybeAddAll(Object[] leftArray, int leftLength,
-                                        Object[] rightArray, int rightLength, Counts counts) {
-         final Object[]  newArray = new Object[leftLength + rightLength];
-         // insert lhs first
-         System.arraycopy(leftArray, 0, newArray, 0, leftLength);
-         // append rhs to end
-         int leftDifferences = 0;
-         int rightDifferences = 0;
-         int j = leftLength;
-         for (int i = 0; i < rightLength; i += 2) {
-             final Object rightKey = rightArray[i];
-             final Object rightValue = rightArray[i + 1];
-             final int index = keyIndex(leftArray, leftLength, rightKey);
-             if (-1 == index) {
-                 leftDifferences++;
-                 if (i != j) rightDifferences++;
-                 newArray[j++] = rightKey;
-                 newArray[j++] = rightValue;
-             } else {
-                 counts.sameKey++;
-                 final Object leftKey = leftArray[index];
-                 final Object leftValue = leftArray[index + 1];
-                 final Object newValue = counts.resolveFunction.invoke(leftKey, leftValue, rightValue);
-                 if (newValue != leftValue) {
-                	 leftDifferences++;
-                     newArray[index + 1] = newValue;
-                 }
-                 if (newValue != rightValue || i != index) rightDifferences++;
-             }
-         }
-         return
-             leftDifferences == 0 ?
-             leftArray :
-             rightDifferences == 0 ?
-             rightArray :
-             newArray;            
-     }
+    public static Object[] maybeAddAll(Object[] leftArray, int leftLength,
+                                       Object[] rightArray, int rightLength, Counts counts) {
+        final Object[]  newArray = new Object[leftLength + rightLength];
+        // insert lhs first
+        System.arraycopy(leftArray, 0, newArray, 0, leftLength);
+        // append rhs to end
+        int leftDifferences = 0;
+        int rightDifferences = 0;
+        int j = leftLength;
+        for (int i = 0; i < rightLength; i += 2) {
+            final Object rightKey = rightArray[i];
+            final Object rightValue = rightArray[i + 1];
+            final int index = keyIndex(leftArray, leftLength, rightKey);
+            if (-1 == index) {
+                leftDifferences++;
+                if (i != j) rightDifferences++;
+                newArray[j++] = rightKey;
+                newArray[j++] = rightValue;
+            } else {
+                counts.sameKey++;
+                final Object leftKey = leftArray[index];
+                final Object leftValue = leftArray[index + 1];
+                final Object newValue = counts.resolveFunction.invoke(leftKey, leftValue, rightValue);
+                if (newValue != leftValue) {
+                    leftDifferences++;
+                    newArray[index + 1] = newValue;
+                }
+                if (newValue != rightValue || i != index) rightDifferences++;
+            }
+        }
+        return
+            leftDifferences == 0 ?
+            leftArray :
+            rightDifferences == 0 ?
+            rightArray :
+            newArray;            
+    }
 
 }

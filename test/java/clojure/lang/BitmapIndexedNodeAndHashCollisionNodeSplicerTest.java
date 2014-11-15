@@ -13,7 +13,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
 
     final int shift = 0;
     final Hasher hasher = new Hasher() {@Override
-	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     public void test(Object leftKey, Object leftValue,
                      int rightHash,
                      Object rightKey0, Object rightValue0, Object rightKey1, Object rightValue1,
@@ -66,11 +66,11 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
              new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
              new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
              false, false);
-         test(hasher, 3, 19,
-              hasher.hash(1),
-              new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
-              new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
-              false, false);
+        test(hasher, 3, 19,
+             hasher.hash(1),
+             new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
+             new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
+             false, false);
 
     }
 
@@ -108,17 +108,17 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
     @Override
     @Test
     public void testSameKeyAndValue() {
-    	// TODO: test left and right sameness
-    	test(new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
-    			hasher.hash(1),
-    			new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
-    			new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
-    			false, false);
-    	test(hasher, 1, 17,
-    			hasher.hash(1),
-    			new HashCodeKey("key1",   hasher.hash(1)), "value1",
-    			new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
-    			false, false);
+        // TODO: test left and right sameness
+        test(new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
+             hasher.hash(1),
+             new HashCodeKey("key1.0", hasher.hash(1)), "value1.0",
+             new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
+             false, false);
+        test(hasher, 1, 17,
+             hasher.hash(1),
+             new HashCodeKey("key1",   hasher.hash(1)), "value1",
+             new HashCodeKey("key1.1", hasher.hash(1)), "value1.1",
+             false, false);
     }
     
 }

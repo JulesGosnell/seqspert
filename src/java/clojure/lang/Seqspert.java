@@ -5,7 +5,8 @@ import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
 /**
- * Seqspert needs access to a few Clojure internals. For the moment, this class seems like a sensible place to put them.
+ * Seqspert needs access to a few Clojure internals. For the moment,
+ * this class seems like a sensible place to put them.
  * 
  * @author jules
  *
@@ -56,59 +57,59 @@ public class Seqspert {
         return node.assoc(shift, hash, key, value, addedLeaf);
     }
 
-    public static Splicer keyValuePairAndKeyValuePairSplicer		= new KeyValuePairAndKeyValuePairSplicer();
-    public static Splicer keyValuePairAndBitmapIndexedNodeSplicer	= new KeyValuePairAndBitmapIndexedNodeSplicer();
-    public static Splicer keyValuePairAndArrayNodeSplicer		= new KeyValuePairAndArrayNodeSplicer();
-    public static Splicer keyValuePairAndHashCollisionNodeSplicer	= new KeyValuePairAndHashCollisionNodeSplicer();
-    public static Splicer bitmapIndexedNodeAndKeyValuePairSplicer	= new BitmapIndexedNodeAndKeyValuePairSplicer();
-    public static Splicer bitmapIndexedNodeAndBitmapIndexedNodeSplicer	= new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
-    public static Splicer bitmapIndexedNodeAndArrayNodeSplicer		= new BitmapIndexedNodeAndArrayNodeSplicer();
-    public static Splicer bitmapIndexedNodeAndHashCollisionNodeSplicer	= new BitmapIndexedNodeAndHashCollisionNodeSplicer();
-    public static Splicer arrayNodeAndKeyValuePairSplicer		= new ArrayNodeAndKeyValuePairSplicer();
-    public static Splicer arrayNodeAndBitmapIndexedNodeSplicer		= new ArrayNodeAndBitmapIndexedNodeSplicer();
-    public static Splicer arrayNodeAndArrayNodeSplicer			= new ArrayNodeAndArrayNodeSplicer();
-    public static Splicer arrayNodeAndHashCollisionNodeSplicer		= new ArrayNodeAndHashCollisionNodeSplicer();
-    public static Splicer hashCollisionNodeAndKeyValuePairSplicer	= new HashCollisionNodeAndKeyValuePairSplicer();
-    public static Splicer hashCollisionNodeAndBitmapIndexedNodeSplicer	= new HashCollisionNodeAndBitmapIndexedNodeSplicer();
-    public static Splicer hashCollisionNodeAndArrayNodeSplicer		= new HashCollisionNodeAndArrayNodeSplicer();
-    public static Splicer hashCollisionNodeAndHashCollisionNodeSplicer	= new HashCollisionNodeAndHashCollisionNodeSplicer();
+    public static Splicer keyValuePairAndKeyValuePairSplicer            = new KeyValuePairAndKeyValuePairSplicer();
+    public static Splicer keyValuePairAndBitmapIndexedNodeSplicer       = new KeyValuePairAndBitmapIndexedNodeSplicer();
+    public static Splicer keyValuePairAndArrayNodeSplicer               = new KeyValuePairAndArrayNodeSplicer();
+    public static Splicer keyValuePairAndHashCollisionNodeSplicer       = new KeyValuePairAndHashCollisionNodeSplicer();
+    public static Splicer bitmapIndexedNodeAndKeyValuePairSplicer       = new BitmapIndexedNodeAndKeyValuePairSplicer();
+    public static Splicer bitmapIndexedNodeAndBitmapIndexedNodeSplicer  = new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
+    public static Splicer bitmapIndexedNodeAndArrayNodeSplicer          = new BitmapIndexedNodeAndArrayNodeSplicer();
+    public static Splicer bitmapIndexedNodeAndHashCollisionNodeSplicer  = new BitmapIndexedNodeAndHashCollisionNodeSplicer();
+    public static Splicer arrayNodeAndKeyValuePairSplicer               = new ArrayNodeAndKeyValuePairSplicer();
+    public static Splicer arrayNodeAndBitmapIndexedNodeSplicer          = new ArrayNodeAndBitmapIndexedNodeSplicer();
+    public static Splicer arrayNodeAndArrayNodeSplicer                  = new ArrayNodeAndArrayNodeSplicer();
+    public static Splicer arrayNodeAndHashCollisionNodeSplicer          = new ArrayNodeAndHashCollisionNodeSplicer();
+    public static Splicer hashCollisionNodeAndKeyValuePairSplicer       = new HashCollisionNodeAndKeyValuePairSplicer();
+    public static Splicer hashCollisionNodeAndBitmapIndexedNodeSplicer  = new HashCollisionNodeAndBitmapIndexedNodeSplicer();
+    public static Splicer hashCollisionNodeAndArrayNodeSplicer          = new HashCollisionNodeAndArrayNodeSplicer();
+    public static Splicer hashCollisionNodeAndHashCollisionNodeSplicer  = new HashCollisionNodeAndHashCollisionNodeSplicer();
 
     public static INode splice(int shift, Counts counts,
                                boolean leftHaveHash, int leftHash,
                                Object leftKey, Object leftValue, boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
         return
-	    (leftKey != null ?
-	     (rightKey != null ?
-	      keyValuePairAndKeyValuePairSplicer :
-	      rightValue instanceof BitmapIndexedNode ?
-	      keyValuePairAndBitmapIndexedNodeSplicer :
-	      rightValue instanceof ArrayNode ?
-	      keyValuePairAndArrayNodeSplicer :
-	      keyValuePairAndHashCollisionNodeSplicer) :
-	     leftValue instanceof BitmapIndexedNode ?
-	     (rightKey != null ?
-	      bitmapIndexedNodeAndKeyValuePairSplicer :
-	      rightValue instanceof BitmapIndexedNode ?
-	      bitmapIndexedNodeAndBitmapIndexedNodeSplicer :
-	      rightValue instanceof ArrayNode ?
-	      bitmapIndexedNodeAndArrayNodeSplicer :
-	      bitmapIndexedNodeAndHashCollisionNodeSplicer) :
-	     leftValue instanceof ArrayNode ?
-	     (rightKey != null ?
-	      arrayNodeAndKeyValuePairSplicer :
-	      rightValue instanceof BitmapIndexedNode ?
-	      arrayNodeAndBitmapIndexedNodeSplicer :
-	      rightValue instanceof ArrayNode ?
-	      arrayNodeAndArrayNodeSplicer :
-	      arrayNodeAndHashCollisionNodeSplicer) :
-	     (rightKey != null ?
-	      hashCollisionNodeAndKeyValuePairSplicer :
-	      rightValue instanceof BitmapIndexedNode ?
-	      hashCollisionNodeAndBitmapIndexedNodeSplicer :
-	      rightValue instanceof ArrayNode ?
-	      hashCollisionNodeAndArrayNodeSplicer :
-	      hashCollisionNodeAndHashCollisionNodeSplicer))
-	    .splice(shift, counts, leftHaveHash, leftHash, leftKey, leftValue, rightHaveHash, rightHash, rightKey, rightValue);
+            (leftKey != null ?
+             (rightKey != null ?
+              keyValuePairAndKeyValuePairSplicer :
+              rightValue instanceof BitmapIndexedNode ?
+              keyValuePairAndBitmapIndexedNodeSplicer :
+              rightValue instanceof ArrayNode ?
+              keyValuePairAndArrayNodeSplicer :
+              keyValuePairAndHashCollisionNodeSplicer) :
+             leftValue instanceof BitmapIndexedNode ?
+             (rightKey != null ?
+              bitmapIndexedNodeAndKeyValuePairSplicer :
+              rightValue instanceof BitmapIndexedNode ?
+              bitmapIndexedNodeAndBitmapIndexedNodeSplicer :
+              rightValue instanceof ArrayNode ?
+              bitmapIndexedNodeAndArrayNodeSplicer :
+              bitmapIndexedNodeAndHashCollisionNodeSplicer) :
+             leftValue instanceof ArrayNode ?
+             (rightKey != null ?
+              arrayNodeAndKeyValuePairSplicer :
+              rightValue instanceof BitmapIndexedNode ?
+              arrayNodeAndBitmapIndexedNodeSplicer :
+              rightValue instanceof ArrayNode ?
+              arrayNodeAndArrayNodeSplicer :
+              arrayNodeAndHashCollisionNodeSplicer) :
+             (rightKey != null ?
+              hashCollisionNodeAndKeyValuePairSplicer :
+              rightValue instanceof BitmapIndexedNode ?
+              hashCollisionNodeAndBitmapIndexedNodeSplicer :
+              rightValue instanceof ArrayNode ?
+              hashCollisionNodeAndArrayNodeSplicer :
+              hashCollisionNodeAndHashCollisionNodeSplicer))
+            .splice(shift, counts, leftHaveHash, leftHash, leftKey, leftValue, rightHaveHash, rightHash, rightKey, rightValue);
     }
 
 }
