@@ -110,14 +110,14 @@
      (merge l r)
      (parallel-splice-hash-maps l r))))
 
-(comment
+(do
   (println "STARTING TEST RUN")
   (TestUtils/wrapSplicers)
   (try
     (dotimes [i 10000000]
       (do
         (if (zero? (mod i 1000)) (println "i =" i))
-        (check 512 32 4)))
+        (check 1024 32 5)))
     (catch Throwable t
       (do
         (.flush System/out)
@@ -139,7 +139,7 @@
         (p/pprint (seqspert.core/inspect clojure.lang.TestSplicer/actual))
         ))
     (finally
-      (TestUtils/wrapSplicers)))
+      (TestUtils/unwrapSplicers)))
   (println "FINISHED"))
 
 ;; 100,000,000 merge - needs 25-40g of heap

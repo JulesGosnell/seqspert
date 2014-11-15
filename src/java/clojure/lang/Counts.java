@@ -27,7 +27,10 @@ public class Counts {
     }
 
     public boolean equals(Counts that) {
-        return this.resolveFunction == that.resolveFunction && this.sameKey == that.sameKey && this.sameKeyAndValue == that.sameKeyAndValue;
+        return
+            this.resolveFunction == that.resolveFunction &&
+            this.sameKey == that.sameKey &&
+            this.sameKeyAndValue == that.sameKeyAndValue;
     }
 
     @Override
@@ -38,6 +41,8 @@ public class Counts {
     @Override
     public String toString() {
         return getClass().getSimpleName() + 
-            "(resolveFunction=" + resolveFunction + ", sameKey=" + sameKey + ", sameKeyAndValue=" + sameKeyAndValue +")";
+            "(resolveFunction=" + resolveFunction +
+            ", sameKey=" + sameKey +
+            ", sameKeyAndValue=" + sameKeyAndValue +")";
     }
 }

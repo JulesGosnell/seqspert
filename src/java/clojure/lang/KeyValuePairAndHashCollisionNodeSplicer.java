@@ -7,8 +7,8 @@ public class KeyValuePairAndHashCollisionNodeSplicer implements Splicer {
 
     @Override
     public INode splice(int shift, Counts counts,
-                        boolean leftHaveHash, int leftHashCode,
-                        Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
+                        boolean leftHaveHash, int leftHashCode, Object leftKey, Object leftValue,
+                        boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
 
         final HashCollisionNode rightNode = (HashCollisionNode) rightValue;
 
