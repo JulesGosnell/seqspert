@@ -85,14 +85,6 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
     @Test
     public void testSameKeyAndValue() {
         final int leftHash = hasher.hash(1);
-//        test(1,
-//             new HashCodeKey("key1", 1), "value1",
-//             new HashCodeKey("key1.1", 1), "value1.1",
-//             1, 32,
-//             null, null,
-//             false);
-
-        // TODO: needs debugging...
         test(leftHash,
              new HashCodeKey("key1", leftHash), "value1",
              new HashCodeKey("key1.1", leftHash), "value1.1",

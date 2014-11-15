@@ -2,6 +2,7 @@ package clojure.lang;
 
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
@@ -30,7 +31,7 @@ public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface
 
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
-        // if (sameRight) assertSame(rightNode, actualNode);
+        if (sameRight) assertSame(rightNode, actualNode);
     }
 
     @Override

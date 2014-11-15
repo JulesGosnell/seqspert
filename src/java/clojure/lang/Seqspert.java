@@ -22,8 +22,6 @@ public class Seqspert {
 
     // this could be prettier and maybe faster if PersistentHashMap
     // was refactored but it is not part of seqspert :-(
-
-    // TODO - create new AtomicRef or not ?
     
     public static PersistentHashMap spliceHashMaps(PersistentHashMap lMap, PersistentHashMap rMap) {
         // check null config the same

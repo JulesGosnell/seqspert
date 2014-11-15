@@ -23,7 +23,7 @@ public class ArrayNodeUtils {
             if ((bitmap & (1 << i)) != 0) {
                 final Object key = bitIndexedArray[j++];
                 final Object value = bitIndexedArray[j++];                
-                newArray[i] = promote(newShift, key, value); // TODO: inline
+                newArray[i] = promote(newShift, key, value);
             }
         }
         newArray[index] = newNode;

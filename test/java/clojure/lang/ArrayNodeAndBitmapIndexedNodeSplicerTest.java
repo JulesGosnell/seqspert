@@ -68,11 +68,11 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
              new HashCodeKey("key1", hasher.hash(1)), "value1",
              new HashCodeKey("key2", hasher.hash(2)), "value2",
              true);
-        // TODO: might work
-        // rhs is an HCN
-        // test(hasher, 1, 31,
-        //      new HashCodeKey("key1", hasher.hash(1)), "value1",
-        //      new HashCodeKey("key2", hasher.hash(1)), "value2",
-        //      true);
+//         TODO: investigate
+//         rhs is an HCN
+//         test(hasher, 1, 31,
+//              new HashCodeKey("key1", hasher.hash(1)), "value1",
+//              new HashCodeKey("key2", hasher.hash(1)), "value2",
+//              false);
     }
 }

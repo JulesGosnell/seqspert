@@ -41,8 +41,6 @@ public class HashCollisionNodeAndKeyValuePairSplicerTest implements SplicerTestI
         if (same) assertSame(expectedNode, actualNode);
     }
 
-    // TODO: inline and tidy up
-
     final int leftHashCode = hasher.hash(2);
     final Object leftKey0 = new HashCodeKey("key0", leftHashCode);
     final Object leftKey1 = new HashCodeKey("key1", leftHashCode);

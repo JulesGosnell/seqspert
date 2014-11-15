@@ -23,7 +23,7 @@ class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
         final Object[] rightArray = rightNode.array;
         if((rightBitmap & bit) == 0) {
             // left hand side unoccupied...
-            final int rightBitCount = Integer.bitCount(rightBitmap); // TODO: repeating work ? - see index()
+            final int rightBitCount = Integer.bitCount(rightBitmap);
             if (rightBitCount == 16)
                 return new ArrayNode(null,
                                      17,

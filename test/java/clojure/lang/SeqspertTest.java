@@ -71,14 +71,6 @@ public class SeqspertTest {
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
     }
-    
-    @Test
-    public void testUnknown() {
-        // TODO: replace these with specific tests...
-        // TODO: investigate other places where BINU:create(kvp1, kvp2) is used...
-        test(0, 551, 552, 551, 935);
-        test(0, 0, 3, 110000, 130000);
-    }
 
     @Test
     public void testHashCollisionNodePromotion() {
