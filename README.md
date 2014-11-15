@@ -112,12 +112,12 @@ Seqspert's splice-hash-maps function creates a new hash-trie
 (underlying representation of a Clojure hash-map) directly from the
 overlaying of the right hand side on top of the left hand side in a
 single operation, reusing as much of the structure of both maps as
-possible and avoiding most associated churn and re-calling of hash()
-on keys.
+possible and avoiding  re-calling of hash() on keys.
 
-Since hash-tries are a form of tree, splicing can be done in parallel
-- each subtree being handed off to a different thread. This can yield
-substantial performance benefits.
+Since hash-tries are a form of tree, we can go a step further by doing
+the splicing in parallel, each subtree being handed off to a different
+thread and then the results being gathered back into a single
+hash-trie. This can yield substantial performance benefits.
 
 Since much of the structure of the maps involved is reused and
 seqspert bypasses a lot of the code that implements the Sequence
