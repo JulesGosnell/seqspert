@@ -7,16 +7,17 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import clojure.lang.TestUtils.Hasher;
-import clojure.lang.PersistentHashMap.INode;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
+import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.TestUtils.Hasher;
 
 public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
 
     int shift = 0;
-    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    final Hasher hasher = new Hasher() {@Override
+	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     Splicer splicer = new BitmapIndexedNodeAndBitmapIndexedNodeSplicer();
         
     public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1,

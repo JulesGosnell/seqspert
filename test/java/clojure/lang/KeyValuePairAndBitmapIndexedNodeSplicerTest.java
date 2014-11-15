@@ -11,7 +11,8 @@ import clojure.lang.TestUtils.Hasher;
 public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
-    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5); }};
+    final Hasher hasher = new Hasher() {@Override
+	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5); }};
     
     public void test(Object leftKey, Object leftValue,
                      Hasher hasher, int rightStart, int rightEnd, boolean sameRight) {
@@ -43,7 +44,8 @@ public class KeyValuePairAndBitmapIndexedNodeSplicerTest implements SplicerTestI
         
         // provide 3 ranks in which consecutive nodes are collapsed into hash collisions...
         final Hasher hasher = new Hasher() {
-                public int hash(int i) {return ((i / 2 + 2) << 10) | ((i / 2 + 1) << 5) | (i / 2);}};
+                @Override
+				public int hash(int i) {return ((i / 2 + 2) << 10) | ((i / 2 + 1) << 5) | (i / 2);}};
 
         // use the Hasher above to create a 16 node BIN with children BIN, HCN, ..., HCN, BIN
         // then splice it into a KVP causing the promotion of all children...

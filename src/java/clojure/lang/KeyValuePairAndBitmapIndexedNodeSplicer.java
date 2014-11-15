@@ -8,7 +8,8 @@ import clojure.lang.PersistentHashMap.INode;
 // why is this so complicated ?
 class KeyValuePairAndBitmapIndexedNodeSplicer implements Splicer {
 
-    public INode splice(int shift, Counts counts,
+    @Override
+	public INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHashCode, Object leftKey, Object leftValue,
                         boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 

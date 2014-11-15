@@ -5,7 +5,8 @@ import clojure.lang.PersistentHashMap.INode;
 
 class HashCollisionNodeAndHashCollisionNodeSplicer implements Splicer {
     
-    public INode splice(int shift, Counts counts,
+    @Override
+	public INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHashCode,
                         Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
         final HashCollisionNode leftNode  = (HashCollisionNode) leftValue;

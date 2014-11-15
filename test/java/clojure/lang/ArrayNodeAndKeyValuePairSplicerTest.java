@@ -6,13 +6,14 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
-import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.TestUtils.Hasher;
 
 public class ArrayNodeAndKeyValuePairSplicerTest implements SplicerTestInterface {
         
     final int shift = 0;
-    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    final Hasher hasher = new Hasher() {@Override
+	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
 
     public void test(Hasher leftHasher, int leftStart, int leftEnd, Object rightKey, Object rightValue, boolean same) {
         final INode leftNode = TestUtils.create(shift, leftHasher, leftStart, leftEnd);

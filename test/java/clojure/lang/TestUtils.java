@@ -7,8 +7,6 @@ import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-import clojure.lang.Seqspert;
-
 public class TestUtils {
 
     public static void assertHashMapEquals(PersistentHashMap expected, PersistentHashMap actual) {
@@ -124,7 +122,8 @@ public class TestUtils {
 
     public static interface Hasher {public int hash(int i);}
 
-    public static final Hasher defaultHasher = new Hasher() {public int hash(int i) { return i; }};
+    public static final Hasher defaultHasher = new Hasher() {@Override
+	public int hash(int i) { return i; }};
 
     public static interface Factory {
         public Object makeKey(int i);

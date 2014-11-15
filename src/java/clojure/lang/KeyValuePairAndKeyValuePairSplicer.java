@@ -21,7 +21,8 @@ class KeyValuePairAndKeyValuePairSplicer implements Splicer {
                                      new Object[]{rightKey, rightValue, leftKey, leftValue});
     }
     
-    public INode splice(int shift, Counts counts,
+    @Override
+	public INode splice(int shift, Counts counts,
 			boolean leftHaveHash, int leftHashCode,
 			Object leftKey, Object leftValue, boolean rightHaveHash, int rightHashCode, Object rightKey, Object rightValue) {
         if (Util.equiv(leftKey, rightKey)) {

@@ -6,8 +6,8 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
-import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.TestUtils.Hasher;
 
 // we can't build an HCN directly via INode.assoc, which is what we
 // want to do, but we can indirectly, i.e. build a BIN-HCN
@@ -15,7 +15,8 @@ import clojure.lang.PersistentHashMap.INode;
 // consequences.
 public class HashCollisionNodeAndHashCollisionNodeSplicerTest implements SplicerTestInterface {
 
-    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    final Hasher hasher = new Hasher() {@Override
+	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final int shift = 0;
 
     public void test(Object key0, Object value0, Object key1, Object value1,

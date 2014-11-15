@@ -6,12 +6,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import clojure.lang.TestUtils;
-import clojure.lang.TestUtils.Hasher;
-import clojure.lang.PersistentHashMap.INode;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
+import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.TestUtils.Hasher;
 
 public class SeqspertTest {
 
@@ -83,7 +82,8 @@ public class SeqspertTest {
 
     @Test
     public void testHashCollisionNodePromotion() {
-        final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 1) << 5) | i; }};
+        final Hasher hasher = new Hasher() {@Override
+		public int hash(int i) { return ((i + 1) << 5) | i; }};
 
         // 1-16 inc singleton BINS
         final INode leftNode = TestUtils.create(0, hasher, 1, 17);

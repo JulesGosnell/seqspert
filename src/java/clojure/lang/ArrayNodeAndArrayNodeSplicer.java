@@ -1,14 +1,14 @@
 package clojure.lang;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
-import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 // TODO: support rightDifferences...
 
 class ArrayNodeAndArrayNodeSplicer implements Splicer {
 
-    public INode splice(int shift, Counts counts,
+    @Override
+	public INode splice(int shift, Counts counts,
                         boolean leftHaveHash, int leftHash, Object leftKey, Object leftValue,
                         boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 

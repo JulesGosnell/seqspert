@@ -6,13 +6,14 @@ import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
-import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.TestUtils.Hasher;
 
 public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
-    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    final Hasher hasher = new Hasher() {@Override
+	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
 
     public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1, 
                      Hasher rightHasher, int rightStart, int rightEnd, boolean sameRight) {

@@ -11,7 +11,8 @@ import clojure.lang.TestUtils.Hasher;
 public class KeyValuePairAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
-    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 1) << 10) | (i << 5); }};
+    final Hasher hasher = new Hasher() {@Override
+	public int hash(int i) { return ((i + 1) << 10) | (i << 5); }};
 
     public void test(Object leftKey, Object leftValue,
                      Hasher hasher, int rightStart, int rightEnd, boolean sameRight) {

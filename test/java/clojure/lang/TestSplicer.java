@@ -1,6 +1,5 @@
 package clojure.lang;
 
-import static clojure.lang.ArrayNodeUtils.promote;
 import static org.junit.Assert.assertEquals;
 import clojure.lang.PersistentHashMap.INode;
 
@@ -19,9 +18,10 @@ public class TestSplicer implements Splicer {
     public static INode expected = null;
     public static INode actual = null;
 
-    private String className(Object o) {return o == null ? "<null>" : o.getClass().getSimpleName();}
+    //private String className(Object o) {return o == null ? "<null>" : o.getClass().getSimpleName();}
 
-    public INode splice(final int shift, Counts counts,
+    @Override
+	public INode splice(final int shift, Counts counts,
                         boolean leftHaveHash, int leftHash, Object leftKey, Object leftValue,
                         boolean rightHaveHash, int rightHash, Object rightKey, Object rightValue) {
 
@@ -31,7 +31,8 @@ public class TestSplicer implements Splicer {
         final Counts expectedCounts = new Counts();
 
         final IFn assocFunction = new AFn() {
-                public Object invoke(Object result, Object key, Object value) {
+                @Override
+				public Object invoke(Object result, Object key, Object value) {
                     final int hash = BitmapIndexedNodeUtils.hash(key);
                     final Box box = new Box(null);
                     final INode node = ((INode)result).assoc(shift, hash, key, value, box);

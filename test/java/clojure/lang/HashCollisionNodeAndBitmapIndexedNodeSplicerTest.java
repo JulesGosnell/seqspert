@@ -14,7 +14,8 @@ import clojure.lang.TestUtils.Hasher;
 
 public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInterface {
 
-    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    final Hasher hasher = new Hasher() {@Override
+	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final int shift = 0;
 
     public void test(int leftHash,

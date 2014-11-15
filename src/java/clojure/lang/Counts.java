@@ -30,11 +30,13 @@ public class Counts {
         return this.resolveFunction == that.resolveFunction && this.sameKey == that.sameKey && this.sameKeyAndValue == that.sameKeyAndValue;
     }
 
-    public boolean equals(Object that) {
+    @Override
+	public boolean equals(Object that) {
         return (that instanceof Counts) && this.equals((Counts) that);
     }
     
-    public String toString() {
+    @Override
+	public String toString() {
         return getClass().getSimpleName() + 
             "(resolveFunction=" + resolveFunction + ", sameKey=" + sameKey + ", sameKeyAndValue=" + sameKeyAndValue +")";
     }

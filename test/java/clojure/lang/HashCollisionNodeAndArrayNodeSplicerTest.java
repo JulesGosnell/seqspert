@@ -6,14 +6,15 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import clojure.lang.TestUtils.Hasher;
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.TestUtils.Hasher;
 
 public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
-    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    final Hasher hasher = new Hasher() {@Override
+	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
     final int shift = 0;
 
     public void test(int leftHash,

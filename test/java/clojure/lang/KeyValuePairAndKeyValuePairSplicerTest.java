@@ -3,15 +3,16 @@ package clojure.lang;
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
 
-import clojure.lang.TestUtils.Hasher;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.TestUtils.Hasher;
 
 public class KeyValuePairAndKeyValuePairSplicerTest implements SplicerTestInterface {
 
     final int shift = 0;
-    final Hasher hasher = new Hasher() {public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    final Hasher hasher = new Hasher() {@Override
+	public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
 
     public void test(Object leftKey, Object leftValue,
                      Object rightKey, Object rightValue, boolean same) {
