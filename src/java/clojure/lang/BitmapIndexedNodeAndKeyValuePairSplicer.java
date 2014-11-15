@@ -53,7 +53,7 @@ class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
             } else {
                 return new BitmapIndexedNode(null,
                                              leftBitmap,
-                                             BitmapIndexedNodeUtils.cloneAndSetNode(leftArray, valueIndex, newSubNode));
+                                             BitmapIndexedNodeUtils.cloneAndSetNode(leftArray, keyIndex, newSubNode));
             }
         }
     }

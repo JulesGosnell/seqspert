@@ -48,7 +48,7 @@ class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
             return (subVal == spliced) ?
             	leftNode :
             	new BitmapIndexedNode(null, leftBitmap,
-                                      BitmapIndexedNodeUtils.cloneAndSetNode(leftArray, valueIndex, spliced));
+                                      BitmapIndexedNodeUtils.cloneAndSetNode(leftArray, keyIndex, spliced));
         }
     }
 

@@ -26,10 +26,10 @@ public class BitmapIndexedNodeUtils {
                                      new Object[]{key1, value1, key0, value0});
     }
     
-    public static Object[] cloneAndSetNode(Object[] oldArray, int index, INode node) {
+    public static Object[] cloneAndSetNode(Object[] oldArray, int keyIndex, INode node) {
         final Object[] newArray = oldArray.clone();
-        newArray[index - 1] = null; // yeugh - TODO - change to keyIndex
-        newArray[index] = node;
+        newArray[keyIndex + 0] = null;
+        newArray[keyIndex + 1] = node;
         return newArray;
     }
     
