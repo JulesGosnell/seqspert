@@ -110,7 +110,7 @@
      (merge l r)
      (parallel-splice-hash-maps l r))))
 
-(do
+(comment
   (println "STARTING TEST RUN")
   (TestUtils/wrapSplicers)
   (try
