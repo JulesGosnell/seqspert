@@ -1,6 +1,6 @@
 (defproject seqspert "1.7.0-alpha3.1.0-SNAPSHOT"
 
-  :description "Seqspert: specific, faster, smaller Sequence operations "
+  :description "Seqspert: specific, faster, smaller Clojure Sequence operations "
 
   :url "https://github.com/JulesGosnell/seqspert/"
 
@@ -22,7 +22,7 @@
                 ;;*unchecked-math* true
                 }
 
-  :jvm-opts ["-Xmx1g" "-server" "-XX:+UsePopCountInstruction"]
+  :jvm-opts ["-Xms1g" "-Xmx1g" "-server" "-XX:+UsePopCountInstruction"]
 
   :main seqspert.all
   :aot :all
