@@ -40,6 +40,14 @@ public class Seqspert {
     }
         
     // HashSet
+
+    public static PersistentHashSet createPersistentHashSet(PersistentHashMap map) {
+        return new PersistentHashSet(PersistentHashMap.EMPTY, map);
+    }
+    
+    public static PersistentHashMap hashSetImpl(PersistentHashSet set) {
+        return (PersistentHashMap) set.impl;
+    }
         
     public static PersistentHashSet spliceHashSets(PersistentHashSet lSet, PersistentHashSet rSet) {
         final PersistentHashMap meta = PersistentHashMap.EMPTY; // TODO - consider merging METAs
