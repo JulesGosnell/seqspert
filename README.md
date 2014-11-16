@@ -67,7 +67,7 @@ As much of the structure of the maps involved is reused and a lot of
 the code that implements the Sequence abstraction is bypassed, heap
 churn is also reduced to a large extent.
 
-<pre>
+```clojure
 user=> (def m1 (apply hash-map (range 0 2000000)))  ;; create a map with 1M entries
 #'user/m1
 user=> (def m2 (apply hash-map (range 1000000 3000000))) ;; create an intersecting map
@@ -85,7 +85,7 @@ user=> (time (def m5 (parallel-splice-hash-maps m1 m2))) ;; parallel seqspert sp
 #'user/m5
 user=> (= m3 m4 m5) ;; verify results
 true
-</pre>
+```
 
 - "splicing" hash sets:
 
@@ -94,7 +94,7 @@ which each set element is both the key and the value in map
 entry. This means that Seqspert can leverage all the work done on
 splicing hash-maps to splice hash-sets as well:
 
-<pre>
+```clojure
 user=> (def s1 (apply hash-set (range 0 1000000)))  ;; create a set with 1M entries
 #'user/s1
 user=> (def s2 (apply hash-set (range 500000 1500000))) ;; create an intersecting set
@@ -114,7 +114,7 @@ user=> (time (def s5 (parallel-splice-hash-sets s1 s2))) ;; parallel seqspert sp
 #'user/s5
 user=> (= s3 s4 s5) ;; verify results
 true
-</pre>
+```
 
 - vector to vector mapping of a function
 
@@ -150,8 +150,8 @@ fork-join pool then finally reconstituting them into a vector, thus
 not only the function application but also the building of the output
 vector is done in parallel.:
 
-<pre>
-</pre>
+```clojure
+```
 
 - vector-to-array / array-to-vector
 
@@ -165,7 +165,7 @@ parallel.
 If you are performing large vector/array/vector copies then you should
 benchmark these functions.
 
-<pre>
+```clojure
 user=> (def v1 (vec (range 5000000)))
 #'user/v1
 user=> (time (def a1 (into-array Object v1))) ;; traditional approach
@@ -187,7 +187,7 @@ user=> (time (def v3 (array-to-vector a2))) ;; seqspert replacement
 user=> (= v2 v3)
 true
 user=> 
-</pre>
+```
 
 Seqspert also provides an "inspect" method for transforming the
 underlying implementation of a number of Clojure Sequences into a
@@ -198,8 +198,8 @@ learning to use Clojure's collections in an efficient and performant
 way.
 
 - array-map
-<pre>
-</pre>
+```clojure
+```
 
 ## Disclaimer
 
