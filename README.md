@@ -124,7 +124,7 @@ good thing.
 1. vector related functions are generally eager (mapv) rather than
 lazy (map) - laziness involves thread coordination which can be an
 unwelcome overhead when you don't need it. It also makes it more
-difficult to work out which thread work is actually being done on.
+difficult to work out on which thread the work is actually being done.
 
 2. a vector's internal structure is more compact than e.g. a
 linked-list, meaning less churn and maybe better mechanical sympathy.
@@ -196,6 +196,9 @@ the covers. Understanding this is helpful in debugging Seqspert and
 learning to use Clojure's collections in an efficient and performant
 way.
 
+- array-map
+<pre>
+</pre>
 
 ## Disclaimer
 
