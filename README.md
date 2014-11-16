@@ -88,7 +88,7 @@ user=> (= m3 m4 m5) ;; verify results
 true
 ```
 
-### "splicing" hash sets:
+### "splicing" hash sets
 
 Clojure hash-sets are implemented using an underlying hash-map in
 which each set element is both the key and the value in map
