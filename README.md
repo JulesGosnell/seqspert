@@ -166,19 +166,19 @@ threads allowing a vector to be copied into an array in parallel.
 ![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/vector-to-array.gif)
 
 ```clojure
-user=> (def v1 (vec (range 5000000)))
+user=> (def v1 (vec (range 10000000)))
 #'user/v1
 user=> (time (def a1 (into-array Object v1))) ;; traditional
-"Elapsed time: 603.765253 msecs"
+"Elapsed time: 1181.269146 msecs"
 #'user/a1
 user=> (use '[seqspert.vector])
 nil
 user=> (time (def a2 (vector-to-array v1))) ;; seqspert
-"Elapsed time: 48.920468 msecs"
+"Elapsed time: 114.372134 msecs"
 #'user/a2
 user=> (= (seq a1)(seq a2))
 true
-user=> 
+user=>
 ```
 
 ### array to vector copy
@@ -193,29 +193,20 @@ If you are performing large vector/array/vector copies then you might
 like to benchmark these functions.
 
 ```clojure
-user=> (def v1 (vec (range 5000000)))
-#'user/v1
-user=> (time (def a1 (into-array Object v1))) ;; traditional
-"Elapsed time: 603.765253 msecs"
+user=> (def a1 (into-array Object (range 10000000)))
 #'user/a1
+user=> (def v1 (time (vec a1)))
+"Elapsed time: 93.17489 msecs"
+#'user/v1
 user=> (use '[seqspert.vector])
 nil
-user=> (time (def a2 (vector-to-array v1))) ;; seqspert
-"Elapsed time: 48.920468 msecs"
-#'user/a2
-user=> (= (seq a1)(seq a2))
-true
-user=> (time (def v2 (into [] a1))) ;; traditional
-"Elapsed time: 83.325507 msecs"
+user=> (def v2 (time (array-to-vector a1)))
+"Elapsed time: 28.696511 msecs"
 #'user/v2
-user=> (time (def v3 (array-to-vector a2))) ;; seqspert
-"Elapsed time: 33.902564 msecs"
-#'user/v3
-user=> (= v2 v3)
+user=> (= v1 v2)
 true
-user=> 
+user=>
 ```
-
 ### data-structure inspection
 
 Seqspert also provides an "inspect" method for transforming the
