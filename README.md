@@ -21,9 +21,8 @@ number of specific high-performance, low-churn alternatives to common
 Sequence-based operations.
 
 Seqspert contains both Java and Clojure code which is thoroughly unit
-tested on every build.
-
-http://ouroboros.dyndns-free.com/ci/job/seqspert/
+tested on every
+[build](http://ouroboros.dyndns-free.com/ci/job/seqspert/).
 
 I have just put a recent snapshot up on Clojars. Any feedback would be
 most appreciated.
