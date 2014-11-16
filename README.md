@@ -96,6 +96,8 @@ which each set element is both the key and the value in map
 entry. This means that Seqspert can leverage all the work done on
 splicing hash-maps to splice hash-sets as well:
 
+![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/splice-hash-sets.gif)
+
 ```clojure
 user=> (def s1 (apply hash-set (range 0 1000000)))  ;; create a set with 1M entries
 #'user/s1
@@ -154,18 +156,23 @@ vector is done in parallel.:
 
 ```clojure
 ```
+![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/splice-hash-sets.gif)
 
 - vector-to-array / array-to-vector
 
 vector-to-array hands off subtrees and array offsets to different
 threads allowing a vector to be copied into an array in parallel.
 
+![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/vector-to-array.gif)
+
 array-to-vector does the same thing in reverse. As with fjvmap, not
 only the copying but also the building of the output vector is done in
 parallel.
 
-If you are performing large vector/array/vector copies then you should
-benchmark these functions.
+![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/array-to-vector.gif)
+
+If you are performing large vector/array/vector copies then you might
+like to benchmark these functions.
 
 ```clojure
 user=> (def v1 (vec (range 5000000)))
