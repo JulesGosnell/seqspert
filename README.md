@@ -9,13 +9,16 @@ Sequence.
 
 Whilst abstractions are a good thing in terms of getting useful work
 done in simple terms, when it comes to raw performance, they sometimes
-get in the way.
+get in the way. e.g. Sequences present as a linear structure
+supporting one-by-one element addition when perhaps the underlying
+tree-based implementation of some sequences is better suited to
+parallelism and more efficient bulk-updates.
 
-Seqspert started life as a set of utils for examining the underlying
-implementations and contents of various Clojure Sequence types but is
-now growing into a library supporting a number of specific
-high-performance, low-churn alternatives to common Sequence-based
-operations.
+Seqspert started life as a set of utils for examining and
+understanding the underlying implementations and contents of various
+Clojure Sequence types but is now growing into a library supporting a
+number of specific high-performance, low-churn alternatives to common
+Sequence-based operations.
 
 Seqspert contains both Java and Clojure code which is thoroughly unit
 tested on every build.
@@ -55,7 +58,7 @@ overlaying of the right hand side on top of the left hand side in a
 single operation, reusing as much of the structure of both maps as
 possible and avoiding work such as re-calling of hash() on keys.
 
-Since hash-tries are a form of tree, Seqspert go a step further by
+Since hash-tries are a form of tree, Seqspert can go a step further by
 doing the splicing in parallel, each subtree being handed off to a
 different thread and then the results being gathered back into a
 single hash-trie. This can yield substantial performance benefits.
@@ -87,8 +90,8 @@ true
 - "splicing" hash sets:
 
 Clojure hash-sets are implemented using an underlying hash-map in
-which each set element is both the key and the value in its key-value
-pair. This means that Seqspert can leverage all the work done on
+which each set element is both the key and the value in map
+entry. This means that Seqspert can leverage all the work done on
 splicing hash-maps to splice hash-sets as well:
 
 <pre>
@@ -118,9 +121,10 @@ true
 If you are trying to write performant code in Clojure, vectors are a
 good thing.
 
-1. vector related functions are generally eager (vmap) rather than
+1. vector related functions are generally eager (mapv) rather than
 lazy (map) - laziness involves thread coordination which can be an
-unwelcome overhead when you don't need it.
+unwelcome overhead when you don't need it. It also makes it more
+difficult to work out which thread work is actually being done on.
 
 2. a vector's internal structure is more compact than e.g. a
 linked-list, meaning less churn and maybe better mechanical sympathy.
@@ -150,7 +154,7 @@ vector is done in parallel.:
 
 - vector-to-array / array-to-vector
 
-vector-to-array hands off subvectors and array offsets to different
+vector-to-array hands off subtrees and array offsets to different
 threads allowing a vector to be copied into an array in parallel.
 
 array-to-vector does the same thing in reverse. As with fjvmap, not
@@ -191,6 +195,7 @@ print()-ed. This aids comprehension of exactly what is going on under
 the covers. Understanding this is helpful in debugging Seqspert and
 learning to use Clojure's collections in an efficient and performant
 way.
+
 
 ## Disclaimer
 
