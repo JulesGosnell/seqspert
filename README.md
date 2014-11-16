@@ -269,14 +269,10 @@ user=> (inspect (subvec (vector :a :b :c :d) 1 2))
 
 Your mileage may vary !
 
-All example timings are rough and relative to the box on which this
-README was written (4x 4.0ghz), linux-3.14.11-1, openjdk 1.8.0_40-b12
-and clojure-1.7.0-alpha3 and are not indicative of anything else. If
-you need anything more precise, please do your own testing.
-
-The performance of these functions has been tested on a reasonable
-cross-section of machines/jvms, however it is unlikely that this is
-exactly the same combination of h/w, s/w and data that constitute your
+The results detailed above were collected on 4x 4.0ghz,
+linux-3.14.11-1, openjdk 1.8.0_40-b12 and clojure-1.7.0-alpha3 and are
+not indicative of anything else. It is unlikely that this is exactly
+the same combination of h/w, s/w and data that constitute your
 production platform. ALWAYS test and test again until you are
 satisfied that, in your particular usecase, a seqspert function
 provides you with a significant performance win before adopting it.
