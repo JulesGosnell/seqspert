@@ -223,8 +223,6 @@ the covers. Understanding this is helpful in debugging Seqspert and
 learning to use Clojure's collections in an efficient and performant
 way.
 
-- array-map
-
 ```clojure
 user=> (use '[seqspert core all])
 nil
@@ -271,6 +269,12 @@ exactly the same combination of h/w, s/w and data that constitute your
 production platform. ALWAYS test and test again until you are
 satisfied that, in your particular usecase, a seqspert function
 provides you with a significant performance win before adopting it.
+
+## Further Reading
+
+- hash maps / sets - [Phil Bagwell's "Ideal Hash Trees"](http://lampwww.epfl.ch/papers/idealhashtrees.pdf)
+
+- vectors - I can't find a good reference, but ["RRB-Trees: Efficient Immutable Vectors"](http://infoscience.epfl.ch/record/169879/files/RMTrees.pdf) presents a similar but enhanced data-structure available for Clojure as [core.rrb-vector](https://github.com/clojure/core.rrb-vector).
 
 ## License
 
