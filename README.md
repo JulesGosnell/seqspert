@@ -269,8 +269,10 @@ user=> (inspect (subvec (vector :a :b :c :d) 1 2))
 
 Your mileage may vary !
 
-All example timings are relative to the box on which this README was
-written (4x 4.0ghz) and are not indicative of anything else.
+All example timings are rough and relative to the box on which this
+README was written (4x 4.0ghz), linux-3.14.11-1, openjdk 1.8.0_40-b12
+and clojure-1.7.0-alpha3 and are not indicative of anything else. If
+you need anything more precise, please do your own testing.
 
 The performance of these functions has been tested on a reasonable
 cross-section of machines/jvms, however it is unlikely that this is
