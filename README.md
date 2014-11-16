@@ -156,8 +156,23 @@ vector is done in parallel.:
 ![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/splice-hash-sets.gif)
 
 ```clojure
+user=> (def v1 (vec (range 10000000)))
+#'user/v1
+user=> (def v2 (time (mapv identity v1)))
+"Elapsed time: 236.2084 msecs"
+#'user/v2
+user=> (use '[seqspert.vector])
+nil
+user=> (def v3 (time (vmap identity v1)))
+"Elapsed time: 114.366042 msecs"
+#'user/v3
+user=> (def v4 (time (fjvmap identity v1)))
+"Elapsed time: 42.927673 msecs"
+#'user/v4
+user=> (= v1 v2 v3 v4)
+true
+user=>
 ```
-
 ### vector to array copy
 
 vector-to-array hands off subtrees and array offsets to different
