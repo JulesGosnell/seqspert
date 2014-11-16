@@ -121,15 +121,16 @@ true
 If you are trying to write performant code in Clojure, vectors are a
 good thing.
 
-1. vector related functions are generally eager (mapv) rather than
+* vector related functions are generally eager (mapv) rather than
 lazy (map) - laziness involves thread coordination which can be an
 unwelcome overhead when you don't need it. It also makes it more
 difficult to work out on which thread the work is actually being done.
 
-2. a vector's internal structure is more compact than e.g. a
-linked-list, meaning less churn and maybe better mechanical sympathy.
+* a vector's internal structure is more compact than e.g. a
+linked-list, meaning less churn and maybe better [mechanical
+sympathy](http://mechanical-sympathy.blogspot.co.uk/).
 
-3. a vector's api supports random access so it can be cut into smaller
+* a vector's api supports random access so it can be cut into smaller
 pieces for processing in parallel whereas e.g. a linked-list does not
 and therefore cannot.
 
