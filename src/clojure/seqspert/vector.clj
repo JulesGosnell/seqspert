@@ -216,6 +216,13 @@
 ;;------------------------------------------------------------------------------
 ;; local impl
 
+;; N.B.
+;;; I moved this code to here from my other project - clumatra -
+;;; because I felt that it fitted better in seqspert. The references
+;;; to wavefronts, kernel compilation etc relate to my intention to
+;;; run vmap on a GPU once Project Sumatra (JIT Java bytecode -> GPU)
+;;; and Clumatra (Clojure on Sumatra) mature...
+
 ;; wavefront size provided at construction time, no runtime args
 (defn kernel-compile-leaf [f]
   (fn [^"[Ljava.lang.Object;" in ^"[Ljava.lang.Object;" out]
