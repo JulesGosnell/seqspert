@@ -74,15 +74,15 @@ user=> (def m1 (apply hash-map (range 0 2000000)))  ;; create a map with 1M entr
 #'user/m1
 user=> (def m2 (apply hash-map (range 1000000 3000000))) ;; create an intersecting map
 #'user/m2
-user=> (time (def m3 (merge m1 m2))) ;; merge maps using standard approach
+user=> (time (def m3 (merge m1 m2))) ;; traditional
 "Elapsed time: 938.151586 msecs"
 #'user/m3
-user=> (use '[seqspert hash-map]) ;; now let's see what seqspert can do...
+user=> (use '[seqspert hash-map])
 nil
-user=> (time (def m4 (sequential-splice-hash-maps m1 m2))) ;; sequential seqspert splice
+user=> (time (def m4 (sequential-splice-hash-maps m1 m2))) ;; seqspert
 "Elapsed time: 266.333163 msecs"
 #'user/m4
-user=> (time (def m5 (parallel-splice-hash-maps m1 m2))) ;; parallel seqspert splice
+user=> (time (def m5 (parallel-splice-hash-maps m1 m2))) ;;  seqspert
 "Elapsed time: 91.248891 msecs"
 #'user/m5
 user=> (= m3 m4 m5) ;; verify results
@@ -103,17 +103,17 @@ user=> (def s1 (apply hash-set (range 0 1000000)))  ;; create a set with 1M entr
 #'user/s1
 user=> (def s2 (apply hash-set (range 500000 1500000))) ;; create an intersecting set
 #'user/s2
-user=> (use '[clojure set]) ;; pull in set utils
+user=> (use '[clojure set])
 nil
-user=> (time (def s3 (union s1 s2))) ;; merge maps using standard approach
+user=> (time (def s3 (union s1 s2))) ;; traditionall
 "Elapsed time: 662.81211 msecs"
 #'user/s3
-user=> (use '[seqspert hash-set]) ;; now let's see what seqspert can do...
+user=> (use '[seqspert hash-set])
 nil
-user=> (time (def s4 (sequential-splice-hash-sets s1 s2))) ;; sequential seqspert splice
+user=> (time (def s4 (sequential-splice-hash-sets s1 s2))) ;; seqspert
 "Elapsed time: 172.168669 msecs"
 #'user/s4
-user=> (time (def s5 (parallel-splice-hash-sets s1 s2))) ;; parallel seqspert splice
+user=> (time (def s5 (parallel-splice-hash-sets s1 s2))) ;; seqspert
 "Elapsed time: 56.688093 msecs"
 #'user/s5
 user=> (= s3 s4 s5) ;; verify results
@@ -154,9 +154,10 @@ fork-join pool then finally reconstituting them into a vector, thus
 not only the function application but also the building of the output
 vector is done in parallel.:
 
+![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/splice-hash-sets.gif)
+
 ```clojure
 ```
-![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/splice-hash-sets.gif)
 
 - vector-to-array / array-to-vector
 
@@ -164,6 +165,22 @@ vector-to-array hands off subtrees and array offsets to different
 threads allowing a vector to be copied into an array in parallel.
 
 ![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/vector-to-array.gif)
+
+```clojure
+user=> (def v1 (vec (range 5000000)))
+#'user/v1
+user=> (time (def a1 (into-array Object v1))) ;; traditional
+"Elapsed time: 603.765253 msecs"
+#'user/a1
+user=> (use '[seqspert.vector])
+nil
+user=> (time (def a2 (vector-to-array v1))) ;; seqspert
+"Elapsed time: 48.920468 msecs"
+#'user/a2
+user=> (= (seq a1)(seq a2))
+true
+user=> 
+```
 
 array-to-vector does the same thing in reverse. As with fjvmap, not
 only the copying but also the building of the output vector is done in
@@ -177,20 +194,20 @@ like to benchmark these functions.
 ```clojure
 user=> (def v1 (vec (range 5000000)))
 #'user/v1
-user=> (time (def a1 (into-array Object v1))) ;; traditional approach
+user=> (time (def a1 (into-array Object v1))) ;; traditional
 "Elapsed time: 603.765253 msecs"
 #'user/a1
 user=> (use '[seqspert.vector])
 nil
-user=> (time (def a2 (vector-to-array v1))) ;; seqspert replacement
+user=> (time (def a2 (vector-to-array v1))) ;; seqspert
 "Elapsed time: 48.920468 msecs"
 #'user/a2
 user=> (= (seq a1)(seq a2))
 true
-user=> (time (def v2 (into [] a1))) ;; traditional approach
+user=> (time (def v2 (into [] a1))) ;; traditional
 "Elapsed time: 83.325507 msecs"
 #'user/v2
-user=> (time (def v3 (array-to-vector a2))) ;; seqspert replacement
+user=> (time (def v3 (array-to-vector a2))) ;; seqspert
 "Elapsed time: 33.902564 msecs"
 #'user/v3
 user=> (= v2 v3)
@@ -207,7 +224,38 @@ learning to use Clojure's collections in an efficient and performant
 way.
 
 - array-map
+
 ```clojure
+user=> (use '[seqspert core all])
+nil
+user=> 
+
+user=> (inspect (array-map :a 1 :b 2 :c 3))
+#seqspert.array_map.ArrayMap{:array [:a 1 :b 2 :c 3]}
+user=> 
+
+user=> (inspect (hash-map :a 1 :b 2 :c 3))
+#seqspert.hash_map.HashMap{:count 3, :root #seqspert.hash_map.BitmapIndexedNode{:bitmap "1000000010000100000000000000000", :array [:c 3 :b 2 :a 1 nil nil]}}
+user=> 
+
+user=> (inspect (sorted-map :a 1 :b 2 :c 3))
+#seqspert.tree_map.TreeMap{:tree #seqspert.tree_map.TreeMapBlackBranchVal{:key :b, :val 2, :left #seqspert.tree_map.TreeMapBlackVal{:key :a, :val 1}, :right #seqspert.tree_map.TreeMapBlackVal{:key :c, :val 3}}, :_count 3}
+user=> 
+
+user=> (inspect (hash-set :a :b :c))
+#seqspert.hash_set.HashSet{:impl #seqspert.hash_map.HashMap{:count 3, :root #seqspert.hash_map.BitmapIndexedNode{:bitmap "1000000010000100000000000000000", :array [:c :c :b :b :a :a nil nil]}}}
+user=> 
+
+user=> (inspect (sorted-set :a :b :c))
+#seqspert.tree_set.TreeSet{:impl #seqspert.tree_map.TreeMap{:tree #seqspert.tree_map.TreeMapBlackBranchVal{:key :b, :val :b, :left #seqspert.tree_map.TreeMapBlackVal{:key :a, :val :a}, :right #seqspert.tree_map.TreeMapBlackVal{:key :c, :val :c}}, :_count 3}}
+user=> 
+
+user=> (inspect (vector :a :b :c :d))
+#seqspert.vector.Vector{:cnt 4, :shift 5, :root #seqspert.vector.VectorNode{:array [nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil]}, :tail [:a :b :c :d]}
+user=> 
+
+user=> (inspect (subvec (vector :a :b :c :d) 1 2))
+#seqspert.vector.SubVector{:v #seqspert.vector.Vector{:cnt 4, :shift 5, :root #seqspert.vector.VectorNode{:array [nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil]}, :tail [:a :b :c :d]}, :start 1, :end 2}
 ```
 
 ## Disclaimer
