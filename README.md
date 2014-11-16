@@ -42,7 +42,7 @@ most appreciated.
 Seqspert provides a number of high-performance Sequence related
 functions:
 
-- "splicing" hash maps
+# "splicing" hash maps
 
 Traditionally the merging of two hash-maps is done via the Sequence
 abstraction, reading every key-value-pair from a right hand side map
@@ -68,7 +68,6 @@ churn is also reduced to a large extent.
 
 ![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/splice-hash-maps.gif)
 
-
 ```clojure
 user=> (def m1 (apply hash-map (range 0 2000000)))  ;; create a map with 1M entries
 #'user/m1
@@ -89,7 +88,7 @@ user=> (= m3 m4 m5) ;; verify results
 true
 ```
 
-- "splicing" hash sets:
+# "splicing" hash sets:
 
 Clojure hash-sets are implemented using an underlying hash-map in
 which each set element is both the key and the value in map
@@ -120,7 +119,7 @@ user=> (= s3 s4 s5) ;; verify results
 true
 ```
 
-- vector to vector mapping of a function
+# vector to vector function mapping 
 
 If you are trying to write performant code in Clojure, vectors are a
 good thing.
@@ -159,7 +158,7 @@ vector is done in parallel.:
 ```clojure
 ```
 
-- vector-to-array / array-to-vector
+# vector to array copy
 
 vector-to-array hands off subtrees and array offsets to different
 threads allowing a vector to be copied into an array in parallel.
@@ -181,6 +180,8 @@ user=> (= (seq a1)(seq a2))
 true
 user=> 
 ```
+
+# array to vector copy
 
 array-to-vector does the same thing in reverse. As with fjvmap, not
 only the copying but also the building of the output vector is done in
