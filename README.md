@@ -17,8 +17,8 @@ now growing into a library supporting a number of specific
 high-performance, low-churn alternatives to common Sequence-based
 operations.
 
-Seqspert contains both Java and Clojure code which is unit tested on
-every build.
+Seqspert contains both Java and Clojure code which is thoroughly unit
+tested on every build.
 
 http://ouroboros.dyndns-free.com/ci/job/seqspert/
 
@@ -37,91 +37,32 @@ most appreciated.
 
 ## Overview
 
-Seqspert provides an "inspect" method for transforming the underlying
-implementation of a number of Clojure Sequences into a corresponding
-Clojure data structure which may then be print()-ed. This aids
-comprehension of exactly what is going on under the covers, hopefully
-leading to the writing of tighter code.
-
-Seqspert also provides a number of high-performance Sequence related
+Seqspert provides a number of high-performance Sequence related
 functions:
 
-<pre>
-user=> (use '[seqspert core all])
-nil
-user=> (use '[clojure.pprint])
-nil
-</pre>
-
-array-map:
-- inspect
-<pre>
-user=> (pprint (inspect {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 8 :h 9}))
-{:array [:e 5 :g 8 :c 3 :h 9 :b 2 :d 4 :f 6 :a 1]}
-nil
-user=>
-</pre>
-
-hash-map:
-- inspect
-<pre>
-user=> (pprint (inspect {:a 1 :b 2 :c 3 :d 4 :e 5 :f 6 :g 8 :h 9 :i 10}))
-{:count 9,
- :root
- {:bitmap "1100001010100100100000000000000",
-  :array
-  [:e
-   5
-   nil
-   {:bitmap "100000000010000000000000",
-    :array [:g 8 :c 3 nil nil nil nil]}
-   :h
-   9
-   :b
-   2
-   nil
-   {:bitmap "10000000000",
-    :array
-    [nil
-     {:bitmap "100000001", :array [:d 4 :f 6 nil nil nil nil]}
-     nil
-     nil
-     nil
-     nil
-     nil
-     nil]}
-   :i
-   10
-   :a
-   1
-   nil
-   nil]}}
-nil
-user=>
-</pre>
-- splice-hash-maps [WIP]
+- "splicing" hash maps
 
 Traditionally the merging of two hash-maps is done via the Sequence
-abstraction, reading every key-value-pair from the right hand side and
-assoc-ing each one to the left hand side. Unfortunately, this means
-that all the work done to reduce a set of keys and values into the
-right hand side is thrown away and has to be redone on the left hand
-side.
+abstraction, reading every key-value-pair from a right hand side map
+and assoc-ing each one into a left hand side map. Unfortunately, this
+means that all the work done to reduce a set of keys and values into
+the right hand side is thrown away and has to be redone on the left
+hand side.
 
 Seqspert's splice-hash-maps function creates a new hash-trie
 (underlying representation of a Clojure hash-map) directly from the
 overlaying of the right hand side on top of the left hand side in a
 single operation, reusing as much of the structure of both maps as
-possible and avoiding  re-calling of hash() on keys.
+possible and avoiding work such as re-calling of hash() on keys.
 
-Since hash-tries are a form of tree, we can go a step further by doing
-the splicing in parallel, each subtree being handed off to a different
-thread and then the results being gathered back into a single
-hash-trie. This can yield substantial performance benefits.
+Since hash-tries are a form of tree, Seqspert go a step further by
+doing the splicing in parallel, each subtree being handed off to a
+different thread and then the results being gathered back into a
+single hash-trie. This can yield substantial performance benefits.
 
-Since much of the structure of the maps involved is reused and
-seqspert bypasses a lot of the code that implements the Sequence
-abstraction, heap churn is also reduced to a large extent.
+As much of the structure of the maps involved is reused and a lot of
+the code that implements the Sequence abstraction is bypassed, heap
+churn is also reduced to a large extent.
 
 <pre>
 user=> (def m1 (apply hash-map (range 0 2000000)))  ;; create a map with 1M entries
@@ -143,12 +84,12 @@ user=> (= m3 m4 m5) ;; verify results
 true
 </pre>
 
-hash-set:
+- "splicing" hash sets:
 
 Clojure hash-sets are implemented using an underlying hash-map in
 which each set element is both the key and the value in its key-value
-pair. This means that Seqspert can reuse all the work done on splicing
-hash-maps to splice hash-sets as well:
+pair. This means that Seqspert can leverage all the work done on
+splicing hash-maps to splice hash-sets as well:
 
 <pre>
 user=> (def s1 (apply hash-set (range 0 1000000)))  ;; create a set with 1M entries
@@ -172,66 +113,52 @@ user=> (= s3 s4 s5) ;; verify results
 true
 </pre>
 
-- inspect
+- vector to vector mapping of a function
+
+If you are trying to write performant code in Clojure, vectors are a
+good thing.
+
+1. vector related functions are generally eager (vmap) rather than
+lazy (map) - laziness involves thread coordination which can be an
+unwelcome overhead when you don't need it.
+
+2. a vector's internal structure is more compact than e.g. a
+linked-list, meaning less churn and maybe better mechanical sympathy.
+
+3. a vector's api supports random access so it can be cut into smaller
+pieces for processing in parallel whereas e.g. a linked-list does not
+and therefore cannot.
+
+Traditionally a vector is mapv-ed into another vector via the Sequence
+abstraction. Each element of the input vector has the function applied
+and is then conj-ed onto the output vector.
+
+Seqspert works directly on the underlying structure of the vector, a
+tree. vmap walks the tree without having to expend any cycles making
+it look like a vector, calling the function on all its leaves and
+efficiently building an output tree of exactly the same dimensions as
+the original with no need to resize repeatedly as it is built in a
+single operation.
+
+fjvmap does the same thing but in parallel, passing each subtree to a
+fork-join pool then finally reconstituting them into a vector, thus
+not only the function application but also the building of the output
+vector is done in parallel.:
 
 <pre>
-user=> (use '[seqspert core all])
-nil
-user=> (use '[clojure.pprint])
-nil
-user=> (pprint (inspect #{:a :b :c :d :e :f :g :h}))
-{:impl
- {:count 8,
-  :root
-  {:bitmap "1000001010100100100000000000000",
-   :array
-   [:e
-    :e
-    nil
-    {:bitmap "100000000010000000000000",
-     :array [:g :g :c :c nil nil nil nil]}
-    :h
-    :h
-    :b
-    :b
-    nil
-    {:bitmap "10000000000",
-     :array
-     [nil
-      {:bitmap "100000001", :array [:d :d :f :f nil nil nil nil]}
-      nil
-      nil
-      nil
-      nil
-      nil
-      nil]}
-    :a
-    :a
-    nil
-    nil
-    nil
-    nil]}}}
-nil
-user=>
 </pre>
-
-tree-map:
-- inspect
-
-tree-set:
-- inspect
-
-vector:
-- inspect
 
 - vector-to-array / array-to-vector
 
-These two functions use multiple threads and a knowledge of vector
-internal structure to copy to/from Object[] more efficiently than the
-traditional approach.
+vector-to-array hands off subvectors and array offsets to different
+threads allowing a vector to be copied into an array in parallel.
 
-If you are performing large vector/array/vector copies then I would
-expect these functions to be useful to you.
+array-to-vector does the same thing in reverse. As with fjvmap, not
+only the copying but also the building of the output vector is done in
+parallel.
+
+If you are performing large vector/array/vector copies then you should
+benchmark these functions.
 
 <pre>
 user=> (def v1 (vec (range 5000000)))
@@ -257,67 +184,17 @@ true
 user=> 
 </pre>
 
-- vmap
-
-Traditionally a sequence is map-ped into a vector by conj-ing the
-result of the application of a function to each element of the
-sequence onto an initially empty vector.
-
-vmap both expects and produces a vector. It walks the input vector,
-applying the function to each element and builds up a vector of
-similar dimensions as it goes. If you are performing small
-vector->vector operations, vmap should be faster.
-
-<pre>
-user=> (def v1 (vec (range 1000000)))
-#'user/v1
-user=> (time (def v2 (mapv identity v1))) ;; traditional approach
-"Elapsed time: 100.226994 msecs"
-#'user/v2
-user=> (use '[seqspert.vector])
-nil
-user=> (time (def v3 (vmap identity v1))) ;; seqspert replacement
-"Elapsed time: 40.608011 msecs"
-#'user/v3
-user=> (= v1 v2 v3)
-true
-user=> 
-</pre>
-
-- fjvmap
-
-fjvmap takes advantage of the fact that the underlying representation
-of a vector is a tree.
-
-It works in the same way as vmap, except that each branch of the tree
-is handed off to a forkjoin pool thus the function is applied in
-parallel.
-
-There is no directly comparable traditional clojure function, so I
-will compare it to vmap, which we have just seen.
-
-If you are mapping vector/vector using pure functions, then you might
-want to try fjvmap.
-
-<pre>
-user=> (use '[seqspert.vector])
-nil
-user=> (def v1 (vec (range 1000000)))
-#'user/v1
-user=> (time (def v2 (vmap inc v1))) ;; seqspert sequential
-"Elapsed time: 74.748379 msecs"
-#'user/v2
-user=> (time (def v3 (fjvmap inc v1))) ;; seqspert parallel [on a 4 core box]
-"Elapsed time: 29.287218 msecs"
-#'user/v3
-user=> (= v2 v3)
-true
-user=> 
-</pre>
+Seqspert also provides an "inspect" method for transforming the
+underlying implementation of a number of Clojure Sequences into a
+corresponding Clojure data structure which may then be
+print()-ed. This aids comprehension of exactly what is going on under
+the covers. Understanding this is helpful in debugging Seqspert and
+learning to use Clojure's collections in an efficient and performant
+way.
 
 ## Disclaimer
 
-Mileage may vary !
+Your mileage may vary !
 
 All example timings are relative to the box on which this README was
 written (4x 4.0ghz) and are not indicative of anything else.
@@ -328,9 +205,6 @@ exactly the same combination of h/w, s/w and data that constitute your
 production platform. ALWAYS test and test again until you are
 satisfied that, in your particular usecase, a seqspert function
 provides you with a significant performance win before adopting it.
-
-Map/Set splicing functions are still a work in progress - although
-nearly complete.
 
 ## License
 
