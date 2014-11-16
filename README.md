@@ -66,6 +66,9 @@ As much of the structure of the maps involved is reused and a lot of
 the code that implements the Sequence abstraction is bypassed, heap
 churn is also reduced to a large extent.
 
+![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/splice-hash-maps.gif)
+
+
 ```clojure
 user=> (def m1 (apply hash-map (range 0 2000000)))  ;; create a map with 1M entries
 #'user/m1
