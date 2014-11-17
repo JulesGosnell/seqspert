@@ -35,7 +35,7 @@ appreciated.
 e.g.
 
 just put this in a project.clj file and in the same dir type 'lein
-repl' the cut-n-paste in some of the examples below... :
+repl'. Then cut and paste in some of the examples below :
 
 ```clojure
 (defproject my-stuff "0.1.0-SNAPSHOT"
@@ -171,7 +171,7 @@ fork-join pool then finally reconstituting them into a vector, thus
 not only the function application but also the building of the output
 vector is done in parallel.:
 
-![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/splice-hash-sets.gif)
+![Alt text](https://raw.github.com/JulesGosnell/seqspert/master/images/map-vector.gif)
 
 ```clojure
 user=> (def v1 (vec (range 10000000)))
