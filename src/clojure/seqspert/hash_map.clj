@@ -93,7 +93,8 @@
          kvps (seq (bitmap-indexed-node-array node))]
     (if (= (bit-and bitmap 1) 1)
       ;;TODO: take and drop in same action
-      (recur (conj! result (take 2 kvps)) (dec i) (bit-shift-right bitmap 1) (drop 2 kvps))
+      (let [[h t] (split-at 2 kvps)]
+        (recur (conj! result h) (dec i) (bit-shift-right bitmap 1) t))
       (if (zero? i)
         (persistent! result)
         (recur (conj! result nil) (dec i) (bit-shift-right bitmap 1) kvps)))))
