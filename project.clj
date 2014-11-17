@@ -1,4 +1,4 @@
-(defproject seqspert "1.7.0-alpha3.1.0-SNAPSHOT"
+(defproject seqspert "1.7.0-alpha4.1.0-SNAPSHOT"
 
   :description "Seqspert: specific, faster, smaller Clojure Sequence operations "
 
@@ -7,7 +7,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[org.clojure/clojure "1.7.0-alpha3"]
+  :dependencies [[org.clojure/clojure "1.7.0-alpha4"]
                  [junit/junit "4.11"]]
 
   :plugins [[lein-test-out "0.3.1"]
@@ -22,7 +22,8 @@
                 ;;*unchecked-math* true
                 }
 
-  :jvm-opts ["-Xms1g" "-Xmx1g" "-server" "-XX:+UsePopCountInstruction"]
+  :jvm-opts ["-Xms1g" "-Xmx1g" "-server"]
+  :javac-options ["-target" "1.7" "-source" "1.7"]
 
   :main seqspert.all
   :aot :all
