@@ -24,13 +24,31 @@ Seqspert contains both Java and Clojure code which is thoroughly unit
 tested on every
 [build](http://ouroboros.dyndns-free.com/ci/job/seqspert/).
 
-I have just put a recent snapshot up on Clojars. Any feedback would be
-most appreciated.
+I have just put a recent snapshot up on Clojars. It should be run on
+java-7/8 and clojure-1.7.0-alpha4. Any feedback would be most
+appreciated.
 
 ## Either: Lein
 
-[seqspert "1.7.0-alpha3.1.0-SNAPSHOT"]
+[seqspert "1.7.0-alpha4.1.0-SNAPSHOT"]
 
+e.g.
+
+just put this in a project.clj file and in the same dir type 'lein
+repl' the cut-n-paste in some of the examples below... :
+
+```clojure
+(defproject my-stuff "0.1.0-SNAPSHOT"
+  :description "FIXME: write description"
+  :url "http://example.com/FIXME"
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :dependencies [[org.clojure/clojure "1.7.0-alpha4"]
+                 [seqspert "1.7.0-alpha4.1.0-SNAPSHOT"]]
+  :main ^:skip-aot my-stuff.core
+  :target-path "target/%s"
+  :profiles {:uberjar {:aot :all}})
+```
 ## Or: Build/Install
 
 - git clone https://github.com/JulesGosnell/seqspert.git
@@ -74,15 +92,15 @@ user=> (def m1 (apply hash-map (range 0 2000000)))  ;; create a map with 1M entr
 user=> (def m2 (apply hash-map (range 1000000 3000000))) ;; create an intersecting map
 #'user/m2
 user=> (time (def m3 (merge m1 m2))) ;; traditional
-"Elapsed time: 938.151586 msecs"
+"Elapsed time: 398.815137 msecs"
 #'user/m3
 user=> (use '[seqspert hash-map])
 nil
 user=> (time (def m4 (sequential-splice-hash-maps m1 m2))) ;; seqspert
-"Elapsed time: 266.333163 msecs"
+"Elapsed time: 188.270844 msecs"
 #'user/m4
 user=> (time (def m5 (parallel-splice-hash-maps m1 m2))) ;;  seqspert
-"Elapsed time: 91.248891 msecs"
+"Elapsed time: 25.401196 msecs"
 #'user/m5
 user=> (= m3 m4 m5) ;; verify results
 true
@@ -104,16 +122,16 @@ user=> (def s2 (apply hash-set (range 500000 1500000))) ;; create an intersectin
 #'user/s2
 user=> (use '[clojure set])
 nil
-user=> (time (def s3 (union s1 s2))) ;; traditionall
-"Elapsed time: 662.81211 msecs"
+user=> (time (def s3 (union s1 s2))) ;; traditional
+"Elapsed time: 337.050528 msecs"
 #'user/s3
 user=> (use '[seqspert hash-set])
 nil
 user=> (time (def s4 (sequential-splice-hash-sets s1 s2))) ;; seqspert
-"Elapsed time: 172.168669 msecs"
+"Elapsed time: 158.255666 msecs"
 #'user/s4
 user=> (time (def s5 (parallel-splice-hash-sets s1 s2))) ;; seqspert
-"Elapsed time: 56.688093 msecs"
+"Elapsed time: 28.837984 msecs"
 #'user/s5
 user=> (= s3 s4 s5) ;; verify results
 true
@@ -159,15 +177,15 @@ vector is done in parallel.:
 user=> (def v1 (vec (range 10000000)))
 #'user/v1
 user=> (def v2 (time (mapv identity v1)))
-"Elapsed time: 236.2084 msecs"
+"Elapsed time: 166.884981 msecs"
 #'user/v2
 user=> (use '[seqspert.vector])
 nil
 user=> (def v3 (time (vmap identity v1)))
-"Elapsed time: 114.366042 msecs"
+"Elapsed time: 106.545886 msecs"
 #'user/v3
 user=> (def v4 (time (fjvmap identity v1)))
-"Elapsed time: 42.927673 msecs"
+"Elapsed time: 22.778568 msecs"
 #'user/v4
 user=> (= v1 v2 v3 v4)
 true
@@ -184,12 +202,12 @@ threads allowing a vector to be copied into an array in parallel.
 user=> (def v1 (vec (range 10000000)))
 #'user/v1
 user=> (time (def a1 (into-array Object v1))) ;; traditional
-"Elapsed time: 1181.269146 msecs"
+"Elapsed time: 715.439909 msecs"
 #'user/a1
 user=> (use '[seqspert.vector])
 nil
 user=> (time (def a2 (vector-to-array v1))) ;; seqspert
-"Elapsed time: 114.372134 msecs"
+"Elapsed time: 17.8768 msecs"
 #'user/a2
 user=> (= (seq a1)(seq a2))
 true
@@ -208,15 +226,15 @@ If you are performing large vector/array/vector copies then you might
 like to benchmark these functions.
 
 ```clojure
-user=> (def a1 (into-array Object (range 10000000)))
+user=> (def a1 (into-array Object (range 100000000)))
 #'user/a1
-user=> (def v1 (time (vec a1)))
-"Elapsed time: 93.17489 msecs"
+user=> (def v1 (time (vec a1))) ;; traditional
+"Elapsed time: 513.214568 msecs"
 #'user/v1
 user=> (use '[seqspert.vector])
 nil
-user=> (def v2 (time (array-to-vector a1)))
-"Elapsed time: 28.696511 msecs"
+user=> (def v2 (time (array-to-vector a1))) ;; seqspert
+"Elapsed time: 182.745605 msecs"
 #'user/v2
 user=> (= v1 v2)
 true
@@ -269,8 +287,8 @@ user=> (inspect (subvec (vector :a :b :c :d) 1 2))
 
 Your mileage may vary !
 
-The results detailed above were collected on 4x 4.0ghz,
-linux-3.14.11-1, openjdk 1.8.0_40-b12 and clojure-1.7.0-alpha3 and are
+The results detailed above were collected on 16x 3.30ghz,
+linux-3.11.0-26, Oracle 1.8.0-ea-b119 and clojure-1.7.0-alpha3 and are
 not indicative of anything else. It is unlikely that this is exactly
 the same combination of h/w, s/w and data that constitute your
 production platform. ALWAYS test and test again until you are
