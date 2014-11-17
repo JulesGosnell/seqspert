@@ -144,7 +144,7 @@
 
 ;; 100,000,000 merge - needs 25-40g of heap
 (comment
-  (def n (* 10 1000 1000))
+  (def n (* 100 1000 1000))
   (println "Starting:" n)
   (def m1 (apply hash-map (range (* n 2))))
   (def m2 (apply hash-map (range n (* n 3))))
@@ -152,8 +152,10 @@
   (def m3 (time (merge m1 m2)))
   (println "sequential splice:")
   (def m4 (time (sequential-splice-hash-maps m1 m2)))
-  (println "parallel splice:")
-  (def m5 (time (parallel-splice-hash-maps m1 m2)))
   (println "equals:")
-  (println (= m3 m4 m5))
+  (println (time (= m3 m4)))
+  (println "parallel splice:")
+  (def m4 (time (parallel-splice-hash-maps m1 m2)))
+  (println "equals:")
+  (println (time (= m3 m4)))
   )
