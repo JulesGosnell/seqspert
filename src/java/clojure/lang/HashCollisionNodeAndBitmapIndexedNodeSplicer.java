@@ -53,7 +53,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 rightSubValue == newSubNode ?
                 rightNode :
                 // TODO: is it possible to be leftSame here ?
-                // BiN had other subNodes, return union of old and new...
+                // BIN had other subNodes, return union of old and new...
                 new BitmapIndexedNode(null,
                                       rightBitmap,
                                       BitmapIndexedNodeUtils.cloneAndSetKeyValuePair(rightArray, keyIndex, null, newSubNode));
