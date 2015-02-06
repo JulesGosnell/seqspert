@@ -36,9 +36,21 @@ public class Seqspert {
         final Counts counts = new Counts(Counts.resolveLeft, 0, 0); // TODO: pass through correct resolveFn here
         final PersistentHashMap.INode root = Seqspert.splice(0, counts, false, 0, null, lRoot, false, 0, null, rRoot);
         final int count = lMap.count + rMap.count - counts.sameKey;
+
+        // TODO - do NOT always reurn new map
+        
         return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);
     }
+
+    public static PersistentHashMap assocBy(PersistentHashMap map, IFn resolveFunction, Object key, Object value) {
+        final Counts counts = new Counts(resolveFunction, 0, 0);
+        final PersistentHashMap.INode oldRoot = map.root == null? BitmapIndexedNode.EMPTY : map.root;
+        final PersistentHashMap.INode newRoot = Seqspert.splice(0, counts, false, 0, null, oldRoot, false, 0, key, value);
+        return (newRoot == oldRoot) ? map : new PersistentHashMap(map.count + 1 - counts.sameKey, newRoot, map.hasNull, map.nullValue);
+    }
         
+
+    
     // HashSet
 
     public static PersistentHashSet createPersistentHashSet(PersistentHashMap map) {
@@ -60,6 +72,8 @@ public class Seqspert {
     public static PersistentHashMap createPersistentHashMap(int count, Object root) {
         return new PersistentHashMap(count, (INode)root, false, null);
     }
+
+    public static PersistentHashMap EMPTY_HASH_MAP = PersistentHashMap.EMPTY;
 
     public static INode assoc(INode node, int shift, int hash, Object key, Object value, Box addedLeaf) {
         return node.assoc(shift, hash, key, value, addedLeaf);
