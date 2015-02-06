@@ -124,15 +124,6 @@ public class SeqspertTest {
                     false, 0, null, leftNode,
                     false, 0, null, rightNode);
         
-        {
-            assertTrue(actualNode instanceof ArrayNode);
-            // 18th child is an HCN
-            final ArrayNode parent = (ArrayNode) actualNode;
-            assertEquals(parent.count, 18);
-            final HashCollisionNode child = (HashCollisionNode) parent.array[18];
-            assertEquals(child.hash, hasher.hash(18));
-        }
-        
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
     }
