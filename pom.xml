@@ -10,14 +10,14 @@
   <groupId>seqspert</groupId>
   <artifactId>seqspert</artifactId>
   <packaging>jar</packaging>
-  <version>1.7.0-alpha3.1.0-SNAPSHOT</version>
+  <version>${clojure.version}.1.0-SNAPSHOT</version>
   <name>seqspert</name>
-  <description>Seqspert: specific, faster, smaller Sequence operations </description>
+  <description>Seqspert: specific, faster, smaller Clojure Sequence operations </description>
   <url>https://github.com/JulesGosnell/seqspert/</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <clojure.version>1.7.0-alpha3</clojure.version>
+    <clojure.version>1.7.0-alpha5</clojure.version>
   </properties>
 
   <developers>
@@ -32,6 +32,19 @@
       <timezone>0</timezone>
     </developer>
   </developers>
+  
+  <licenses>
+    <license>
+      <name>Eclipse Public License</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+    </license>
+  </licenses>
+  
+  <scm>
+    <connection>scm:git:git://github.com/JulesGosnell/seqspert.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/JulesGosnell/seqspert.git</developerConnection>
+    <url>https://github.com/JulesGosnell/seqspert</url>
+  </scm>
 
   <build>
     <sourceDirectory>src/java</sourceDirectory>
