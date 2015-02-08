@@ -1,5 +1,7 @@
 package clojure.lang;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 
 

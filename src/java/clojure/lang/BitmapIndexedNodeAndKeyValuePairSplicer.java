@@ -20,13 +20,16 @@ public class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
         final int leftBitmap = leftNode.bitmap;
         final Object[] leftArray = leftNode.array;
         if ((leftBitmap & bit) == 0) {
+            final Object resolved = counts.resolveFunction.invoke(rightKey, null, rightValue);
             // left hand side unoccupied
             final int leftBitCount = Integer.bitCount(leftBitmap);
             if (leftBitCount == 16)
                 return new ArrayNode(null,
                                      17,
                                      ArrayNodeUtils.promoteAndSet(shift, leftBitmap, leftArray,
-                                                                  rightHash, rightKey, rightValue));
+                                                                  rightHash,
+                                                                  rightKey,
+                                                                  resolved));
             else
                 return new BitmapIndexedNode(null,
                                              leftBitmap | bit,
@@ -34,12 +37,13 @@ public class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
                                                                                                leftBitCount * 2,
                                                                                                keyIndex,
                                                                                                rightKey,
-                                                                                               rightValue));
+                                                                                               resolved));
             
         } else {
             // left hand side already occupied...
             final Object subKey = leftArray[keyIndex];
             final Object subVal = leftArray[valueIndex];
+
             final INode newSubNode =
                 Seqspert.splice(shift + 5, counts, false, 0, subKey, subVal, true, rightHash, rightKey, rightValue);
 

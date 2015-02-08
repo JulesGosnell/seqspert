@@ -5,6 +5,7 @@ import static clojure.lang.ArrayNodeUtils.promote;
 import static clojure.lang.BitmapIndexedNodeUtils.create;
 import static clojure.lang.BitmapIndexedNodeUtils.hash;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
@@ -31,7 +32,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
         // N.B. these two alternates were a single body with a number of tests - cut-n-paste into two for performance reasons...
         if (newBitCount > 16) {
             final INode[] newAnArray = new INode[32];
-
+            int count = Integer.bitCount(leftBitmap);
             for (int i = 0; i < 32; i++) {
                 final int mask = 1 << i;
                 final boolean hasLeft = ((leftBitmap & mask) != 0);
@@ -57,6 +58,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                             // result was a Node...
                             newAnArray[i] = newSubNode;
                         }
+                        count++;
                     } else {
                         // haveLeft and !haveRight
                         newAnArray[i] = promote(newShift, leftSubKey, leftSubValue);
@@ -65,7 +67,11 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                     if (hasRight) { // and !haveLeft
                         final Object rightSubKey = rightArray[rightIndex++];
                         final Object rightSubValue = rightArray[rightIndex++];
-                        newAnArray[i] = promote(newShift, rightSubKey, rightSubValue);
+                        newAnArray[i] = count > 15 &&
+                            rightKey == null && rightSubValue instanceof HashCollisionNode ?
+                            promote(newShift, ((HashCollisionNode)rightSubValue).hash, rightSubKey, rightSubValue) :
+                            promote(newShift, rightSubKey, rightSubValue);
+                        count++;
                     }
                 }
             }

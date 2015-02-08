@@ -159,3 +159,39 @@
   (println "equals:")
   (println (time (= m3 m4)))
   )
+
+(comment ;; group-by
+
+  (def data (vec (range 20)))
+
+  (group-by even? data)
+  
+  ;;  vs
+  
+  (defn group-by-resolver [key current additional]
+    (if (nil? current) [additional] (conj current additional)))
+  
+  (defn seqspert-group-by [f s]
+    (reduce
+     (fn [m v] (clojure.lang.Seqspert/assocBy m group-by-resolver (f v) v))
+     clojure.lang.Seqspert/EMPTY_HASH_MAP
+     s))
+  
+  (seqspert-group-by even? data)
+  
+  (clojure.lang.Seqspert/assocBy clojure.lang.Seqspert/EMPTY_HASH_MAP (fn [k ov nv] :new-value) :key :value)
+
+  (def data (vec (range 1000000)))
+  (time (dotimes  [_ 30] (group-by even? data)))
+  (time (dotimes  [_ 30] (seqspert-group-by even? data)))
+  ;; works, but seqspert version is slower because is not using transient!/persistent - consider...
+  (= (group-by even? data) (seqspert-group-by even? data))
+  ;;  I am going to have the same issue with making assocBy-ing a large number of entries faster
+  ;; looks like quite a bit of work :-(
+  ;; how do we avoid any performace overhead ? is there any already ?
+  ;; so we need an assocBy! and a few more tests...
+
+  ;; also need to get over the alternative structures hurdle...
+  
+  ;; should be able to double speed of groupBy etc...
+  )

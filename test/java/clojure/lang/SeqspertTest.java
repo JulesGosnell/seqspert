@@ -2,8 +2,8 @@ package clojure.lang;
 
 import static clojure.lang.TestUtils.assertNodeEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 
@@ -123,15 +123,6 @@ public class SeqspertTest {
             .splice(shift, actualCounts,
                     false, 0, null, leftNode,
                     false, 0, null, rightNode);
-        
-        {
-            assertTrue(actualNode instanceof ArrayNode);
-            // 18th child is an HCN
-            final ArrayNode parent = (ArrayNode) actualNode;
-            assertEquals(parent.count, 18);
-            final HashCollisionNode child = (HashCollisionNode) parent.array[18];
-            assertEquals(child.hash, hasher.hash(18));
-        }
         
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);

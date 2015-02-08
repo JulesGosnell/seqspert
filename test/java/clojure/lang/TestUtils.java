@@ -18,18 +18,7 @@ public class TestUtils {
 
     public static void assertNodeEquals(INode expected, INode actual) {
         if (expected instanceof BitmapIndexedNode) {
-            final BitmapIndexedNode parent = (BitmapIndexedNode) expected;
-            // we have to allow expected-BIN-HCN to be equivalent to actual-HCN because of an issue
-            // with the way promotion of Nodes and KVP ordering occur...
-            if (actual instanceof HashCollisionNode &&
-                Integer.bitCount(parent.bitmap) == 1 &&
-                parent.array[1] instanceof HashCollisionNode &&
-                ((HashCollisionNode)parent.array[1]).hash == ((HashCollisionNode)actual).hash) {
-                final HashCollisionNode child = (HashCollisionNode)parent.array[1];
-                assertHashCollisionNodeEquals(child, (HashCollisionNode)actual);
-            } else {
-                assertBitmapIndexedNodeEquals((BitmapIndexedNode) expected, (BitmapIndexedNode) actual);
-            }
+            assertBitmapIndexedNodeEquals((BitmapIndexedNode) expected, (BitmapIndexedNode) actual);
         } else if (expected instanceof HashCollisionNode) {
             assertHashCollisionNodeEquals((HashCollisionNode) expected, (HashCollisionNode) actual);
         } else {
