@@ -6,6 +6,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.junit.Ignore;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
@@ -157,4 +158,46 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key" + 4, hasher.hash(4)), "value4", hasher, 4, 20, false, false);
         test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key4.1", hasher.hash(4)), "value4", hasher, 4, 20, false, false);
     }
+
+    @Ignore
+    @Test
+    public void testPromotion() {
+
+        // different numbers of nodes in left and right hand sides
+        // hash nodes at different positions in left and right hand sides
+
+        final int leftStart = 0;
+        final int rightStart = 8;
+
+        for (int leftEnd = 1; leftEnd < 16; leftEnd++) {
+            for (int rightEnd = 9; rightEnd < 24; rightEnd++) {
+                for (int h = 9; h < 24; h++) {
+                    for (int bit = 0; bit < 2; bit++) {
+
+                        System.out.println("HERE: " + leftEnd + " : " + rightEnd + " : " + h + " : " + bit);
+                    
+                        INode leftNode  = TestUtils.create(shift, leftStart, leftEnd);
+                        final INode rightNode = TestUtils.create(shift, rightStart, rightEnd);
+
+                        final int i = (bit == 0 ? leftStart : rightStart) + h;
+                        final IFn resolveFunction = Counts.resolveLeft;
+                        final Counts actualCounts = new Counts(resolveFunction, 0, 0);
+                        leftNode = TestUtils.assoc(shift,
+                                        bit == 0 ? leftNode : rightNode,
+                                        new HashCodeKey("collision" + i, TestUtils.defaultHasher.hash(i)),
+                                        ("value"+i), new Counts(resolveFunction, 0, 0));
+                        
+                        final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
+                        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
+                
+                        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+
+                        assertEquals(expectedCounts, actualCounts);
+                        assertNodeEquals(expectedNode, actualNode);
+                    }
+                }
+            }
+        }
+    }
+
 }
