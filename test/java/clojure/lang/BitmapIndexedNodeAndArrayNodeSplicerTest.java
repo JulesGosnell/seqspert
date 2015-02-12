@@ -5,10 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
-import org.junit.Ignore;
 
-import clojure.lang.PersistentHashMap.INode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.INode;
 import clojure.lang.TestUtils.Hasher;
 
 public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
@@ -117,7 +116,6 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
         assertNodeEquals(expectedNode, actualNode);
     }
 
-    @Ignore
     @Test
     public void testPromotionRight() {
 
@@ -133,11 +131,11 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
             
         final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
         final INode expectedNode = assocN(shift,
-                                          assocN(shift, leftNode, 17, 32, rightKeyer, expectedCounts),
+                                          assocN(shift, leftNode, 17, 32, leftKeyer, expectedCounts),
                                           17,
                                           32,
                                           rightKeyer,
-                                          new Counts());
+                                          expectedCounts);
                 
         final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
