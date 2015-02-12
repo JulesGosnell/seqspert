@@ -5,8 +5,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
+import org.junit.Ignore;
 
 import clojure.lang.PersistentHashMap.INode;
+import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.TestUtils.Hasher;
 
 public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
@@ -54,5 +56,95 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
     public void testSameKeyAndValue() {
         test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key" + 4, hasher.hash(4)), "value4", hasher, 3, 31, true);
     }
-    
+
+    interface Keyer {HashCodeKey key(int i);}
+
+    Keyer leftKeyer  = new Keyer(){@Override public HashCodeKey key(int i){return new HashCodeKey("leftKey" + i, TestUtils.defaultHasher.hash(i));}};
+    Keyer rightKeyer = new Keyer(){@Override public HashCodeKey key(int i){return new HashCodeKey("rightKey" + i, TestUtils.defaultHasher.hash(i));}};
+        
+    private INode makeNode(int shift, int start, int end, Keyer keyer) {
+        INode node = BitmapIndexedNode.EMPTY;
+        for (int i = start; i < end; i++)
+            node = TestUtils.assoc(shift, node , keyer.key(i), "value" + i, new Counts());
+        return node;
+    }
+
+    private INode assocN(int shift, INode node, int start, int end, Keyer keyer, Counts counts) {
+        for (int i = start; i < end; i++)
+            node = TestUtils.assoc(shift, node , keyer.key(i), "value" + i, counts);
+        return node;
+    }
+
+    @Test
+    public void testPromotionBoth() {
+
+        // hash collision node do not arise until left and right children are merged...
+        
+        final INode leftNode  = makeNode(shift, 0, 16, leftKeyer);
+        final INode rightNode = makeNode(shift, 0, 32, rightKeyer);
+            
+        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode expectedNode = assocN(shift, leftNode, 0, 32, rightKeyer, expectedCounts);
+                
+        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+
+        assertEquals(expectedCounts, actualCounts);
+        assertNodeEquals(expectedNode, actualNode);
+    }
+
+    @Test
+    public void testPromotionLeft() {
+
+        // hash collision node arises from left hand node
+        
+        final INode leftNode = assocN(shift,
+                                      makeNode(shift,  0, 16, leftKeyer),
+                                      0,
+                                      16,
+                                      rightKeyer,
+                                      new Counts());
+        final INode rightNode = makeNode(shift, 17, 32, rightKeyer);
+            
+        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode expectedNode = assocN(shift, leftNode, 17, 32, rightKeyer, expectedCounts);
+                
+        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+
+
+        assertEquals(expectedCounts, actualCounts);
+        assertNodeEquals(expectedNode, actualNode);
+    }
+
+    @Ignore
+    @Test
+    public void testPromotionRight() {
+
+        // hash collision node arises from right hand node
+        
+        final INode leftNode = makeNode(shift,  0, 16, leftKeyer);
+        final INode rightNode = assocN(shift,
+                                       makeNode(shift, 17, 32, leftKeyer),
+                                       17,
+                                       32,
+                                       rightKeyer,
+                                       new Counts());
+            
+        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode expectedNode = assocN(shift,
+                                          assocN(shift, leftNode, 17, 32, rightKeyer, expectedCounts),
+                                          17,
+                                          32,
+                                          rightKeyer,
+                                          new Counts());
+                
+        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+
+
+        assertEquals(expectedCounts, actualCounts);
+        assertNodeEquals(expectedNode, actualNode);
+    }
+
 }
