@@ -200,4 +200,107 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         }
     }
 
+    interface Keyer {HashCodeKey key(int i);}
+
+    Keyer leftKeyer  = new Keyer(){@Override public HashCodeKey key(int i){return new HashCodeKey("leftKey" + i, TestUtils.defaultHasher.hash(i));}};
+    Keyer rightKeyer = new Keyer(){@Override public HashCodeKey key(int i){return new HashCodeKey("rightKey" + i, TestUtils.defaultHasher.hash(i));}};
+        
+    private INode makeNode(int shift, int start, int end, Keyer keyer) {
+        INode node = BitmapIndexedNode.EMPTY;
+        for (int i = start; i < end; i++)
+            node = TestUtils.assoc(shift, node , keyer.key(i), "value" + i, new Counts());
+        return node;
+    }
+
+    private INode assocN(int shift, INode node, int start, int end, Keyer keyer, Counts counts) {
+        for (int i = start; i < end; i++)
+            node = TestUtils.assoc(shift, node , keyer.key(i), "value" + i, counts);
+        return node;
+    }
+
+    @Test
+    public void testPromotionBoth() {
+        
+        // hash collision node do not arise until left and right children are merged...
+        
+        final INode leftNode = makeNode(shift, 8, 24, leftKeyer);
+        assertTrue(leftNode instanceof BitmapIndexedNode);
+
+        final INode rightNode = makeNode(shift, 12, 28, rightKeyer);
+        assertTrue(rightNode instanceof BitmapIndexedNode);
+            
+        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode expectedNode = assocN(shift, leftNode, 12, 28, rightKeyer, expectedCounts);
+        assertTrue(expectedNode instanceof ArrayNode);
+                
+        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+        assertTrue(actualNode instanceof ArrayNode);
+
+        assertEquals(expectedCounts, actualCounts);
+        assertNodeEquals(expectedNode, actualNode);
+    }
+
+    @Test
+    public void testPromotionLeft() {
+
+        // hash collision node arises from left hand node
+        
+        final INode leftNode = assocN(shift,
+                                      makeNode(shift,  0, 16, leftKeyer),
+                                      0,
+                                      16,
+                                      rightKeyer,
+                                      new Counts());
+        assertTrue(leftNode instanceof BitmapIndexedNode);
+
+        final INode rightNode = makeNode(shift, 16, 32, rightKeyer);
+        assertTrue(rightNode instanceof BitmapIndexedNode);
+            
+        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode expectedNode = assocN(shift, leftNode, 16, 32, rightKeyer, expectedCounts);
+        assertTrue(expectedNode instanceof ArrayNode);
+                
+        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+        assertTrue(actualNode instanceof ArrayNode);
+
+        assertEquals(expectedCounts, actualCounts);
+        assertNodeEquals(expectedNode, actualNode);
+    }
+
+    
+    @Test
+    public void testPromotionRight() {
+
+        // hash collision node arises from right hand node
+        
+        final INode leftNode = makeNode(shift,  0, 16, leftKeyer);
+        assertTrue(leftNode instanceof BitmapIndexedNode);
+
+        final INode rightNode = assocN(shift,
+                                       makeNode(shift, 16, 32,leftKeyer),
+                                       16,
+                                       32,
+                                       rightKeyer,
+                                       new Counts());
+        assertTrue(rightNode instanceof BitmapIndexedNode);
+            
+        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode expectedNode = assocN(shift,
+                                          assocN(shift, leftNode, 16, 32, leftKeyer, expectedCounts),
+                                          16,
+                                          32,
+                                          rightKeyer,
+                                          expectedCounts);
+        assertTrue(expectedNode instanceof ArrayNode);
+                
+        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+        assertTrue(actualNode instanceof ArrayNode);
+
+
+        assertEquals(expectedCounts, actualCounts);
+        assertNodeEquals(expectedNode, actualNode);
+    }
 }
