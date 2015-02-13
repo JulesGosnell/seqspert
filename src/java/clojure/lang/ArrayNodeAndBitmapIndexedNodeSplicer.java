@@ -1,6 +1,7 @@
 package clojure.lang;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
+import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
 import clojure.lang.PersistentHashMap.INode;
 
@@ -39,7 +40,9 @@ public class ArrayNodeAndBitmapIndexedNodeSplicer implements Splicer {
                     if (leftSubNode != newSubNode) leftDifferences++;
                 } else {
                     // only rhs present
-                    newArray[i] = ArrayNodeUtils.promote(newShift, rightSubKey, rightSubValue);
+                    newArray[i] = rightSubKey == null && rightSubValue instanceof HashCollisionNode ?
+                    		ArrayNodeUtils.promote(newShift, ((HashCollisionNode)rightSubValue).hash, rightSubKey, rightSubValue) :
+                    		ArrayNodeUtils.promote(newShift, rightSubKey, rightSubValue);	
                     leftDifferences++;
                 }
             } else { // not haveRight
