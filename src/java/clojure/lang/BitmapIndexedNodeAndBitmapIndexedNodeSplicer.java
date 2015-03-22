@@ -32,7 +32,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
         // N.B. these two alternates were a single body with a number of tests - cut-n-paste into two for performance reasons...
         if (newBitCount > 16) {
             final INode[] newAnArray = new INode[32];
-            int count = Integer.bitCount(leftBitmap);
+            int count = 0;
             for (int i = 0; i < 32; i++) {
                 final int mask = 1 << i;
                 final boolean hasLeft = ((leftBitmap & mask) != 0);
@@ -58,19 +58,19 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                             // result was a Node...
                             newAnArray[i] = newSubNode;
                         }
-                        count++;
                     } else {
                         // haveLeft and !haveRight
                         newAnArray[i] = promote(newShift, leftSubKey, leftSubValue);
                     }
+                    count++;
                 } else {
                     if (hasRight) { // and !haveLeft
                         final Object rightSubKey = rightArray[rightIndex++];
                         final Object rightSubValue = rightArray[rightIndex++];
-                        newAnArray[i] = count > 15 &&
-                            rightKey == null && rightSubValue instanceof HashCollisionNode ?
-                            promote(newShift, ((HashCollisionNode)rightSubValue).hash, rightSubKey, rightSubValue) :
-                            promote(newShift, rightSubKey, rightSubValue);
+                        // emulate the difference between an HCN occurring before and after BIN promotion
+                        newAnArray[i] = (count >= 16) &&  (rightSubValue instanceof HashCollisionNode) ?
+                            promote(newShift, ((HashCollisionNode) rightSubValue).hash, rightSubKey, rightSubValue) : // wrap anything
+                            promote(newShift, rightSubKey, rightSubValue); // wrap KVPs, not INodes
                         count++;
                     }
                 }

@@ -159,47 +159,6 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key4.1", hasher.hash(4)), "value4", hasher, 4, 20, false, false);
     }
 
-    @Ignore
-    @Test
-    public void testPromotion() {
-
-        // different numbers of nodes in left and right hand sides
-        // hash nodes at different positions in left and right hand sides
-
-        final int leftStart = 0;
-        final int rightStart = 8;
-
-        for (int leftEnd = 1; leftEnd < 16; leftEnd++) {
-            for (int rightEnd = 9; rightEnd < 24; rightEnd++) {
-                for (int h = 9; h < 24; h++) {
-                    for (int bit = 0; bit < 2; bit++) {
-
-                        System.out.println("HERE: " + leftEnd + " : " + rightEnd + " : " + h + " : " + bit);
-                    
-                        INode leftNode  = TestUtils.create(shift, leftStart, leftEnd);
-                        final INode rightNode = TestUtils.create(shift, rightStart, rightEnd);
-
-                        final int i = (bit == 0 ? leftStart : rightStart) + h;
-                        final IFn resolveFunction = Counts.resolveLeft;
-                        final Counts actualCounts = new Counts(resolveFunction, 0, 0);
-                        leftNode = TestUtils.assoc(shift,
-                                        bit == 0 ? leftNode : rightNode,
-                                        new HashCodeKey("collision" + i, TestUtils.defaultHasher.hash(i)),
-                                        ("value"+i), new Counts(resolveFunction, 0, 0));
-                        
-                        final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
-                        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
-                
-                        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
-
-                        assertEquals(expectedCounts, actualCounts);
-                        assertNodeEquals(expectedNode, actualNode);
-                    }
-                }
-            }
-        }
-    }
-
     interface Keyer {HashCodeKey key(int i);}
 
     Keyer leftKeyer  = new Keyer(){@Override public HashCodeKey key(int i){return new HashCodeKey("leftKey" + i, TestUtils.defaultHasher.hash(i));}};
@@ -303,4 +262,120 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         assertEquals(expectedCounts, actualCounts);
         assertNodeEquals(expectedNode, actualNode);
     }
+
+    public void testPromotionNew(int leftStart, int leftEnd, int rightStart, int rightEnd, int h, boolean left) {
+
+        System.out.println(leftStart + "-" + leftEnd + ", " + rightStart + "-" + rightEnd + ", " + h + ", " + left);
+        final Object extraKey = new HashCodeKey("collision" + h, TestUtils.defaultHasher.hash(h));
+        final Object extraValue = "value" + h;
+
+        INode leftNode = BitmapIndexedNode.EMPTY;
+        final Counts leftCounts = new Counts(Counts.resolveLeft, 0, 0);
+        for (int l = leftStart; l < leftEnd; l++) {
+            leftNode = TestUtils.assoc(shift, leftNode, leftKeyer.key(l), "value" + l, leftCounts);
+            if (left && l == h) leftNode = TestUtils.assoc(shift, leftNode, extraKey, extraValue, leftCounts);
+        }
+        assertTrue(leftNode instanceof BitmapIndexedNode);
+        
+        INode rightNode = BitmapIndexedNode.EMPTY;
+        final Counts rightCounts = new Counts(Counts.resolveLeft, 0, 0);
+        for (int r = rightStart; r < rightEnd; r++) {
+            rightNode = TestUtils.assoc(shift, rightNode, rightKeyer.key(r), "value" + r, rightCounts);
+            if (!left && r == h) rightNode = TestUtils.assoc(shift, rightNode, extraKey, extraValue, rightCounts);
+        }
+        assertTrue(rightNode instanceof BitmapIndexedNode);
+            
+        final IFn resolveFunction = Counts.resolveLeft;
+
+        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        INode expectedNode = leftNode;
+        
+        // TODO: iterate over right hand BIN, adding associations to left hand BIN...
+        for (ISeq seq = rightNode.nodeSeq(); seq != null; seq = seq.next()) {
+        	final MapEntry entry = (MapEntry) seq.first();
+        	expectedNode = TestUtils.assoc(shift, expectedNode, entry.key(), entry.val(), expectedCounts);
+        }
+
+        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+
+        assertEquals(expectedCounts, actualCounts);
+        assertNodeEquals(expectedNode, actualNode);
+    }
+
+    @Test
+    public void testPromotionNew() {
+        final int leftStart = 0;
+        final int rightStart = 8;
+        
+        for (int leftEnd = 1; leftEnd < 16; leftEnd++) {
+            for (int rightEnd = 9; rightEnd < 24; rightEnd++) {
+                for (int h = 9; h < 24; h++) {
+                    for (int bit = 0; bit < 2; bit++) {
+                        testPromotionNew(leftStart, leftEnd, rightStart, rightEnd, h, bit == 0);
+                    }}}}
+        
+        //testPromotionNew(0, 2, 8, 23, 22, false); // count > 15
+        //testPromotionNew(0, 9, 8, 17, 15, false); // count > 16
+        //testPromotionNew(0, 3, 8, 23, 22, false);
+    }  
+
+    // @Test
+    // public void testPromotion() {
+
+    //     // different numbers of nodes in left and right hand sides
+    //     // hash nodes at different positions in left and right hand sides
+
+    //     final int leftStart = 0;
+    //     final int rightStart = 8;
+
+    //     for (int leftEnd = 1; leftEnd < 16; leftEnd++) {
+    //         for (int rightEnd = 9; rightEnd < 24; rightEnd++) {
+    //             for (int h = 9; h < 24; h++) {
+    //                 for (int bit = 0; bit < 2; bit++) {
+
+    //                     ///                             2                 23               9           1
+                        
+    //                     System.out.println("HERE: " + leftEnd + " : " + rightEnd + " : " + h + " : " + bit);
+                    
+    //                     INode leftNode  = TestUtils.create(shift, leftStart, leftEnd);
+    //                     assertTrue(leftNode instanceof BitmapIndexedNode);
+                        
+    //                     INode rightNode = TestUtils.create(shift, rightStart, rightEnd);
+    //                     assertTrue(rightNode instanceof BitmapIndexedNode);
+
+    //                     final int i = (bit == 0 ? leftStart : rightStart) + h;
+    //                     final IFn resolveFunction = Counts.resolveLeft;
+    //                     final Counts actualCounts = new Counts(resolveFunction, 0, 0);
+
+    //                     final Object extraKey = new HashCodeKey("collision" + i, TestUtils.defaultHasher.hash(i));
+    //                     final Object extraValue = "value" + i;
+                        
+    //                     if (bit == 0) {
+    //                         leftNode = TestUtils.assoc(shift, leftNode, extraKey, extraValue,
+    //                                                    new Counts(resolveFunction, 0, 0));
+    //                         assertTrue(leftNode instanceof BitmapIndexedNode);
+    //                     } else {
+    //                         rightNode = TestUtils.assoc(shift, rightNode, extraKey, extraValue,
+    //                                                     new Counts(resolveFunction, 0, 0));
+    //                         assertTrue(rightNode instanceof BitmapIndexedNode);
+    //                     }
+                        
+    //                     final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
+    //                     INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
+    //                     if (bit == 1) {
+    //                         expectedNode = TestUtils.assoc(shift, expectedNode, extraKey, extraValue,
+    //                                                        expectedCounts);
+    //                     }
+                
+    //                     final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+
+    //                     assertEquals(expectedCounts, actualCounts);
+    //                     assertNodeEquals(expectedNode, actualNode);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
 }
