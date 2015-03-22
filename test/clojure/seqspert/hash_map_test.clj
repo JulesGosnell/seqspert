@@ -106,9 +106,9 @@
 (defn check [n breadth depth]
   (let [l (rand-map n breadth depth)
         r (rand-map n breadth depth)]
-    (= ;;TestUtils/assertHashMapEquals
+    (TestUtils/assertHashMapEquals
      (merge l r)
-     (parallel-splice-hash-maps l r))))
+     (sequential-splice-hash-maps l r)))) ;try parallel when sequential works...
 
 (comment
   (println "STARTING TEST RUN")

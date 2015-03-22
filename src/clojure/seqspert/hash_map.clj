@@ -142,6 +142,7 @@
                   left-children
                   right-children)]
     (set! (.sameKey counts) (reduce + 0 (map third (filter some? children))))
+    ;; TODO: this is creating BINs with > 16 subNodes...
     ((if promote-p into-array-node into-bitmap-indexed-node) children)))
 
 (defmulti ^{:private true} parallel-splice-nodes (fn [l r c] [(type l)(type r)]))
