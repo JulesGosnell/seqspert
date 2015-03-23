@@ -24,7 +24,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
         if((leftBitmap & bit) == 0) {
             // left hand side unoccupied...
             final int leftBitCount = Integer.bitCount(leftBitmap);
-            if (leftBitCount == 16)
+            if (leftBitCount == 16) // TODO: probably a bug here
                 return new ArrayNode(null,
                                      17,
                                      ArrayNodeUtils.promoteAndSet(shift,

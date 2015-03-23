@@ -45,7 +45,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
             } else { // not lb
                 if (hasRight) {
                     // only rhs present - copy over
-                    newArray[i] = rightSubNode;
+                    newArray[i] = rightSubNode; // TODO: probably a bug here....
                 } else {
                     // do nothing...
                     empty++;
