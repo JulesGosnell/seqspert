@@ -2,6 +2,7 @@ package clojure.lang;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.BitmapIndexedNode;
+import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
 public class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
@@ -23,6 +24,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
         int rightDifferences = 0;
         int empty = 0;
         int leftIndex = 0;
+        int count = Integer.bitCount(leftNode.bitmap);
         for (int i = 0; i < 32; i++) {
             final int mask = 1 << i;
             final boolean hasLeft = ((leftNode.bitmap & mask) != 0);
@@ -45,7 +47,10 @@ public class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
             } else { // not lb
                 if (hasRight) {
                     // only rhs present - copy over
-                    newArray[i] = rightSubNode; // TODO: probably a bug here....
+                    newArray[i] = (count > 15 && rightSubNode instanceof HashCollisionNode)  ? 
+                    		ArrayNodeUtils.promote(shift + 5, ((HashCollisionNode)rightSubNode).hash, null, rightSubNode) :
+                    			rightSubNode;
+                    count++;
                 } else {
                     // do nothing...
                     empty++;

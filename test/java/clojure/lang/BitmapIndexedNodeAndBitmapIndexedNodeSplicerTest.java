@@ -265,7 +265,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 
     public void testPromotionNew(int leftStart, int leftEnd, int rightStart, int rightEnd, int h, boolean left) {
 
-        System.out.println(leftStart + "-" + leftEnd + ", " + rightStart + "-" + rightEnd + ", " + h + ", " + left);
+        //System.out.println(leftStart + "-" + leftEnd + ", " + rightStart + "-" + rightEnd + ", " + h + ", " + left);
         final Object extraKey = new HashCodeKey("collision" + h, TestUtils.defaultHasher.hash(h));
         final Object extraValue = "value" + h;
 
@@ -275,7 +275,6 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
             leftNode = TestUtils.assoc(shift, leftNode, leftKeyer.key(l), "value" + l, leftCounts);
             if (left && l == h) leftNode = TestUtils.assoc(shift, leftNode, extraKey, extraValue, leftCounts);
         }
-        assertTrue(leftNode instanceof BitmapIndexedNode);
         
         INode rightNode = BitmapIndexedNode.EMPTY;
         final Counts rightCounts = new Counts(Counts.resolveLeft, 0, 0);
@@ -283,7 +282,6 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
             rightNode = TestUtils.assoc(shift, rightNode, rightKeyer.key(r), "value" + r, rightCounts);
             if (!left && r == h) rightNode = TestUtils.assoc(shift, rightNode, extraKey, extraValue, rightCounts);
         }
-        assertTrue(rightNode instanceof BitmapIndexedNode);
             
         final IFn resolveFunction = Counts.resolveLeft;
 
@@ -308,16 +306,25 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         final int leftStart = 0;
         final int rightStart = 8;
         
-        for (int leftEnd = 1; leftEnd < 16; leftEnd++) {
-            for (int rightEnd = 9; rightEnd < 24; rightEnd++) {
-                for (int h = 9; h < 24; h++) {
+        for (int leftEnd = 1; leftEnd < 32; leftEnd++) {
+            for (int rightEnd = 1; rightEnd < 32; rightEnd++) {
+                for (int h = 1; h < 32; h++) {
                     for (int bit = 0; bit < 2; bit++) {
                         testPromotionNew(leftStart, leftEnd, rightStart, rightEnd, h, bit == 0);
                     }}}}
         
+        // BIN/BIN
         //testPromotionNew(0, 2, 8, 23, 22, false); // count > 15
         //testPromotionNew(0, 9, 8, 17, 15, false); // count > 16
         //testPromotionNew(0, 3, 8, 23, 22, false);
+        //BIN/AN
+        //testPromotionNew(0, 1, 8, 25, 23, false);
+        //testPromotionNew(0, 1, 8, 25, 8, false);
+        // AN/BIN
+        //testPromotionNew(0, 17, 8, 1, 1, false);
+        //testPromotionNew(0, 17, 8, 18, 17, false);
+        // AN/AN
+        //testPromotionNew(0, 17, 8, 25, 17, false);
     }  
 
     // @Test
