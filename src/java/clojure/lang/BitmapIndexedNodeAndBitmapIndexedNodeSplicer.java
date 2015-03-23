@@ -32,7 +32,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
         // N.B. these two alternates were a single body with a number of tests - cut-n-paste into two for performance reasons...
         if (newBitCount > 16) {
             final INode[] newAnArray = new INode[32];
-            int count = 0;
+            int count = Integer.bitCount(leftBitmap);
             for (int i = 0; i < 32; i++) {
                 final int mask = 1 << i;
                 final boolean hasLeft = ((leftBitmap & mask) != 0);
@@ -62,7 +62,6 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                         // haveLeft and !haveRight
                         newAnArray[i] = promote(newShift, leftSubKey, leftSubValue);
                     }
-                    count++;
                 } else {
                     if (hasRight) { // and !haveLeft
                         final Object rightSubKey = rightArray[rightIndex++];
