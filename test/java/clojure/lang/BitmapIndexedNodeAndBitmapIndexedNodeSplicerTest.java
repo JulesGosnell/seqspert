@@ -188,7 +188,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         assertTrue(rightNode instanceof BitmapIndexedNode);
             
         final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
-        final INode expectedNode = assocN(shift, leftNode, 12, 28, rightKeyer, expectedCounts);
+        final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);
         assertTrue(expectedNode instanceof ArrayNode);
                 
         final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
@@ -204,19 +204,14 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
 
         // hash collision node arises from left hand node
         
-        final INode leftNode = assocN(shift,
-                                      makeNode(shift,  0, 16, leftKeyer),
-                                      0,
-                                      16,
-                                      rightKeyer,
-                                      new Counts());
+        final INode leftNode = assocN(shift,makeNode(shift,  0, 16, leftKeyer),  0, 16, rightKeyer, new Counts());
         assertTrue(leftNode instanceof BitmapIndexedNode);
 
         final INode rightNode = makeNode(shift, 16, 32, rightKeyer);
         assertTrue(rightNode instanceof BitmapIndexedNode);
             
         final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
-        final INode expectedNode = assocN(shift, leftNode, 16, 32, rightKeyer, expectedCounts);
+        final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);
         assertTrue(expectedNode instanceof ArrayNode);
                 
         final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
@@ -245,11 +240,10 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         assertTrue(rightNode instanceof BitmapIndexedNode);
             
         final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        // TODO: use merge here...
         final INode expectedNode = assocN(shift,
                                           assocN(shift, leftNode, 16, 32, leftKeyer, expectedCounts),
-                                          16,
-                                          32,
-                                          rightKeyer,
+                                          16, 32, rightKeyer, 
                                           expectedCounts);
         assertTrue(expectedNode instanceof ArrayNode);
                 
@@ -289,13 +283,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         //final IFn resolveFunction = Counts.resolveLeft;
 
         final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
-        INode expectedNode = leftNode;
-        
-        // TODO: iterate over right hand BIN, adding associations to left hand BIN...
-        for (ISeq seq = rightNode.nodeSeq(); seq != null; seq = seq.next()) {
-        	final MapEntry entry = (MapEntry) seq.first();
-        	expectedNode = TestUtils.assoc(shift, expectedNode, entry.key(), entry.val(), expectedCounts);
-        }
+        final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);
 
         final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
@@ -335,64 +323,6 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         // AN/AN
         //testPromotionNew(0, 17, 8, 25, 17, false);
     }  
-
-    // @Test
-    // public void testPromotion() {
-
-    //     // different numbers of nodes in left and right hand sides
-    //     // hash nodes at different positions in left and right hand sides
-
-    //     final int leftStart = 0;
-    //     final int rightStart = 8;
-
-    //     for (int leftEnd = 1; leftEnd < 16; leftEnd++) {
-    //         for (int rightEnd = 9; rightEnd < 24; rightEnd++) {
-    //             for (int h = 9; h < 24; h++) {
-    //                 for (int bit = 0; bit < 2; bit++) {
-
-    //                     ///                             2                 23               9           1
-                        
-    //                     System.out.println("HERE: " + leftEnd + " : " + rightEnd + " : " + h + " : " + bit);
-                    
-    //                     INode leftNode  = TestUtils.create(shift, leftStart, leftEnd);
-    //                     assertTrue(leftNode instanceof BitmapIndexedNode);
-                        
-    //                     INode rightNode = TestUtils.create(shift, rightStart, rightEnd);
-    //                     assertTrue(rightNode instanceof BitmapIndexedNode);
-
-    //                     final int i = (bit == 0 ? leftStart : rightStart) + h;
-    //                     final IFn resolveFunction = Counts.resolveLeft;
-    //                     final Counts actualCounts = new Counts(resolveFunction, 0, 0);
-
-    //                     final Object extraKey = new HashCodeKey("collision" + i, TestUtils.defaultHasher.hash(i));
-    //                     final Object extraValue = "value" + i;
-                        
-    //                     if (bit == 0) {
-    //                         leftNode = TestUtils.assoc(shift, leftNode, extraKey, extraValue,
-    //                                                    new Counts(resolveFunction, 0, 0));
-    //                         assertTrue(leftNode instanceof BitmapIndexedNode);
-    //                     } else {
-    //                         rightNode = TestUtils.assoc(shift, rightNode, extraKey, extraValue,
-    //                                                     new Counts(resolveFunction, 0, 0));
-    //                         assertTrue(rightNode instanceof BitmapIndexedNode);
-    //                     }
-                        
-    //                     final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
-    //                     INode expectedNode = TestUtils.assocN(shift, leftNode, rightStart, rightEnd, expectedCounts);
-    //                     if (bit == 1) {
-    //                         expectedNode = TestUtils.assoc(shift, expectedNode, extraKey, extraValue,
-    //                                                        expectedCounts);
-    //                     }
-                
-    //                     final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
-
-    //                     assertEquals(expectedCounts, actualCounts);
-    //                     assertNodeEquals(expectedNode, actualNode);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
     
     @Test
     public void testPromotionAgain() {
@@ -472,13 +402,8 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     		final Box rbox = new Box(null);
     		for (HashCodeKey k: right) rightNode.assoc(0, k.hashCode(), k, "value", rbox);
     		
-    		INode expectedNode = leftNode;
     		final Counts expectedCounts = new Counts();
-            // TODO: iterate over right hand BIN, adding associations to left hand BIN...
-            for (ISeq seq = rightNode.nodeSeq(); seq != null; seq = seq.next()) {
-            	final MapEntry entry = (MapEntry) seq.first();
-            	expectedNode = TestUtils.assoc(shift, expectedNode, entry.key(), entry.val(), expectedCounts);
-            }
+    		final INode expectedNode = TestUtils.merge(shift,  leftNode,  rightNode,  expectedCounts);
             
     		final Counts actualCounts = new Counts();
             final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
