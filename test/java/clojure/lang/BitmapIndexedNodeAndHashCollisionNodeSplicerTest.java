@@ -24,8 +24,7 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicerTest implements Splicer
                                                               rightKey0, rightValue0,
                                                               rightKey1, rightValue1);
         final Counts expectedCounts = new Counts();
-        final INode expectedNode =
-            TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
+        final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);
 
         final Counts actualCounts = new Counts();
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);

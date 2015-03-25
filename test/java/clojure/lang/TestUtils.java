@@ -288,4 +288,17 @@ public class TestUtils {
         Seqspert.hashCollisionNodeAndArrayNodeSplicer           = ((TestSplicer)Seqspert.hashCollisionNodeAndArrayNodeSplicer).splicer;
         Seqspert.hashCollisionNodeAndHashCollisionNodeSplicer   = ((TestSplicer)Seqspert.hashCollisionNodeAndHashCollisionNodeSplicer).splicer;
     }    
+    
+    public static INode merge(final int shift, INode left, INode right, final Counts counts) {
+        final IFn assocFunction = new AFn() {
+            @Override
+            public Object invoke(Object result, Object key, Object value) {
+                final int hash = BitmapIndexedNodeUtils.hash(key);
+                final Box box = new Box(null);
+                final INode node = ((INode)result).assoc(shift, hash, key, value, box);
+                counts.sameKey += (box.val == box) ? 0 : 1;
+                return node;
+            }};
+            return (INode) right.kvreduce(assocFunction, left);
+    }
 }

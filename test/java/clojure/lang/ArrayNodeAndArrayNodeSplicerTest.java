@@ -19,7 +19,8 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
 
     public void test(Object leftKey, Object leftValue,
                      Hasher leftHasher, int leftStart, int leftEnd,
-                     Hasher rightHasher, int rightStart, int rightEnd, boolean leftSame, boolean rightSame) {
+                     Hasher rightHasher, int rightStart, int rightEnd,
+                     boolean leftSame, boolean rightSame) {
         final INode leftNode = TestUtils.create(shift, leftKey, leftValue, leftHasher, leftStart, leftEnd);
         assertTrue(leftNode instanceof ArrayNode);
 
@@ -29,7 +30,7 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         final IFn resolveFunction = rightSame ? Counts.resolveRight: Counts.resolveLeft;
         
         final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
-        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightHasher, rightStart, rightEnd, expectedCounts);
+        final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);
 
         final Counts actualCounts = new Counts(resolveFunction, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);

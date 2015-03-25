@@ -34,9 +34,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
         final IFn resolver = sameRight ? Counts.resolveRight : Counts.resolveLeft;
 
         final Counts expectedCounts = new Counts(resolver, 0, 0);
-        final INode expectedNode = TestUtils.assocN(shift, leftNode,
-                                                    rightHasher, rightStart, rightEnd, rightKey0, rightValue0,
-                                                    expectedCounts);
+        final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);
 
         final Counts actualCounts = new Counts(resolver, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);

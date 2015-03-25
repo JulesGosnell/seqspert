@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import clojure.lang.PersistentHashMap.ArrayNode;
@@ -30,7 +29,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         final IFn resolveFunction = leftSame ? Counts.resolveLeft : Counts.resolveRight;
 
         final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
-        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightHasher, rightStart, rightEnd, expectedCounts);
+        final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);
                 
         final Counts actualCounts = new Counts(resolveFunction, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
@@ -263,27 +262,31 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
         assertNodeEquals(expectedNode, actualNode);
     }
 
-    public void testPromotionNew(int leftStart, int leftEnd, int rightStart, int rightEnd, int h, boolean left) {
+    public void testPromotionNew(int leftStart, int leftEnd, int rightStart, int rightEnd, int collision1, boolean side1, int collision2, boolean side2) {
 
         //System.out.println(leftStart + "-" + leftEnd + ", " + rightStart + "-" + rightEnd + ", " + h + ", " + left);
-        final Object extraKey = new HashCodeKey("collision" + h, TestUtils.defaultHasher.hash(h));
-        final Object extraValue = "value" + h;
+        final Object extraKey1 = new HashCodeKey("collision1" + collision1, TestUtils.defaultHasher.hash(collision1));
+        final Object extraValue1 = "value1" + collision1;
+        final Object extraKey2 = new HashCodeKey("collision2" + collision2, TestUtils.defaultHasher.hash(collision2));
+        final Object extraValue2 = "value2" + collision1;
 
         INode leftNode = BitmapIndexedNode.EMPTY;
         final Counts leftCounts = new Counts(Counts.resolveLeft, 0, 0);
         for (int l = leftStart; l < leftEnd; l++) {
             leftNode = TestUtils.assoc(shift, leftNode, leftKeyer.key(l), "value" + l, leftCounts);
-            if (left && l == h) leftNode = TestUtils.assoc(shift, leftNode, extraKey, extraValue, leftCounts);
+            if (side1 && l == collision1) leftNode = TestUtils.assoc(shift, leftNode, extraKey1, extraValue1, leftCounts);
+            if (side2 && l == collision2) leftNode = TestUtils.assoc(shift, leftNode, extraKey2, extraValue2, leftCounts);
         }
         
         INode rightNode = BitmapIndexedNode.EMPTY;
         final Counts rightCounts = new Counts(Counts.resolveLeft, 0, 0);
         for (int r = rightStart; r < rightEnd; r++) {
             rightNode = TestUtils.assoc(shift, rightNode, rightKeyer.key(r), "value" + r, rightCounts);
-            if (!left && r == h) rightNode = TestUtils.assoc(shift, rightNode, extraKey, extraValue, rightCounts);
+            if (!side1 && r == collision1) rightNode = TestUtils.assoc(shift, rightNode, extraKey1, extraValue1, rightCounts);
+            if (!side2 && r == collision2) rightNode = TestUtils.assoc(shift, rightNode, extraKey2, extraValue2, rightCounts);
         }
             
-        final IFn resolveFunction = Counts.resolveLeft;
+        //final IFn resolveFunction = Counts.resolveLeft;
 
         final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
         INode expectedNode = leftNode;
@@ -304,14 +307,20 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     @Test
     public void testPromotionNew() {
         final int leftStart = 0;
-        final int rightStart = 8;
+        final int maxLeft = 32;
+        final int rightStart = 0;
+        final int maxRight = 32;
+        final int collisionMax1 = 32;
+        final int collisionMax2 = 32;
         
-        for (int leftEnd = 1; leftEnd < 32; leftEnd++) {
-            for (int rightEnd = 1; rightEnd < 32; rightEnd++) {
-                for (int h = 1; h < 32; h++) {
-                    for (int bit = 0; bit < 2; bit++) {
-                        testPromotionNew(leftStart, leftEnd, rightStart, rightEnd, h, bit == 0);
-                    }}}}
+        for (int leftEnd = 1; leftEnd < maxLeft; leftEnd++) {
+        	for (int rightEnd = 1; rightEnd < maxRight; rightEnd++) {
+        		for (int collision1 = 0; collision1 < collisionMax1; collision1++) {
+        			for (int collision2 = 0; collision2 < collisionMax2; collision2++) {
+        				for (int side1 = 0; side1 < 2; side1++) {
+        					for (int side2 = 0; side2 < 2; side2++) {
+        						testPromotionNew(leftStart, leftEnd, rightStart, rightEnd, collision1, side1 == 0, collision2, side2 == 0);
+        					}}}}}}
         
         // BIN/BIN
         //testPromotionNew(0, 2, 8, 23, 22, false); // count > 15
@@ -384,5 +393,97 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicerTest implements Splicer
     //         }
     //     }
     // }
+    
+    @Test
+    public void testPromotionAgain() {
+    		final HashCodeKey[] left = new HashCodeKey[]{
+    		new HashCodeKey("black-" + 3, 3),
+    		new HashCodeKey("white-" + 67, 67),
+    		new HashCodeKey("white-" + 663651, 663651),
+    		new HashCodeKey("black-" + 131, 131),
+    		new HashCodeKey("white-" + 26858691, 26858691),
+    		new HashCodeKey("white-" + 551139, 551139),
+    		new HashCodeKey("white-" + 19826979, 19826979),
+    		new HashCodeKey("white-" + 2467, 2467),
+    		new HashCodeKey("white-" + 451, 451),
+    		new HashCodeKey("white-" + 418307, 418307),
+    		new HashCodeKey("white-" + 611, 611),
+    		new HashCodeKey("black-" + 4739, 4739),
+    		new HashCodeKey("black-" + 14201507, 14201507),
+    		new HashCodeKey("black-" + 12995, 12995),
+    		new HashCodeKey("white-" + 13527747, 13527747),
+    		new HashCodeKey("black-" + 15171, 15171),
+    		new HashCodeKey("white-" + 9128771, 9128771),
+    		new HashCodeKey("black-" + 892835, 892835),
+    		};
+    		
+    		final HashCodeKey[] right = new HashCodeKey[]{
+    		new HashCodeKey("black-" + 3, 3),
+    		new HashCodeKey("white-" + 3, 3),
+    		new HashCodeKey("white-" + 14832643, 14832643),
+    		new HashCodeKey("white-" + 35, 35),
+    		new HashCodeKey("white-" + 7531555, 7531555),
+    		new HashCodeKey("white-" + 67, 67),
+    		new HashCodeKey("white-" + 663651, 663651),
+    		new HashCodeKey("black-" + 32684131, 32684131),
+    		new HashCodeKey("black-" + 131, 131),
+    		new HashCodeKey("white-" + 131, 131),
+    		new HashCodeKey("white-" + 195, 195),
+    		new HashCodeKey("white-" + 26858691, 26858691),
+    		new HashCodeKey("white-" + 227, 227),
+    		new HashCodeKey("white-" + 551139, 551139),
+    		new HashCodeKey("white-" + 19826979, 19826979),
+    		new HashCodeKey("white-" + 11555, 11555),
+    		new HashCodeKey("black-" + 2929955, 2929955),
+    		new HashCodeKey("black-" + 323, 323),
+    		new HashCodeKey("black-" + 355, 355),
+    		new HashCodeKey("white-" + 16739, 16739),
+    		new HashCodeKey("white-" + 387, 387),
+    		new HashCodeKey("black-" + 21891, 21891),
+    		new HashCodeKey("white-" + 2467, 2467),
+    		new HashCodeKey("white-" + 451, 451),
+    		new HashCodeKey("black-" + 16867, 16867),
+    		new HashCodeKey("white-" + 418307, 418307),
+    		new HashCodeKey("black-" + 697891, 697891),
+    		new HashCodeKey("white-" + 611, 611),
+    		new HashCodeKey("white-" + 1656419, 1656419),
+    		new HashCodeKey("black-" + 4739, 4739),
+    		new HashCodeKey("black-" + 14201507, 14201507),
+    		new HashCodeKey("black-" + 25251, 25251),
+    		new HashCodeKey("black-" + 12995, 12995),
+    		new HashCodeKey("white-" + 25283, 25283),
+    		new HashCodeKey("white-" + 13527747, 13527747),
+    		new HashCodeKey("black-" + 28702403, 28702403),
+    		new HashCodeKey("black-" + 15171, 15171),
+    		new HashCodeKey("white-" + 9128771, 9128771),
+    		new HashCodeKey("black-" + 759683, 759683),
+    		new HashCodeKey("white-" + 23028611, 23028611),
+    		new HashCodeKey("white-" + 7075, 7075),
+    		new HashCodeKey("black-" + 892835, 892835),
+    		new HashCodeKey("black-" + 963, 963),
+    		new HashCodeKey("white-" + 8163, 8163),
+    		};
+    		
+    		INode leftNode = BitmapIndexedNode.EMPTY;
+    		final Box lbox = new Box(null);
+    		for (HashCodeKey k: left) leftNode.assoc(0, k.hashCode(), k, "value", lbox);
+    		
+    		INode rightNode = BitmapIndexedNode.EMPTY;
+    		final Box rbox = new Box(null);
+    		for (HashCodeKey k: right) rightNode.assoc(0, k.hashCode(), k, "value", rbox);
+    		
+    		INode expectedNode = leftNode;
+    		final Counts expectedCounts = new Counts();
+            // TODO: iterate over right hand BIN, adding associations to left hand BIN...
+            for (ISeq seq = rightNode.nodeSeq(); seq != null; seq = seq.next()) {
+            	final MapEntry entry = (MapEntry) seq.first();
+            	expectedNode = TestUtils.assoc(shift, expectedNode, entry.key(), entry.val(), expectedCounts);
+            }
+            
+    		final Counts actualCounts = new Counts();
+            final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
+
+            assertNodeEquals(expectedNode, actualNode);
+    }
 
 }
