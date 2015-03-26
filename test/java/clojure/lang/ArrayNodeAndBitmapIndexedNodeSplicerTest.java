@@ -17,6 +17,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     final int shift = 0;
     final Hasher hasher = new Hasher() {@Override
     public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
+    
     public void test(Hasher leftHasher, int leftStart, int leftEnd,
                      Object rightKey0, Object rightValue0,
                      Object rightKey1, Object rightValue1,
@@ -25,8 +26,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
         final INode rightNode = TestUtils.create(shift, rightKey0, rightValue0, rightKey1, rightValue1);
         
         final Counts expectedCounts = new Counts();
-        final INode expectedNode =
-            TestUtils.assoc(shift, leftNode, rightKey0, rightValue0, rightKey1, rightValue1, expectedCounts);
+        final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);
         
         final Counts actualCounts = new Counts();
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
@@ -39,9 +39,20 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testDifferent() {
+    	// rhs is two kvps
         test(hasher, 3, 31,
              new HashCodeKey("key1", hasher.hash(1)), "value1",
              new HashCodeKey("key2", hasher.hash(2)), "value2",
+             false);
+    	// rhs is an HCN
+        test(hasher, 3, 31,
+    			new HashCodeKey("key1", hasher.hash(1)), "value1",
+    			new HashCodeKey("key2", hasher.hash(1)), "value2",
+             false);
+    	// rhs is a BIN
+        test(hasher, 3, 31,
+             new HashCodeKey("key1", 1), "value1",
+             new HashCodeKey("key2", 33), "value2",
              false);
     }
 
@@ -66,17 +77,16 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testSameKeyAndValue() {
-        // rhs is two KVPs
-        test(hasher, 1, 31,
-             new HashCodeKey("key1", hasher.hash(1)), "value1",
-             new HashCodeKey("key2", hasher.hash(2)), "value2",
-             true);
-        //         TODO: investigate
-        //         rhs is an HCN
-        //         test(hasher, 1, 31,
-        //              new HashCodeKey("key1", hasher.hash(1)), "value1",
-        //              new HashCodeKey("key2", hasher.hash(1)), "value2",
-        //              false);
+    	// rhs is two KVPs
+    	test(hasher, 1, 31,
+    			new HashCodeKey("key1", hasher.hash(1)), "value1",
+    			new HashCodeKey("key2", hasher.hash(2)), "value2",
+    			true);
+    	// rhs is an HCN
+    	test(hasher, 1, 31,
+    			new HashCodeKey("key1", hasher.hash(1)), "value1",
+    			new HashCodeKey("key2", hasher.hash(1)), "value2",
+    			false);
     }
 
     interface Keyer {HashCodeKey key(int i);}
