@@ -46,29 +46,21 @@ public class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
             	}
             } else { // not lb
             	if (hasRight) {
-            		// only rhs present - copy over
-            		boolean test = false;
-            		if (count > 15)
-            			if (rightSubNode instanceof HashCollisionNode) {
-            				rightDifferences++;
-            				test= true;
-            			}
-            			else
-            				test = false;
-            		else
-            			test = false;
-
-            		newArray[i] = test  ? 
-            				ArrayNodeUtils.promote(shift + 5, ((HashCollisionNode)rightSubNode).hash, null, rightSubNode) :
-            					rightSubNode;
-            				count++;
+		    // only rhs present - copy over
+		    if (count > 15 && rightSubNode instanceof HashCollisionNode) {
+			rightDifferences++;
+			newArray[i] = ArrayNodeUtils.promote(shift + 5, ((HashCollisionNode)rightSubNode).hash, null, rightSubNode);
+		    } else {
+			newArray[i] = rightSubNode;
+		    }
+		    count++;
             	} else {
-            		// do nothing...
-            		empty++;
+		    // do nothing...
+		    empty++;
             	}
             }
         }
-
+	
         return rightDifferences == 0 ? rightNode : new ArrayNode(null, 32 - empty, newArray);
     }
 }
