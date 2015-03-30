@@ -1,34 +1,31 @@
 package clojure.lang;
 
+
 public class Counts {
         
-    public final IFn resolveFunction;
+	public static Resolver leftResolver = new LeftResolver();
+	public static Resolver rightResolver = new RightResolver();
+	
+    public final Resolver resolver;
     public int sameKey;
     public int sameKeyAndValue;
-    public static IFn resolveLeft  = new AFn() {
-            @Override public Object invoke(Object key, Object leftValue, Object rightValue) {
-                return (Util.equiv(leftValue, rightValue)) ? leftValue : rightValue;
-            }};
-    public static IFn resolveRight = new AFn() {
-            @Override public Object invoke(Object key, Object leftValue, Object rightValue) {
-                return rightValue; 
-            }};
+
 
     public Counts() {
-        this.resolveFunction = Counts.resolveLeft;
+        this.resolver = Counts.leftResolver;
         this.sameKey = 0;
         this.sameKeyAndValue = 0;
     }
 
-    public Counts(IFn resolveFn, int sameKey, int sameKeyAndValue) {
-        this.resolveFunction = resolveFn;
+    public Counts(Resolver resolver, int sameKey, int sameKeyAndValue) {
+        this.resolver = resolver;
         this.sameKey = sameKey;
         this.sameKeyAndValue = sameKeyAndValue;
     }
 
     public boolean equals(Counts that) {
         return
-            this.resolveFunction == that.resolveFunction &&
+            this.resolver.equals(that.resolver) &&
             this.sameKey == that.sameKey &&
             this.sameKeyAndValue == that.sameKeyAndValue;
     }
@@ -41,7 +38,7 @@ public class Counts {
     @Override
     public String toString() {
         return getClass().getSimpleName() + 
-            "(resolveFunction=" + resolveFunction +
+            "(resolver=" + resolver +
             ", sameKey=" + sameKey +
             ", sameKeyAndValue=" + sameKeyAndValue +")";
     }

@@ -53,7 +53,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                             // delegate decision to resolveFunction...
                             newAnArray[i] = create(partition(hash(leftSubKey), newShift),
                                                    leftSubKey,
-                                                   counts.resolveFunction.invoke(leftSubKey, leftSubValue, rightSubValue));
+                                                   counts.resolver.getResolver().invoke(leftSubKey, leftSubValue, rightSubValue));
                         } else {    // haveLeft and haveRight
                             // result was a Node...
                             newAnArray[i] = newSubNode;
@@ -100,7 +100,7 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                             // the key must be unchanged
                             // the value could be either from the left or right -
                             // delegate decision to resolveFunction...
-                            final Object newSubValue = counts.resolveFunction.invoke(leftSubKey,
+                            final Object newSubValue = counts.resolver.getResolver().invoke(leftSubKey,
                                                                                      leftSubValue,
                                                                                      rightSubValue);
                             if (newSubValue != leftSubValue) leftDifferences++;
@@ -131,12 +131,10 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                 }
             }
         
-            return 
-                leftDifferences == 0 ?
-                leftNode :
-                rightDifferences == 0 ?
-                rightNode :
-                new PersistentHashMap.BitmapIndexedNode(null, newBitmap, newBinArray);
+            final INode node = counts.resolver.resolveNodes(leftDifferences, leftNode, rightDifferences, rightNode);
+			return node == null ?
+                new PersistentHashMap.BitmapIndexedNode(null, newBitmap, newBinArray) :
+                	node;
         }
     }
 

@@ -2,7 +2,6 @@ package clojure.lang;
 
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 
-
 public class HashCollisionNodeUtils {
 
     public static HashCollisionNode create(int hashCode, Object key0, Object value0, Object key1, Object value1) {
@@ -87,7 +86,7 @@ public class HashCollisionNodeUtils {
                 counts.sameKey++;
                 final Object leftKey = leftArray[index];
                 final Object leftValue = leftArray[index + 1];
-                final Object newValue = counts.resolveFunction.invoke(leftKey, leftValue, rightValue);
+                final Object newValue = counts.resolver.getResolver().invoke(leftKey, leftValue, rightValue);
                 if (newValue != leftValue) {
                     leftDifferences++;
                     newArray[index + 1] = newValue;
@@ -95,12 +94,9 @@ public class HashCollisionNodeUtils {
                 if (newValue != rightValue || i != index) rightDifferences++;
             }
         }
-        return
-            leftDifferences == 0 ?
-            leftArray :
-            rightDifferences == 0 ?
-            rightArray :
-            newArray;            
+
+        final Object[] node = counts.resolver.resolveArrays(leftDifferences, leftArray, rightDifferences, rightArray);
+		return node == null ? newArray : node;            
     }
 
 }

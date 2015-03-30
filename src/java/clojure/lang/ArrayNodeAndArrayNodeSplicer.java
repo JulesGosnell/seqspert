@@ -4,8 +4,6 @@ import clojure.lang.PersistentHashMap.ArrayNode;
 import clojure.lang.PersistentHashMap.HashCollisionNode;
 import clojure.lang.PersistentHashMap.INode;
 
-// TODO: support rightDifferences...
-
 public class ArrayNodeAndArrayNodeSplicer implements Splicer {
 
     @Override
@@ -51,10 +49,8 @@ public class ArrayNodeAndArrayNodeSplicer implements Splicer {
             }
         }
 
-        return
-            leftDifferences == 0 ? leftNode :
-            rightDifferences == 0 ? rightNode :
-            new ArrayNode(null, 32 - empty, newArray);
+        final INode node = counts.resolver.resolveNodes(leftDifferences, leftNode, rightDifferences, rightNode);
+		return node == null ? new ArrayNode(null, 32 - empty, newArray) : node;
     }
 
 }
