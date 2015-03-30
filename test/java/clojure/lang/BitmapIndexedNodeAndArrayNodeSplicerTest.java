@@ -51,7 +51,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testSameKey() {
-        //test(new HashCodeKey("key" + 3, hasher.hash(3)), "value1", new HashCodeKey("key" + 4, hasher.hash(4)), "value2", null, null, hasher, 3, 31, false);
+        test(new HashCodeKey("key" + 3, hasher.hash(3)), "value1", new HashCodeKey("key" + 4, hasher.hash(4)), "value2", null, null, hasher, 3, 31, false);
         
         test(new HashCodeKey("key" + 0, hasher.hash(0)), "value0",new HashCodeKey("key" + 1, hasher.hash(1)), "value1",
         	 // this creates a direct AN->HCN child
