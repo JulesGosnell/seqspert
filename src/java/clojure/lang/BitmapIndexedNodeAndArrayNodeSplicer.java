@@ -32,29 +32,40 @@ public class BitmapIndexedNodeAndArrayNodeSplicer implements Splicer {
             final boolean hasRight = rightSubNode != null;
 
             if (hasLeft) {
-                final Object leftSubKey = leftArray[leftIndex++];
-                final Object leftSubValue = leftArray[leftIndex++];
+            	final Object leftSubKey = leftArray[leftIndex++];
+            	final Object leftSubValue = leftArray[leftIndex++];
 
-                if (hasRight) {
-                    // both sides present - merge them...
-                    final INode newSubNode = Seqspert.splice(newShift, counts, false, 0, leftSubKey, leftSubValue, false, 0, null, rightSubNode);
-                    newArray[i] = newSubNode;
-                    rightDifferences += (newSubNode == rightSubNode) ? 0 : 1;
-                } else {
-                    newArray[i] = ArrayNodeUtils.promote(newShift, leftSubKey, leftSubValue);
-                    rightDifferences++;
-                }
+            	if (hasRight) {
+            		// both sides present - merge them...
+            		final INode newSubNode = Seqspert.splice(newShift, counts, false, 0, leftSubKey, leftSubValue, false, 0, null, rightSubNode);
+            		newArray[i] = newSubNode;
+            		rightDifferences += (newSubNode == rightSubNode) ? 0 : 1;
+            	} else {
+            		newArray[i] = ArrayNodeUtils.promote(newShift, leftSubKey, leftSubValue);
+            		rightDifferences++;
+            	}
             } else { // not lb
-                if (hasRight) {
-                    // only rhs present - copy over
-                    newArray[i] = (count > 15 && rightSubNode instanceof HashCollisionNode)  ? 
-                    		ArrayNodeUtils.promote(shift + 5, ((HashCollisionNode)rightSubNode).hash, null, rightSubNode) :
-                    			rightSubNode;
-                    count++;
-                } else {
-                    // do nothing...
-                    empty++;
-                }
+            	if (hasRight) {
+            		// only rhs present - copy over
+            		boolean test = false;
+            		if (count > 15)
+            			if (rightSubNode instanceof HashCollisionNode) {
+            				rightDifferences++;
+            				test= true;
+            			}
+            			else
+            				test = false;
+            		else
+            			test = false;
+
+            		newArray[i] = test  ? 
+            				ArrayNodeUtils.promote(shift + 5, ((HashCollisionNode)rightSubNode).hash, null, rightSubNode) :
+            					rightSubNode;
+            				count++;
+            	} else {
+            		// do nothing...
+            		empty++;
+            	}
             }
         }
 
