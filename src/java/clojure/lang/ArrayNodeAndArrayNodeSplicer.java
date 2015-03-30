@@ -40,7 +40,7 @@ public class ArrayNodeAndArrayNodeSplicer implements Splicer {
             } else {
                 if (hasRight) {
                     leftDifferences++;
-                    newArray[i] = (rightSubNode instanceof HashCollisionNode) ?
+                    newArray[i] = rightSubNode instanceof HashCollisionNode ?
                     		ArrayNodeUtils.promote(newShift, ((HashCollisionNode)rightSubNode).hash, null, rightSubNode) :
                     		ArrayNodeUtils.promote(newShift, null, rightSubNode);
                 } else {

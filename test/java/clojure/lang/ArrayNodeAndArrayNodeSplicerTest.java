@@ -50,11 +50,12 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
         test(
         		new HashCodeKey("key0", hasher.hash(0)), "value0", hasher, 1, 18, false,
         		new HashCodeKey("key31.1", hasher.hash(31)), "value31.1", hasher, 11, 32, false);
+                
+        test(
+        		new HashCodeKey("key0", hasher.hash(0)), "value0", hasher, 16, 32, false,
+        		// this produces a direct AN->HCN child
+        		new HashCodeKey("key15.1", hasher.hash(15)), "value15.1", hasher, 0, 17, false);
     }
-
-    // TODO:
-    // I suspect that we need a test here where the collision causing assocs both go in on the rhs AFTER it has been promoted to an AN
-    
     
     @Override
     @Test
