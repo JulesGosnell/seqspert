@@ -21,9 +21,9 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
         final int valueIndex = keyIndex + 1;
         final int leftBitmap = leftNode.bitmap;
         final Object[] leftArray = leftNode.array;
+        final int leftBitCount = Integer.bitCount(leftBitmap);
         if((leftBitmap & bit) == 0) {
             // left hand side unoccupied...
-            final int leftBitCount = Integer.bitCount(leftBitmap);
             if (leftBitCount == 16) // TODO: probably a bug here
                 return new ArrayNode(null,
                                      17,
@@ -46,9 +46,17 @@ public class BitmapIndexedNodeAndHashCollisionNodeSplicer implements Splicer {
             final Object subVal = leftArray[valueIndex];
             final INode spliced = Seqspert.splice(shift + 5, counts, false, 0, subKey, subVal, false, 0, null, rightNode);
             return (subVal == spliced) ?
-                leftNode :
-                new BitmapIndexedNode(null, leftBitmap,
-                                      BitmapIndexedNodeUtils.cloneAndSetNode(leftArray, keyIndex, spliced));
+		leftNode:
+                new BitmapIndexedNode(null,
+				      leftBitmap,
+                                      BitmapIndexedNodeUtils.
+				      cloneAndSetNode(leftArray,
+						      keyIndex,
+						      (leftBitCount == 15 && spliced instanceof HashCollisionNode) ?
+						      BitmapIndexedNodeUtils.create(keyIndex, null, spliced) :
+						      spliced
+						      )
+				      );
         }
     }
 
