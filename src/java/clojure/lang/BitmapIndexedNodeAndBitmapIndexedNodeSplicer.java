@@ -56,7 +56,9 @@ public class BitmapIndexedNodeAndBitmapIndexedNodeSplicer implements Splicer {
                                                    counts.resolver.getResolver().invoke(leftSubKey, leftSubValue, rightSubValue));
                         } else {    // haveLeft and haveRight
                             // result was a Node...
-                            newAnArray[i] = newSubNode;
+			    newAnArray[i] = (count == 15 && newSubNode instanceof HashCollisionNode) ?
+				create(partition(((HashCollisionNode)newSubNode).hash, newShift), leftSubKey, newSubNode) :
+				newSubNode;
                         }
                     } else {
                         // haveLeft and !haveRight
