@@ -1,4 +1,4 @@
-(defproject seqspert "1.7.0-alpha6.1.0-SNAPSHOT"
+(defproject seqspert "1.8.0-beta1.1.0-SNAPSHOT"
 
   :description "Seqspert: specific, faster, smaller Clojure Sequence operations "
 
