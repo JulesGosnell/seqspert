@@ -31,7 +31,7 @@ public class HashCollisionNodeAndArrayNodeSplicerTest implements SplicerTestInte
         final INode rightNode = TestUtils.create(shift, rightHasher, rightStart, rightEnd, rightKey0, rightValue0);
         assertTrue(rightNode instanceof ArrayNode);
 
-        final IFn resolver = sameRight ? Counts.resolveRight : Counts.resolveLeft;
+        final Resolver resolver = sameRight ? Counts.rightResolver : Counts.leftResolver;
 
         final Counts expectedCounts = new Counts(resolver, 0, 0);
         final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);

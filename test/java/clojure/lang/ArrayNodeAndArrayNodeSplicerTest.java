@@ -17,22 +17,21 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
     final Hasher hasher = new Hasher() {@Override
     public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
 
-    public void test(Object leftKey, Object leftValue,
-                     Hasher leftHasher, int leftStart, int leftEnd,
-                     Hasher rightHasher, int rightStart, int rightEnd,
-                     boolean leftSame, boolean rightSame) {
-        final INode leftNode = TestUtils.create(shift, leftKey, leftValue, leftHasher, leftStart, leftEnd);
+    public void test(Object leftKey, Object leftValue, Hasher leftHasher, int leftStart, int leftEnd, boolean leftSame,
+    		 		 Object rightKey, Object rightValue, Hasher rightHasher, int rightStart, int rightEnd, boolean rightSame) {
+ 
+    	final INode leftNode = TestUtils.create(shift, leftKey, leftValue, leftHasher, leftStart, leftEnd);
         assertTrue(leftNode instanceof ArrayNode);
 
-        final INode rightNode = TestUtils.create(shift, rightHasher, rightStart, rightEnd);
+        final INode rightNode = TestUtils.create(shift, rightKey, rightValue, rightHasher, rightStart, rightEnd);
         assertTrue(rightNode instanceof ArrayNode);
 
-        final IFn resolveFunction = rightSame ? Counts.resolveRight: Counts.resolveLeft;
+        final Resolver resolver = rightSame ? Counts.rightResolver: Counts.leftResolver;
         
-        final Counts expectedCounts = new Counts(resolveFunction, 0, 0);
+        final Counts expectedCounts = new Counts(resolver, 0, 0);
         final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);
 
-        final Counts actualCounts = new Counts(resolveFunction, 0, 0);
+        final Counts actualCounts = new Counts(resolver, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
@@ -44,29 +43,44 @@ public class ArrayNodeAndArrayNodeSplicerTest implements SplicerTestInterface {
     @Override
     @Test
     public void testDifferent() {
-        final int hash = hasher.hash(0);
-        test(new HashCodeKey("key0", hash), "value0", hasher, 1, 18, hasher, 15, 32, false, false);
+        test(
+        		new HashCodeKey("key0", hasher.hash(0)), "value0", hasher, 1, 18, false,
+        		new HashCodeKey("key15", hasher.hash(15)), "value15", hasher, 16, 32, false);
+        
+        test(
+        		new HashCodeKey("key0", hasher.hash(0)), "value0", hasher, 1, 18, false,
+        		new HashCodeKey("key31.1", hasher.hash(31)), "value31.1", hasher, 11, 32, false);
+                
+        test(
+        		new HashCodeKey("key0", hasher.hash(0)), "value0", hasher, 16, 32, false,
+        		// this produces a direct AN->HCN child
+        		new HashCodeKey("key15.1", hasher.hash(15)), "value15.1", hasher, 0, 17, false);
     }
-
+    
     @Override
     @Test
     public void testSameKeyHashCode() {
-        final int hash = hasher.hash(17);
-        test(new HashCodeKey("key17.1", hash), "value17.1", hasher, 0, 18, hasher, 15, 32, false, false);
+        test(
+        		new HashCodeKey("key17.1", hasher.hash(17)), "value17.1", hasher, 0, 18, false,
+        		new HashCodeKey("key15", hasher.hash(15)), "value15", hasher, 16, 32, false);
     }
 
     @Override
     @Test
     public void testSameKey() {
-        final int hash = hasher.hash(17);
-        test(new HashCodeKey("key17", hash), "value17.1", hasher, 0, 18, hasher, 15, 32, false, false);
+        test(
+        		new HashCodeKey("key17", hasher.hash(17)), "value17.1", hasher, 0, 18, false,
+        		new HashCodeKey("key15", hasher.hash(15)), "value15", hasher, 16, 32, false);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
-        final int hash = hasher.hash(0);
-        test(new HashCodeKey("key0", hash), "value0", hasher, 1, 31, hasher, 0, 31, true, false);
-        test(new HashCodeKey("key0", hash), "value0", hasher, 1, 30, hasher, 0, 31, false, true);
+        test(
+        		new HashCodeKey("key0", hasher.hash(0)), "value0", hasher, 1, 31, true,
+        		new HashCodeKey("key0", hasher.hash(0)), "value0", hasher, 1, 31, false);
+        test(
+        		new HashCodeKey("key0", hasher.hash(0)), "value0", hasher, 1, 30, false,
+        		new HashCodeKey("key0", hasher.hash(0)), "value0", hasher, 1, 31, true);
     }
 }

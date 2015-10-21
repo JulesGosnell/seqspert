@@ -33,7 +33,7 @@ public class Seqspert {
         else if (rRoot == null)
             return lMap;
 
-        final Counts counts = new Counts(Counts.resolveLeft, 0, 0); // TODO: pass through correct resolveFn here
+        final Counts counts = new Counts(Counts.leftResolver, 0, 0); // TODO: pass through correct resolveFn here
         final PersistentHashMap.INode root = Seqspert.splice(0, counts, false, 0, null, lRoot, false, 0, null, rRoot);
         final int count = lMap.count + rMap.count - counts.sameKey;
 
@@ -42,8 +42,8 @@ public class Seqspert {
         return new PersistentHashMap(count, root, lMap.hasNull, lMap.nullValue);
     }
 
-    public static PersistentHashMap assocBy(PersistentHashMap map, IFn resolveFunction, Object key, Object value) {
-        final Counts counts = new Counts(resolveFunction, 0, 0);
+    public static PersistentHashMap assocBy(PersistentHashMap map, Resolver resolver, Object key, Object value) {
+        final Counts counts = new Counts(resolver, 0, 0);
         final PersistentHashMap.INode oldRoot = map.root == null? BitmapIndexedNode.EMPTY : map.root;
         final PersistentHashMap.INode newRoot = Seqspert.splice(0, counts, false, 0, null, oldRoot, false, 0, key, value);
         return (newRoot == oldRoot) ? map : new PersistentHashMap(map.count + 1 - counts.sameKey, newRoot, map.hasNull, map.nullValue);

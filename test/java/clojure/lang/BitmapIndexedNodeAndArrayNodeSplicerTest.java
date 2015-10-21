@@ -19,14 +19,16 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
     public int hash(int i) { return ((i + 2) << 10) | ((i + 1) << 5) | i; }};
 
     public void test(Object leftKey0, Object leftValue0, Object leftKey1, Object leftValue1, 
-                     Hasher rightHasher, int rightStart, int rightEnd, boolean sameRight) {
+                     Object rightKey, Object rightValue, Hasher rightHasher, int rightStart, int rightEnd, boolean sameRight) {
         final INode leftNode = TestUtils.create(shift, leftKey0, leftValue0, leftKey1, leftValue1);
-        final INode rightNode = TestUtils.create(shift, rightHasher, rightStart, rightEnd);
+        final INode rightNode = (rightKey != null) ?
+        		TestUtils.create(shift, rightKey, rightValue, rightHasher, rightStart, rightEnd) :
+            		TestUtils.create(shift, rightHasher, rightStart, rightEnd);
 
-        final Counts expectedCounts = new Counts(Counts.resolveRight, 0, 0);
-        final INode expectedNode = TestUtils.assocN(shift, leftNode, rightHasher, rightStart, rightEnd, expectedCounts);
+        final Counts expectedCounts = new Counts(Counts.rightResolver, 0, 0);
+        final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);
                 
-        final Counts actualCounts = new Counts(Counts.resolveRight, 0, 0); // TODO - resolveLeft ?
+        final Counts actualCounts = new Counts(Counts.rightResolver, 0, 0); // TODO - resolveLeft ?
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
 
         assertEquals(expectedCounts, actualCounts);
@@ -37,25 +39,29 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
     @Override
     @Test
     public void testDifferent() {
-        test(new HashCodeKey("key" + 1, hasher.hash(1)), "value1", new HashCodeKey("key" + 2, hasher.hash(2)), "value2", hasher, 3, 31, false);
+        test(new HashCodeKey("key" + 1, hasher.hash(1)), "value1", new HashCodeKey("key" + 2, hasher.hash(2)), "value2", null, null, hasher, 3, 31, false);
     }
 
     @Override
     @Test
     public void testSameKeyHashCode() {
-        test(new HashCodeKey("key" + 1, hasher.hash(3)), "value1", new HashCodeKey("key" + 2, hasher.hash(4)), "value2", hasher, 3, 31, false);
+        test(new HashCodeKey("key" + 1, hasher.hash(3)), "value1", new HashCodeKey("key" + 2, hasher.hash(4)), "value2", null, null, hasher, 3, 31, false);
     }
 
     @Override
     @Test
     public void testSameKey() {
-        test(new HashCodeKey("key" + 3, hasher.hash(3)), "value1", new HashCodeKey("key" + 4, hasher.hash(4)), "value2", hasher, 3, 31, false);
+        test(new HashCodeKey("key" + 3, hasher.hash(3)), "value1", new HashCodeKey("key" + 4, hasher.hash(4)), "value2", null, null, hasher, 3, 31, false);
+        
+        test(new HashCodeKey("key" + 0, hasher.hash(0)), "value0",new HashCodeKey("key" + 1, hasher.hash(1)), "value1",
+        	 // this creates a direct AN->HCN child
+        		new HashCodeKey("key17.1", hasher.hash(17)), "value17.1", hasher, 2, 19, false);
     }
 
     @Override
     @Test
     public void testSameKeyAndValue() {
-        test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key" + 4, hasher.hash(4)), "value4", hasher, 3, 31, true);
+        test(new HashCodeKey("key" + 3, hasher.hash(3)), "value3", new HashCodeKey("key" + 4, hasher.hash(4)), "value4", null, null, hasher, 3, 31, true);
     }
 
     interface Keyer {HashCodeKey key(int i);}
@@ -87,11 +93,11 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
         final INode rightNode = makeNode(shift, 0, 32, rightKeyer);
         assertTrue(rightNode instanceof ArrayNode);
             
-        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts expectedCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode expectedNode = assocN(shift, leftNode, 0, 32, rightKeyer, expectedCounts);
         assertTrue(expectedNode instanceof ArrayNode);
                 
-        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts actualCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
         assertTrue(actualNode instanceof ArrayNode);
 
@@ -115,11 +121,11 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
         final INode rightNode = makeNode(shift, 15, 32, rightKeyer);
         assertTrue(rightNode instanceof ArrayNode);
             
-        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts expectedCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode expectedNode = assocN(shift, leftNode, 15, 32, rightKeyer, expectedCounts);
         assertTrue(expectedNode instanceof ArrayNode);
                 
-        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts actualCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
         assertTrue(actualNode instanceof ArrayNode);
 
@@ -143,7 +149,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
                                        new Counts());
         assertTrue(rightNode instanceof ArrayNode);
             
-        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts expectedCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode expectedNode = assocN(shift,
                                           assocN(shift, leftNode, 15, 32, leftKeyer, expectedCounts),
                                           15,
@@ -152,7 +158,7 @@ public class BitmapIndexedNodeAndArrayNodeSplicerTest implements SplicerTestInte
                                           expectedCounts);
         assertTrue(expectedNode instanceof ArrayNode);
                 
-        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts actualCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
         assertTrue(actualNode instanceof ArrayNode);
 

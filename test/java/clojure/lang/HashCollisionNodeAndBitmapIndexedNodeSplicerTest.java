@@ -34,7 +34,7 @@ public class HashCollisionNodeAndBitmapIndexedNodeSplicerTest implements Splicer
                                                  rightKey0, rightValue0, rightKey1, rightValue1);
         assertTrue(rightNode instanceof BitmapIndexedNode);
 
-        final IFn resolver = sameRight ? Counts.resolveRight :  Counts.resolveLeft;
+        final Resolver resolver = sameRight ? Counts.rightResolver :  Counts.leftResolver;
 
         final Counts expectedCounts = new Counts(resolver, 0, 0);
         final INode expectedNode = TestUtils.merge(shift, leftNode, rightNode, expectedCounts);

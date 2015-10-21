@@ -20,7 +20,7 @@ public class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
         final int leftBitmap = leftNode.bitmap;
         final Object[] leftArray = leftNode.array;
         if ((leftBitmap & bit) == 0) {
-            final Object resolved = counts.resolveFunction.invoke(rightKey, null, rightValue);
+            final Object resolved = counts.resolver.getResolver().invoke(rightKey, null, rightValue);
             // left hand side unoccupied
             final int leftBitCount = Integer.bitCount(leftBitmap);
             if (leftBitCount == 16)
@@ -48,7 +48,7 @@ public class BitmapIndexedNodeAndKeyValuePairSplicer implements Splicer {
                 Seqspert.splice(shift + 5, counts, false, 0, subKey, subVal, true, rightHash, rightKey, rightValue);
 
             if (newSubNode == null) {
-                final Object resolved = counts.resolveFunction.invoke(subKey, subVal, rightValue);
+                final Object resolved = counts.resolver.getResolver().invoke(subKey, subVal, rightValue);
                 return (subVal == resolved) ?
                     leftNode :
                     new BitmapIndexedNode(null,

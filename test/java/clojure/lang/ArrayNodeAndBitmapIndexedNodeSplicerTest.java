@@ -118,11 +118,11 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
         final INode rightNode = makeNode(shift, 0, 16, rightKeyer);
         assertTrue(rightNode instanceof BitmapIndexedNode);
             
-        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts expectedCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode expectedNode = assocN(shift, leftNode, 0, 16, rightKeyer, expectedCounts);
         assertTrue(expectedNode instanceof ArrayNode);
                 
-        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts actualCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
         assertTrue(actualNode instanceof ArrayNode);
 
@@ -146,11 +146,11 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
         final INode rightNode = makeNode(shift, 0, 15, rightKeyer);
         assertTrue(rightNode instanceof BitmapIndexedNode);
             
-        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts expectedCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode expectedNode = assocN(shift, leftNode, 0, 15, rightKeyer, expectedCounts);
         assertTrue(expectedNode instanceof ArrayNode);
                 
-        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts actualCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
         assertTrue(actualNode instanceof ArrayNode);
 
@@ -174,7 +174,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
                                        new Counts());
         assertTrue(rightNode instanceof BitmapIndexedNode);
             
-        final Counts expectedCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts expectedCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode expectedNode = assocN(shift,
                                           assocN(shift, leftNode, 0, 15, leftKeyer, expectedCounts),
                                           0,
@@ -183,7 +183,7 @@ public class ArrayNodeAndBitmapIndexedNodeSplicerTest implements SplicerTestInte
                                           expectedCounts);
         assertTrue(expectedNode instanceof ArrayNode);
                 
-        final Counts actualCounts = new Counts(Counts.resolveLeft, 0, 0);
+        final Counts actualCounts = new Counts(Counts.leftResolver, 0, 0);
         final INode actualNode = Seqspert.splice(shift, actualCounts, false, 0, null, leftNode, false, 0, null, rightNode);
         assertTrue(actualNode instanceof ArrayNode);
 
