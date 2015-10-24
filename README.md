@@ -2,6 +2,8 @@
 
 <i>["seekspert"]</i>
 
+[![Continuous Integration status](https://secure.travis-ci.org/JulesGosnell/seqspert.png)](http://travis-ci.org/JulesGosnell/seqspert)
+
 ## Introduction
 
 The Clojure collection library is built upon the abstraction of a
